@@ -1,0 +1,46 @@
+{
+  "applications": "*",
+  "changelogDate": "20210831153147",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "library_error_log",
+  "fields": [
+    {
+      "fieldName": "message",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength", "required"],
+      "fieldValidateRulesMaxlength": "1024"
+    },
+    {
+      "fieldName": "severity",
+      "fieldType": "LogSeverity",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "LOW,MEDIUM,HIGH"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "LogStatus",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "CLOSED,FIXED,OPEN"
+    },
+    {
+      "fieldName": "timestamp",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "LibraryErrorLog",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "library",
+      "otherEntityRelationshipName": "errorLog",
+      "relationshipName": "library",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

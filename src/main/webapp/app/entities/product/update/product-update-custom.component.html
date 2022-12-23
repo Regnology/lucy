@@ -1,0 +1,253 @@
+<div>
+  <jhi-alert-error></jhi-alert-error>
+  <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+    <div class="card jh-card">
+      <div class="row g-3 mt-0">
+        <div class="col-lg-5 form-group">
+          <label class="form-control-label" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+        <div class="col-sm form-group">
+          <label class="form-control-label" for="field_identifier">Identifier</label>
+          <input
+            type="text"
+            class="form-control"
+            name="identifier"
+            id="field_identifier"
+            data-cy="identifier"
+            formControlName="identifier"
+          />
+          <div *ngIf="editForm.get('identifier')!.invalid && (editForm.get('identifier')!.dirty || editForm.get('identifier')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('identifier')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+        <div class="col-sm form-group">
+          <label class="form-control-label" for="field_version">Version</label>
+          <input type="text" class="form-control" name="version" id="field_version" data-cy="version" formControlName="version" />
+          <div *ngIf="editForm.get('version')!.invalid && (editForm.get('version')!.dirty || editForm.get('version')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('version')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+      </div>
+      <div class="row g-3 mt-0">
+        <div class="col-md-auto form-group me-5">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"
+                ><span class="me-2">Delivered</span>
+                <fa-icon icon="question-circle" placement="top" ngbTooltip="Product is released and OSS list is published"></fa-icon>
+              </span>
+              <span class="input-group-text input-group-checkbox-append">
+                <input
+                  type="checkbox"
+                  class="form-check"
+                  name="delivered"
+                  id="field_delivered"
+                  data-cy="delivered"
+                  formControlName="delivered"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-auto">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"
+                ><span class="me-2">Previous product version</span>
+                <fa-icon
+                  icon="question-circle"
+                  placement="top"
+                  ngbTooltip="The previous version is necessary to show the statistics and charts for the whole product family"
+                >
+                </fa-icon>
+              </span>
+
+              <select
+                class="form-control input-group"
+                id="field_previousProductId"
+                data-cy="previousProductId"
+                name="previousProductId"
+                formControlName="previousProductId"
+              >
+                <option [ngValue]="null">Select version</option>
+                <option
+                  [ngValue]="
+                    productOption.id === editForm.get('previousProductId')!.value?.id
+                      ? editForm.get('previousProductId')!.value
+                      : productOption
+                  "
+                  *ngFor="let productOption of productsSharedCollection; trackBy: trackProductById"
+                >
+                  {{ productOption.version }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card jh-card">
+      <ul ngbNav #nav="ngbNav" activeId="Details" class="nav nav-pills">
+        <!-- START tab Details -->
+        <li ngbNavItem="Details">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="ellipsis-h"></fa-icon>
+            Details
+          </a>
+          <ng-template ngbNavContent>
+            <div class="form-group">
+              <label class="form-control-label" for="field_targetUrl">Target Url</label>
+              <input
+                type="text"
+                class="form-control"
+                name="targetUrl"
+                id="field_targetUrl"
+                data-cy="targetUrl"
+                formControlName="targetUrl"
+              />
+              <div *ngIf="editForm.get('targetUrl')!.invalid && (editForm.get('targetUrl')!.dirty || editForm.get('targetUrl')!.touched)">
+                <small class="form-text text-danger" *ngIf="editForm.get('targetUrl')?.errors?.maxlength">
+                  This field cannot be longer than 2048 characters.
+                </small>
+              </div>
+            </div>
+
+            <div class="row g-3 mt-0">
+              <div class="col-lg form-group">
+                <label class="form-control-label" for="field_contact">Contact</label>
+                <textarea
+                  class="form-control"
+                  name="contact"
+                  id="field_contact"
+                  data-cy="contact"
+                  formControlName="contact"
+                  placeholder="Contact"
+                  style="min-height: 240px"
+                ></textarea>
+                <div *ngIf="editForm.get('contact')!.invalid && (editForm.get('contact')!.dirty || editForm.get('contact')!.touched)">
+                  <small class="form-text text-danger" *ngIf="editForm.get('contact')?.errors?.maxlength">
+                    This field cannot be longer than 2048 characters.
+                  </small>
+                </div>
+              </div>
+              <div class="col-lg form-group">
+                <label class="form-control-label" for="field_comment">Comment</label>
+                <textarea
+                  type="text"
+                  class="form-control"
+                  name="comment"
+                  id="field_comment"
+                  data-cy="comment"
+                  formControlName="comment"
+                  placeholder="Comment"
+                  style="min-height: 240px"
+                ></textarea>
+                <div *ngIf="editForm.get('comment')!.invalid && (editForm.get('comment')!.dirty || editForm.get('comment')!.touched)">
+                  <small class="form-text text-danger" *ngIf="editForm.get('comment')?.errors?.maxlength">
+                    This field cannot be longer than 4096 characters.
+                  </small>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+
+        <!-- START tab Disclaimer -->
+        <li ngbNavItem="Disclaimer">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="align-left"></fa-icon>
+            Disclaimer
+          </a>
+          <ng-template ngbNavContent>
+            <div class="row g-3 mt-0 form-group">
+              <div class="col-lg form-group">
+                <label class="form-control-label" for="field_disclaimer"
+                  >Disclaimer
+                  <fa-icon icon="question-circle" placement="top" ngbTooltip="Text can be formatted with HTML"></fa-icon>
+                </label>
+                <textarea
+                  class="form-control"
+                  name="disclaimer"
+                  id="field_disclaimer"
+                  data-cy="disclaimer"
+                  formControlName="disclaimer"
+                  style="min-height: 300px"
+                ></textarea>
+              </div>
+              <div class="col-lg form-group">
+                <label class="form-control-label">Preview</label>
+                <div class="preview-box form-control" [innerHTML]="editForm.get('disclaimer')?.value"></div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+
+        <!-- START tab UploadFilter -->
+        <li ngbNavItem="UploadFilter">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="filter"></fa-icon>
+            Upload Filter
+          </a>
+          <ng-template ngbNavContent>
+            <div class="row">
+              <div class="col-md">
+                <label class="form-control-label" for="field_uploadFilter">Upload Filter</label>
+                <textarea
+                  class="form-control"
+                  name="uploadFilter"
+                  id="field_uploadFilter"
+                  data-cy="uploadFilter"
+                  formControlName="uploadFilter"
+                  style="min-height: 200px"
+                ></textarea>
+                <div
+                  *ngIf="
+                    editForm.get('uploadFilter')!.invalid && (editForm.get('uploadFilter')!.dirty || editForm.get('uploadFilter')!.touched)
+                  "
+                >
+                  <small class="form-text text-danger" *ngIf="editForm.get('uploadFilter')?.errors?.maxlength">
+                    This field cannot be longer than 2048 characters.
+                  </small>
+                </div>
+              </div>
+
+              <div class="col-md">
+                <label style="opacity: 0">Info</label>
+                <p class="alert alert-info">
+                  <fa-icon icon="info-circle"></fa-icon> Libraries that matches the upload filter will be excluded from the upload. Note
+                  that the regular expressions must be compliant with Java's regex syntax. The regex must match the whole GroupId or
+                  ArtifactId.<br />
+                  To match all libraries with 'example' in it, write '.*example.*'. A new filter can be added per line.
+                </p>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+      <hr />
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
+
+    <div class="mt-3">
+      <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+        <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+      </button>
+
+      <button
+        type="submit"
+        id="save-entity"
+        data-cy="entityCreateSaveButton"
+        [disabled]="editForm.invalid || isSaving"
+        class="btn btn-primary"
+      >
+        <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+      </button>
+    </div>
+  </form>
+</div>

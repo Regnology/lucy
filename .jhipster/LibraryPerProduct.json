@@ -1,0 +1,42 @@
+{
+  "applications": "*",
+  "changelogDate": "20210304151413",
+  "clientRootFolder": "",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "library_per_product",
+  "fields": [
+    {
+      "fieldName": "addedDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "addedManually",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "hideForPublishing",
+      "fieldType": "Boolean"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "LibraryPerProduct",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "library",
+      "otherEntityRelationshipName": "libraryPerProduct",
+      "relationshipName": "library",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "library",
+      "relationshipName": "product",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

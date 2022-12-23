@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added the entity LicenseNamingMapping.
+    -->
+    <changeSet id="20210331075344-1" author="jhipster">
+        <createTable tableName="license_naming_mapping">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="regex" type="varchar(512)">
+                <constraints nullable="false" />
+            </column>
+            <column name="uniform_short_identifier" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+
+    <changeSet id="20210331075344-1-data" author="jhipster">
+        <validCheckSum>8:097389c721cdb36b505feba37149a13c</validCheckSum>
+        <loadData
+                  file="config/liquibase/data/license_naming_mapping.csv"
+                  separator=";"
+                  tableName="license_naming_mapping"
+                  usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="regex" type="string"/>
+            <column name="uniform_short_identifier" type="string"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

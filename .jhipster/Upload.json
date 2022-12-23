@@ -1,0 +1,41 @@
+{
+  "applications": "*",
+  "changelogDate": "20210418223720",
+  "clientRootFolder": "",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "upload",
+  "fields": [
+    {
+      "fieldName": "file",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any",
+      "fieldValidateRules": ["required", "maxbytes"],
+      "fieldValidateRulesMaxbytes": "30000000"
+    },
+    {
+      "fieldName": "entityToUpload",
+      "fieldType": "EntityUploadChoice",
+      "fieldValues": "PRODUCT (Product),LIBRARY (Library),LICENSE (License)"
+    },
+    {
+      "fieldName": "record",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "overwriteData",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "uploadedDate",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Upload",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "serviceClass"
+}

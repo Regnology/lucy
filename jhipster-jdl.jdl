@@ -1,0 +1,252 @@
+entity Product {
+	name String required,
+    identifier String required,
+    version String required,
+    createdDate LocalDate,
+    lastUpdatedDate LocalDate,
+    targetUrl String maxlength(2048),
+    uploadState UploadState,
+    disclaimer TextBlob,
+    delivered Boolean,
+    deliveredDate Instant,
+    contact String maxlength(2048),
+    comment String maxlength(4096),
+    previousProductId Integer,
+    uploadFilter String maxlength(2048)
+}
+
+enum UploadState {
+    SUCCESSFUL("Successful"),
+    PROCESSING(Processing),
+    FAILURE(Failure)
+}
+
+entity LibraryPerProduct {
+	addedDate LocalDate,
+    addedManually Boolean,
+    hideForPublishing Boolean
+}
+
+entity Library {
+	groupId String,
+    artifactId String required,
+    version String required,
+    type LibraryType,
+    originalLicense String maxlength(2048),
+    licenseUrl String maxlength(2048),
+    licenseText TextBlob,
+    sourceCodeUrl String maxlength(2048),
+    pUrl String maxlength(2048),
+    copyright String maxlength(16384),
+    compliance String,
+    complianceComment String maxlength(4096),
+    comment String maxlength(4096),
+    reviewed Boolean,
+    reviewedDeepScan Boolean,
+    lastReviewedDate LocalDate,
+    lastReviewedDeepScanDate LocalDate,
+    createdDate LocalDate,
+    hideForPublishing Boolean,
+    md5 String maxlength(32),
+    sha1 String maxlength(40)
+}
+
+enum LibraryType {
+    MAVEN(maven),
+    NPM(npm),
+    NUGET(nuget),
+    PYPI(pypi),
+    GOLANG(golang),
+	ALPINE(alpine),
+    APACHE(apache),
+    BITBUCKET(bitbucket),
+    CARGO(cargo),
+    COMPOSER(composer),
+    DEB(deb),
+    DOCKER(docker),
+    GEM(gem),
+    GENERIC(generic),
+    GITHUB(github),
+    GRADLE(gradle),
+    HEX(hex),
+    JAR(jar),
+    JAVA(java),
+    JS(js),
+    POM(pom),
+    RPM(rpm),
+    XSD(xsd),
+    ZIP(zip),
+    UNKNOWN(unknown)
+}
+
+entity LicensePerLibrary {
+	linkType LinkType,
+	orderId Integer
+}
+
+enum LinkType {
+	AND(and),
+    OR(or)
+}
+
+entity License {
+	fullName String required,
+    shortIdentifier String required,
+    spdxIdentifier String,
+    url String maxlength(2048),
+    genericLicenseText TextBlob,
+    other String maxlength(2048),
+    reviewed Boolean,
+    lastReviewedDate LocalDate
+}
+
+entity LicenseConflict {
+    compatibility CompatibilityState,
+    comment String maxlength(4096)
+}
+
+
+entity LicenseNamingMapping {
+	regex String maxlength(512) required,
+    uniformShortIdentifier String
+}
+
+entity GenericLicenseUrl {
+	url String maxlength(2048) required
+}
+
+entity LicenseRisk {
+	name String required,
+    level Integer required,
+    description String maxlength(1024),
+    color String
+}
+
+entity Requirement {
+	shortText String required,
+    description String maxlength(2048)
+}
+
+entity Upload {
+	file Blob required maxbytes(30000000),
+    entityToUpload EntityUploadChoice,
+    record Integer,
+    overwriteData Boolean,
+	uploadedDate LocalDate
+}
+
+entity Fossology {
+    status FossologyStatus required,
+    uploadId String maxlength(64),
+    jobId String maxlength(64),
+    lastScan Instant
+}
+
+entity LibraryErrorLog {
+	message String maxlength(1024) required,
+    severity LogSeverity required,
+    status LogStatus required,
+    timestamp Instant required
+}
+
+enum LogSeverity {
+	LOW,
+    MEDIUM,
+    HIGH
+}
+
+enum LogStatus {
+	CLOSED,
+    FIXED,
+    OPEN
+}
+
+enum EntityUploadChoice {
+	PRODUCT(Product),
+	LIBRARY(Library),
+    LICENSE(License)
+}
+
+enum FossologyStatus {
+    NOT_STARTED("Not started"),
+    UPLOAD_STARTED("Started upload"),
+    UPLOAD_FINISHED("Finished upload"),
+    SCAN_STARTED("Started scan"),
+    SCAN_FINISHED("Finished scan"),
+    FAILURE("Failure")
+}
+
+enum CompatibilityState {
+    Compatible("Compatible"),
+    Incompatible("Incompatible"),
+    Unknown("Unknown")
+}
+
+relationship OneToOne {
+    Library{fossology} to Fossology
+}
+
+relationship ManyToMany {
+	Library{licenseToPublish(shortIdentifier)} to License{libraryPublish},
+    Library{licenseOfFiles(shortIdentifier)} to License{libraryFiles},
+    License{requirement(shortText)} to Requirement{license(shortIdentifier)}
+}
+
+// Simulate a ManyToMany relationship between Product and Library with additional attributes
+relationship OneToMany {
+	Product{library} to LibraryPerProduct{product},
+}
+relationship ManyToOne {
+	LibraryPerProduct{library} to Library
+}
+
+// Simulate a ManyToMany relationship between Library and License with additional attributes
+relationship OneToMany {
+	Library{license} to LicensePerLibrary{library},
+}
+relationship ManyToOne {
+	LicensePerLibrary{license} to License
+}
+
+// Simulate a ManyToMany relationship between License and License with additional attributes
+relationship OneToMany {
+	License{licenseConflict} to LicenseConflict{license},
+}
+relationship ManyToOne {
+	LicenseConflict{license} to License
+}
+
+relationship ManyToOne {
+	Library{lastReviewedBy(login)} to User,
+	Library{lastReviewedDeepScanBy(login)} to User,
+    License{lastReviewedBy(login)} to User,
+    License{licenseRisk(name)} to LicenseRisk,
+}
+
+relationship OneToMany {
+	Library{errorLog} to LibraryErrorLog{library}
+}
+
+// Set pagination options
+paginate Requirement, LicenseRisk with infinite-scroll
+paginate Library, License, Product, LibraryPerProduct, Upload, LicensePerLibrary, LibraryErrorLog, LicenseNamingMapping with pagination
+
+// Use Data Transfer Objects (DTO)
+//dto Product with mapstruct
+
+// Set service options
+service Product with serviceClass
+service LibraryPerProduct with serviceClass
+service Library with serviceClass
+service LibraryErrorLog with serviceClass
+service LicensePerLibrary with serviceClass
+service License with serviceClass
+service Upload with serviceClass
+
+// Enable Filters
+filter Product
+filter LibraryPerProduct
+filter Library
+filter LibraryErrorLog
+filter LicensePerLibrary
+filter License

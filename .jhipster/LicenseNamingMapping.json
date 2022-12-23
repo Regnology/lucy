@@ -1,0 +1,27 @@
+{
+  "applications": "*",
+  "changelogDate": "20210331075344",
+  "clientRootFolder": "",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "license_naming_mapping",
+  "fields": [
+    {
+      "fieldName": "regex",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength", "required"],
+      "fieldValidateRulesMaxlength": "512"
+    },
+    {
+      "fieldName": "uniformShortIdentifier",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "LicenseNamingMapping",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "service": "no"
+}

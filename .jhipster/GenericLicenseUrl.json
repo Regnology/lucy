@@ -1,0 +1,23 @@
+{
+  "applications": "*",
+  "changelogDate": "20210407131645",
+  "clientRootFolder": "",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "generic_license_url",
+  "fields": [
+    {
+      "fieldName": "url",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength", "required"],
+      "fieldValidateRulesMaxlength": "2048"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "GenericLicenseUrl",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "service": "no"
+}

@@ -1,0 +1,121 @@
+/*
+ * Bootstrap overrides https://getbootstrap.com/docs/5.1/customize/sass/
+ * All values defined in bootstrap source
+ * https://github.com/twbs/bootstrap/blob/v5.1.3/scss/_variables.scss can be overwritten here
+ * Make sure not to add !default to values here
+ */
+
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+
+// Colors:
+// Grayscale and brand colors for use across Bootstrap.
+
+$primary: #17a1ee;
+$secondary: $gray-600;
+$success: #28a745;
+$info: #3ebaa3;
+$warning: #ffc107;
+$danger: #dc3545;
+
+$theme-colors: (
+  (
+    'primary': $primary,
+    'secondary': $secondary,
+    'success': $success,
+    'info': $info,
+    'warning': $warning,
+    'danger': $danger,
+    'light': $light,
+    'dark': $dark,
+  )
+);
+
+$primary-gradient: linear-gradient(194deg, #00caff 0%, $primary 100%);
+
+$min-contrast-ratio: 2.3;
+
+// Links
+$link-color: $primary;
+$link-hover-color: darken($link-color, 15%);
+$link-hover-decoration: none;
+
+// Options:
+// Quickly modify global styling by enabling or disabling optional features.
+$enable-rounded: true;
+$enable-shadows: true;
+$enable-gradients: false;
+$enable-transitions: true;
+$enable-hover-media-query: false;
+$enable-grid-classes: true;
+$enable-print-styles: true;
+
+// Components:
+// Define common padding and border radius sizes and more.
+
+$border-radius: 0.15rem;
+$border-radius-lg: 0.125rem;
+$border-radius-sm: 0.1rem;
+
+$box-shadow-sm: 0 0.15rem 0.4rem rgba($black, 0.09);
+
+// Body:
+// Settings for the `<body>` element.
+
+$body-bg: #edf0f4;
+
+// Typography:
+// Font, line-height, and color for body text, headings, and more.
+
+$font-size-base: 1rem;
+
+$dropdown-link-hover-color: white;
+$dropdown-link-hover-bg: #343a40;
+
+// Form
+$input-bg-color: $gray-100;
+
+$input-bg: $input-bg-color;
+$input-color: $gray-800;
+$input-border-color: $input-bg-color;
+$input-box-shadow: 1px 1px 2px rgba($black, 0.075);
+
+$input-placeholder-color: $gray-500;
+
+$input-focus-bg: white;
+$input-focus-box-shadow: none;
+
+$input-group-addon-border-color: $input-group-addon-bg;
+
+$custom-file-bg: $input-bg;
+$custom-file-color: $input-color;
+$custom-file-border-color: $input-border-color;
+$custom-file-box-shadow: $input-box-shadow;
+
+$custom-file-focus-border-color: $input-focus-border-color;
+$custom-file-focus-box-shadow: none;
+
+$custom-file-group-addon-border-color: $input-group-addon-bg;
+
+$component-active-bg: $primary;
+
+$nav-pills-link-color: #111;
+$nav-pills-link-active-color: white;
+$nav-pills-link-active-bg: $secondary;
+
+// Table
+$table-cell-padding: 0.4rem;
+$table-cell-padding-sm: 0.2rem;
+$table-head-color: $gray-600;
+$table-th-font-weight: normal;
+
+// Pagination
+$pagination-color: $link-color;
+$pagination-hover-color: $link-hover-color;
+$pagination-active-bg: $component-active-bg;
+$pagination-active-border-color: $pagination-active-bg;
+
+// Tooltip
+$tooltip-font-size: $font-size-sm;
+$tooltip-color: $white;
+$tooltip-bg: $black;

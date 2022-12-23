@@ -1,0 +1,122 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="library">
+      <h2 data-cy="libraryDetailsHeading"><span>Library</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ library.id }}</span>
+        </dd>
+        <dt><span>Group Id</span></dt>
+        <dd>
+          <span>{{ library.groupId }}</span>
+        </dd>
+        <dt><span>Artifact Id</span></dt>
+        <dd>
+          <span>{{ library.artifactId }}</span>
+        </dd>
+        <dt><span>Version</span></dt>
+        <dd>
+          <span>{{ library.version }}</span>
+        </dd>
+        <dt><span>Type</span></dt>
+        <dd>
+          <span>{{ library.type }}</span>
+        </dd>
+        <dt><span>Original License</span></dt>
+        <dd>
+          <span>{{ library.originalLicense }}</span>
+        </dd>
+        <dt><span>License Url</span></dt>
+        <dd>
+          <span>{{ library.licenseUrl }}</span>
+        </dd>
+        <dt><span>License Text</span></dt>
+        <dd>
+          <span>{{ library.licenseText }}</span>
+        </dd>
+        <dt><span>Source Code Url</span></dt>
+        <dd>
+          <span>{{ library.sourceCodeUrl }}</span>
+        </dd>
+        <dt><span>P Url</span></dt>
+        <dd>
+          <span>{{ library.pUrl }}</span>
+        </dd>
+        <dt><span>Copyright</span></dt>
+        <dd>
+          <span>{{ library.copyright }}</span>
+        </dd>
+        <dt><span>Compliance</span></dt>
+        <dd>
+          <span>{{ library.compliance }}</span>
+        </dd>
+        <dt><span>Compliance Comment</span></dt>
+        <dd>
+          <span>{{ library.complianceComment }}</span>
+        </dd>
+        <dt><span>Comment</span></dt>
+        <dd>
+          <span>{{ library.comment }}</span>
+        </dd>
+        <dt><span>Reviewed</span></dt>
+        <dd>
+          <span>{{ library.reviewed }}</span>
+        </dd>
+        <dt><span>Last Reviewed Date</span></dt>
+        <dd>
+          <span>{{ library.lastReviewedDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Created Date</span></dt>
+        <dd>
+          <span>{{ library.createdDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Hide For Publishing</span></dt>
+        <dd>
+          <span>{{ library.hideForPublishing }}</span>
+        </dd>
+        <dt><span>Md 5</span></dt>
+        <dd>
+          <span>{{ library.md5 }}</span>
+        </dd>
+        <dt><span>Sha 1</span></dt>
+        <dd>
+          <span>{{ library.sha1 }}</span>
+        </dd>
+        <dt><span>Last Reviewed By</span></dt>
+        <dd>
+          <span>{{ library.lastReviewedBy?.login }}</span>
+        </dd>
+        <dt><span>License To Publish</span></dt>
+        <dd>
+          <span *ngFor="let licenseToPublish of library.licenseToPublishes; let last = last">
+            <a [routerLink]="['/license', licenseToPublish?.id, 'view']">{{ licenseToPublish.shortIdentifier }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+        <dt><span>License Of Files</span></dt>
+        <dd>
+          <span *ngFor="let licenseOfFiles of library.licenseOfFiles; let last = last">
+            <a [routerLink]="['/license', licenseOfFiles?.id, 'view']">{{ licenseOfFiles.shortIdentifier }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/library', library.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

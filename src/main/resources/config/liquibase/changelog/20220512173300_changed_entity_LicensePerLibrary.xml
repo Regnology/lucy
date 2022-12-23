@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added orderId to license_per_library.
+    -->
+    <changeSet id="20211014120000-1" author="patrick.wojciech">
+        <addColumn tableName="license_per_library">
+            <column name="order_id" type="int">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

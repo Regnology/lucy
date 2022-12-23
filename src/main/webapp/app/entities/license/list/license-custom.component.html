@@ -1,0 +1,218 @@
+<jhi-alert-error></jhi-alert-error>
+
+<jhi-alert></jhi-alert>
+<div class="jh-card card">
+  <div class="row">
+    <div class="col-md">
+      <h2 id="page-heading" data-cy="LicenseHeading">
+        <fa-icon icon="cubes"></fa-icon>
+        <span>Licenses</span>
+      </h2>
+    </div>
+
+    <div class="col-md-auto">
+      <button class="btn btn-info me-2" (click)="loadPage()" [disabled]="isLoading" ngbTooltip="Reload">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+      </button>
+
+      <ng-template #popContent>
+        <div>
+          <input type="radio" id="formatJson" name="exportFormat" [(ngModel)]="jsonExport" [value]="true" />
+          <label for="formatJson">JSON - Full</label>
+        </div>
+
+        <div>
+          <input type="radio" id="formatCsv" name="exportFormat" [(ngModel)]="jsonExport" [value]="false" />
+          <label for="formatCsv">CSV - Basic</label>
+        </div>
+      </ng-template>
+
+      <div class="btn-group me-2" role="group">
+        <button class="btn btn-info btn-export" (click)="export()" [disabled]="isExporting">
+          <span *ngIf="isExporting" class="spinner-border spinner-border-sm" role="status"></span>
+          <fa-icon *ngIf="!isExporting" icon="file-download"></fa-icon>
+          <span *ngIf="!isExporting">Export</span>
+          <span *ngIf="isExporting">Loading</span>
+        </button>
+        <button class="btn btn-info" [ngbPopover]="popContent" placement="bottom" [autoClose]="'outside'">
+          <fa-icon icon="caret-down"></fa-icon>
+        </button>
+      </div>
+
+      <button
+        *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-license"
+        [routerLink]="['/license/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new License </span>
+      </button>
+    </div>
+  </div>
+  <hr />
+  <h5>Search</h5>
+  <div class="row">
+    <div class="col">
+      <form name="searchForm" role="form" novalidate (ngSubmit)="search()" [formGroup]="searchForm">
+        <div class="row">
+          <div class="col-md mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="fullName"
+              id="field_fullName"
+              data-cy="fullName"
+              formControlName="fullName"
+              placeholder="Full Name"
+            />
+          </div>
+          <div class="col-md mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="shortIdentifier"
+              id="field_shortIdentifier"
+              data-cy="shortIdentifier"
+              formControlName="shortIdentifier"
+              placeholder="Short Identifier"
+            />
+          </div>
+          <div class="col-md mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="spdx"
+              id="field_spdx"
+              data-cy="spdx"
+              formControlName="spdx"
+              placeholder="SPDX Identifier"
+            />
+          </div>
+          <div class="col-md mb-2">
+            <select class="form-control" id="field_requirements" data-cy="requirements" name="requirements" formControlName="requirements">
+              <option [ngValue]="null">Choose a Requirement</option>
+              <option
+                [ngValue]="
+                  requirementOption === searchForm.get('requirements')!.value ? searchForm.get('requirements')!.value : requirementOption
+                "
+                *ngFor="let requirementOption of requirementsSharedCollection"
+              >
+                {{ requirementOption }}
+              </option>
+            </select>
+          </div>
+          <div class="col-sm-auto">
+            <button type="submit" id="save-entity" data-cy="entityCreateSaveButton" class="btn btn-primary">
+              <fa-icon icon="search"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="jh-card card" *ngIf="licenses?.length === 0">
+  <div class="alert alert-warning" id="no-result">
+    <span>No licenses found</span>
+  </div>
+</div>
+
+<div class="table-responsive jh-card card" id="entities" *ngIf="licenses && licenses.length > 0">
+  <table class="table" aria-describedby="page-heading">
+    <thead>
+      <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+        <th scope="col" jhiSortBy="fullName">
+          <span>Full Name</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="shortIdentifier">
+          <span>Short Identifier</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="spdxIdentifier">
+          <span>Spdx Identifier</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="licenseRisk.name">
+          <span>License Risk</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="reviewed">
+          <span>Reviewed</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let license of licenses; trackBy: trackId" data-cy="entityTable">
+        <td>
+          <a [routerLink]="['/license', license.id, 'view']">{{ license.fullName }}</a>
+          <span class="badge bg-light text-black" placement="top" ngbTooltip="Number of requirements">{{
+            license.requirements?.length
+          }}</span>
+        </td>
+        <td>{{ license.shortIdentifier }}</td>
+        <td>{{ license.spdxIdentifier }}</td>
+        <td>
+          <a
+            class="badge btn-light text-white"
+            [ngStyle]="{ 'background-color': license.licenseRisk?.color }"
+            [routerLink]="['/license-risk', license.licenseRisk?.id, 'view']"
+          >
+            {{ license.licenseRisk?.name }}
+          </a>
+        </td>
+        <td class="text-center">
+          <fa-icon icon="check" class="text-success" *ngIf="license.reviewed"></fa-icon>
+          <fa-icon icon="times" class="text-danger" *ngIf="!license.reviewed"></fa-icon>
+        </td>
+        <td *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']" class="text-right">
+          <div class="btn-group">
+            <button
+              type="submit"
+              [routerLink]="['/license', license.id, 'edit']"
+              class="btn btn-primary btn-sm w-50"
+              data-cy="entityEditButton"
+              placement="top"
+              ngbTooltip="Edit license"
+            >
+              <fa-icon icon="pencil-alt"></fa-icon>
+            </button>
+
+            <button
+              type="submit"
+              (click)="delete(license)"
+              class="btn btn-danger btn-sm w-50"
+              data-cy="entityDeleteButton"
+              placement="top"
+              ngbTooltip="Delete license"
+            >
+              <fa-icon icon="times"></fa-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="licenses && licenses.length > 0">
+    <div class="row justify-content-center mb-2">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

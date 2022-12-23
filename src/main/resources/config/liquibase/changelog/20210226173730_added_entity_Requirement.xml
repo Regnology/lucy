@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added the entity Requirement.
+    -->
+    <changeSet id="20210226173730-1" author="jhipster">
+        <createTable tableName="requirement">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="short_text" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="varchar(2048)">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+
+    <changeSet id="20210226173730-1-data" author="jhipster">
+        <loadData
+                  file="config/liquibase/data/requirement.csv"
+                  separator=";"
+                  tableName="requirement"
+                  usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="short_text" type="string"/>
+            <column name="description" type="string"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

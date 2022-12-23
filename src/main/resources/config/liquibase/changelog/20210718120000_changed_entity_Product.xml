@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added delivered, deliveredDate, contact and comment column for product.
+        Renamed state column to upload_state and renamed value UP_TO_DATE to SUCCESSFUL.
+    -->
+    <changeSet id="20210718120000-1" author="patrick.wojciech">
+        <addColumn tableName="product">
+            <column name="delivered" type="boolean" valueBoolean="false">
+                <constraints nullable="true" />
+            </column>
+            <column name="delivered_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            <column name="contact" type="varchar(2048)">
+                <constraints nullable="true" />
+            </column>
+            <column name="comment" type="varchar(4096)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+
+        <renameColumn  tableName="product" columnDataType="varchar(255)" newColumnName="upload_state" oldColumnName="state"/>
+        <update tableName="product">
+            <column name="upload_state" value="SUCCESSFUL"/>
+            <where>upload_state='UP_TO_DATE'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

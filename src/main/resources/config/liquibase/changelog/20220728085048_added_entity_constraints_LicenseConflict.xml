@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    <!--
+        Added the constraints for entity LicenseConflict.
+    -->
+    <changeSet id="20220728085048-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="first_license_conflict_id"
+                                 baseTableName="license_conflict"
+                                 constraintName="fk_license_conflict__first_license_conflict_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="license"/>
+
+        <addForeignKeyConstraint baseColumnNames="second_license_conflict_id"
+                                 baseTableName="license_conflict"
+                                 constraintName="fk_license_conflict__second_license_conflict_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="license"/>
+    </changeSet>
+</databaseChangeLog>

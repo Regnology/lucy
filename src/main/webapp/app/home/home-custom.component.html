@@ -1,0 +1,136 @@
+<div class="card jh-card">
+  <div class="text-center mb-3">
+    <h1>Lucy</h1>
+  </div>
+  <div class="row">
+    <!-- Projects -->
+    <div class="col-xl mb-3">
+      <div class="card lucy-card-row flex-row">
+        <div routerLink="product" class="card-img-left lucy-card-header-row d-flex align-items-center">
+          <fa-icon icon="sitemap" size="2x"></fa-icon>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title"><a routerLink="product" class="card-link">Products</a></h5>
+          <p class="card-text">Track usage of libraries in your product. Find analytics and various reports to download.</p>
+        </div>
+      </div>
+      <div class="card lucy-card-detail-row">
+        <span class="text-center text-muted" *ngIf="!products || products?.length === 0">Cannot load preview</span>
+        <table *ngIf="products && products.length > 0" class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>Last updated product</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of products" data-cy="productTable">
+              <td>
+                <a [routerLink]="['/product', product.id, 'view']">{{ product.name }} {{ product.version }}</a>
+              </td>
+              <td>{{ product.lastUpdatedDate | formatMediumDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Libraries -->
+    <div class="col-xl mb-3">
+      <div class="card lucy-card-row flex-row">
+        <div routerLink="library" class="card-img-left lucy-card-header-row d-flex align-items-center">
+          <fa-icon icon="cubes" size="2x"></fa-icon>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title"><a routerLink="library" class="card-link">Libraries</a></h5>
+          <p class="card-text">Browse through the whole library database and check if the library is compliant with our policies.</p>
+        </div>
+      </div>
+      <div class="card lucy-card-detail-row">
+        <span class="text-center text-muted" *ngIf="!libraries || libraries?.length === 0">Cannot load preview</span>
+        <table *ngIf="libraries && libraries.length > 0" class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>New library</th>
+              <th class="text-center">Risk</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let library of libraries" data-cy="libraryTable">
+              <td>
+                <a [routerLink]="['/library', library.id, 'view']"
+                  >{{
+                    library?.artifactId && library.artifactId!.length > 22 ? (library.artifactId | slice: 0:22) + '..' : library.artifactId
+                  }}
+                  {{ library?.version && library.version!.length > 10 ? (library.version | slice: 0:10) + '..' : library.version }}</a
+                >
+              </td>
+              <td class="text-center">
+                <span
+                  class="rectangle-sm"
+                  [ngStyle]="{ 'background-color': libraryRisk(library).color }"
+                  placement="top"
+                  [ngbTooltip]="libraryRisk(library).name"
+                ></span>
+              </td>
+              <td>{{ library.createdDate | formatMediumDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Licenses -->
+    <div class="col-xl mb-3">
+      <div class="card lucy-card-row flex-row">
+        <div routerLink="license" class="card-img-left lucy-card-header-row d-flex align-items-center">
+          <fa-icon icon="gavel" size="2x"></fa-icon>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title"><a routerLink="license" class="card-link">Licenses</a></h5>
+          <p class="card-text">Learn more about licenses. See which risks it bears and requirements that have to be fulfilled.</p>
+        </div>
+      </div>
+      <div class="card lucy-card-detail-row">
+        <span class="text-center text-muted" *ngIf="!licenses || licenses?.length === 0">Cannot load preview</span>
+        <table *ngIf="licenses && licenses.length > 0" class="table table-sm mb-0">
+          <thead>
+            <tr>
+              <th>Last reviewed license</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let license of licenses" data-cy="licensesTable">
+              <td>
+                <a [routerLink]="['/license', license.id, 'view']">{{
+                  license?.shortIdentifier && license.shortIdentifier!.length > 40
+                    ? (license.shortIdentifier | slice: 0:40) + '..'
+                    : license.shortIdentifier
+                }}</a>
+              </td>
+              <td>{{ license.lastReviewedDate | formatMediumDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="row justify-content-md-center mt-3">
+    <div class="col-md-3 mb-3">
+      <div routerLink="license-risk" class="card lucy-card-sm">
+        <fa-icon icon="shield-alt" size="2x"></fa-icon>
+        <h5>Risks</h5>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div routerLink="requirement" class="card lucy-card-sm">
+        <fa-icon icon="tasks" size="2x"></fa-icon>
+        <h5>Requirements</h5>
+      </div>
+    </div>
+  </div>
+</div>

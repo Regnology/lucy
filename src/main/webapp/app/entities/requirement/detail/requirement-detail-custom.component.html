@@ -1,0 +1,43 @@
+<div class="card jh-card">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <div *ngIf="requirement">
+        <h2 data-cy="requirementDetailsHeading"><span>Requirement</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ requirement.id }}</span>
+          </dd>
+          <dt><span>Short Text</span></dt>
+          <dd>
+            <span>{{ requirement.shortText }}</span>
+          </dd>
+          <dt><span>Description</span></dt>
+          <dd>
+            <span>{{ requirement.description }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+        </button>
+
+        <button
+          *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
+          type="button"
+          [routerLink]="['/requirement', requirement.id, 'edit']"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

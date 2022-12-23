@@ -1,0 +1,201 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-product-heading" data-cy="ProductCreateUpdateHeading">Create or edit a Product</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_identifier">Identifier</label>
+          <input
+            type="text"
+            class="form-control"
+            name="identifier"
+            id="field_identifier"
+            data-cy="identifier"
+            formControlName="identifier"
+          />
+          <div *ngIf="editForm.get('identifier')!.invalid && (editForm.get('identifier')!.dirty || editForm.get('identifier')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('identifier')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_version">Version</label>
+          <input type="text" class="form-control" name="version" id="field_version" data-cy="version" formControlName="version" />
+          <div *ngIf="editForm.get('version')!.invalid && (editForm.get('version')!.dirty || editForm.get('version')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('version')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_createdDate">Created Date</label>
+          <div class="input-group">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="text"
+              class="form-control"
+              name="createdDate"
+              ngbDatepicker
+              #createdDateDp="ngbDatepicker"
+              formControlName="createdDate"
+            />
+            <button type="button" class="btn btn-secondary" (click)="createdDateDp.toggle()">
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_lastUpdatedDate">Last Updated Date</label>
+          <div class="input-group">
+            <input
+              id="field_lastUpdatedDate"
+              data-cy="lastUpdatedDate"
+              type="text"
+              class="form-control"
+              name="lastUpdatedDate"
+              ngbDatepicker
+              #lastUpdatedDateDp="ngbDatepicker"
+              formControlName="lastUpdatedDate"
+            />
+            <button type="button" class="btn btn-secondary" (click)="lastUpdatedDateDp.toggle()">
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_targetUrl">Target Url</label>
+          <input type="text" class="form-control" name="targetUrl" id="field_targetUrl" data-cy="targetUrl" formControlName="targetUrl" />
+          <div *ngIf="editForm.get('targetUrl')!.invalid && (editForm.get('targetUrl')!.dirty || editForm.get('targetUrl')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('targetUrl')?.errors?.maxlength">
+              This field cannot be longer than 2048 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_uploadState">Upload State</label>
+          <select class="form-control" name="uploadState" formControlName="uploadState" id="field_uploadState" data-cy="uploadState">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let uploadState of uploadStateValues" [value]="uploadState">uploadState</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_disclaimer">Disclaimer</label>
+          <textarea
+            class="form-control"
+            name="disclaimer"
+            id="field_disclaimer"
+            data-cy="disclaimer"
+            formControlName="disclaimer"
+          ></textarea>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_delivered">Delivered</label>
+          <input type="checkbox" class="form-check" name="delivered" id="field_delivered" data-cy="delivered" formControlName="delivered" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_deliveredDate">Delivered Date</label>
+          <div class="d-flex">
+            <input
+              id="field_deliveredDate"
+              data-cy="deliveredDate"
+              type="datetime-local"
+              class="form-control"
+              name="deliveredDate"
+              formControlName="deliveredDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_contact">Contact</label>
+          <input type="text" class="form-control" name="contact" id="field_contact" data-cy="contact" formControlName="contact" />
+          <div *ngIf="editForm.get('contact')!.invalid && (editForm.get('contact')!.dirty || editForm.get('contact')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('contact')?.errors?.maxlength">
+              This field cannot be longer than 2048 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_comment">Comment</label>
+          <input type="text" class="form-control" name="comment" id="field_comment" data-cy="comment" formControlName="comment" />
+          <div *ngIf="editForm.get('comment')!.invalid && (editForm.get('comment')!.dirty || editForm.get('comment')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('comment')?.errors?.maxlength">
+              This field cannot be longer than 4096 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_previousProductId">Previous Product Id</label>
+          <input
+            type="number"
+            class="form-control"
+            name="previousProductId"
+            id="field_previousProductId"
+            data-cy="previousProductId"
+            formControlName="previousProductId"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_uploadFilter">Upload Filter</label>
+          <input
+            type="text"
+            class="form-control"
+            name="uploadFilter"
+            id="field_uploadFilter"
+            data-cy="uploadFilter"
+            formControlName="uploadFilter"
+          />
+          <div
+            *ngIf="editForm.get('uploadFilter')!.invalid && (editForm.get('uploadFilter')!.dirty || editForm.get('uploadFilter')!.touched)"
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('uploadFilter')?.errors?.maxlength">
+              This field cannot be longer than 2048 characters.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

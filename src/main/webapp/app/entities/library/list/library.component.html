@@ -1,0 +1,136 @@
+<div>
+  <h2 id="page-heading" data-cy="LibraryHeading">
+    <span>Libraries</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-library"
+        [routerLink]="['/library/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Library </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="libraries?.length === 0">
+    <span>No libraries found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="libraries && libraries.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="groupId"><span>Group Id</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="artifactId"><span>Artifact Id</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="version"><span>Version</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="type"><span>Type</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="originalLicense"><span>Original License</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="licenseUrl"><span>License Url</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="licenseText"><span>License Text</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="sourceCodeUrl"><span>Source Code Url</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="pUrl"><span>P Url</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="copyright"><span>Copyright</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="compliance"><span>Compliance</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="complianceComment"><span>Compliance Comment</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="comment"><span>Comment</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="reviewed"><span>Reviewed</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="lastReviewedDate"><span>Last Reviewed Date</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="createdDate"><span>Created Date</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="hideForPublishing"><span>Hide For Publishing</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="md5"><span>Md 5</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="sha1"><span>Sha 1</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="lastReviewedBy.login"><span>Last Reviewed By</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let library of libraries; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/library', library.id, 'view']">{{ library.id }}</a>
+          </td>
+          <td>{{ library.groupId }}</td>
+          <td>{{ library.artifactId }}</td>
+          <td>{{ library.version }}</td>
+          <td>{{ library.type }}</td>
+          <td>{{ library.originalLicense }}</td>
+          <td>{{ library.licenseUrl }}</td>
+          <td>{{ library.licenseText }}</td>
+          <td>{{ library.sourceCodeUrl }}</td>
+          <td>{{ library.pUrl }}</td>
+          <td>{{ library.copyright }}</td>
+          <td>{{ library.compliance }}</td>
+          <td>{{ library.complianceComment }}</td>
+          <td>{{ library.comment }}</td>
+          <td>{{ library.reviewed }}</td>
+          <td>{{ library.lastReviewedDate | formatMediumDate }}</td>
+          <td>{{ library.createdDate | formatMediumDate }}</td>
+          <td>{{ library.hideForPublishing }}</td>
+          <td>{{ library.md5 }}</td>
+          <td>{{ library.sha1 }}</td>
+          <td>
+            {{ library.lastReviewedBy?.login }}
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/library', library.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/library', library.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(library)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="libraries && libraries.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

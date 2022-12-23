@@ -1,0 +1,38 @@
+{
+  "name": "Fossology",
+  "fields": [
+    {
+      "fieldName": "status",
+      "fieldType": "FossologyStatus",
+      "fieldValues": "NOT_STARTED (Not started),UPLOAD_STARTED (Started upload),UPLOAD_FINISHED (Finished upload),SCAN_STARTED (Started scan),SCAN_FINISHED (Finished scan),FAILURE (Failure)",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "uploadId",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "64"
+    },
+    {
+      "fieldName": "jobId",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "64"
+    },
+    {
+      "fieldName": "lastScan",
+      "fieldType": "Instant"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "fossology",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20220412123722"
+}

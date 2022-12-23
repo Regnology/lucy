@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Increased size for copyright field.
+    -->
+    <changeSet id="20210913102000-1" author="patrick.wojciech">
+        <modifyDataType
+            columnName="copyright"
+            newDataType="varchar(16384)"
+            tableName="library"/>
+    </changeSet>
+</databaseChangeLog>

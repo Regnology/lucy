@@ -1,0 +1,254 @@
+<jhi-alert-error></jhi-alert-error>
+
+<jhi-alert></jhi-alert>
+<div class="jh-card card">
+  <div class="row">
+    <div class="col-md">
+      <h2 id="page-heading" data-cy="ProductHeading">
+        <fa-icon icon="sitemap"></fa-icon>
+        <span
+          >Products<span class="badge bg-secondary" style="color: white">{{ totalItems }}</span></span
+        >
+      </h2>
+    </div>
+
+    <div class="col-md-auto">
+      <ng-template #compareModal let-modal>
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Compare two products
+            <fa-icon
+              icon="question-circle"
+              placement="down"
+              ngbTooltip="When comparing two products, the differences of the contained libraries are displayed. The libraries that are only available in the first or second selected product or the libraries that are available in both products are shown. Various views can be created using different options."
+              container="body"
+            ></fa-icon>
+          </h5>
+          <button type="button" class="btn-close" (click)="modal.close('Close difference view')" data-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <jhi-difference-view #differenceViewComponent></jhi-difference-view>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="modal.close('Close difference view')" data-dismiss="modal">Close</button>
+          <button
+            [disabled]="
+              differenceViewComponent.isLoading ||
+              (differenceViewComponent?.productComparisonForm?.get('firstProduct'))!.invalid ||
+              (differenceViewComponent?.productComparisonForm?.get('secondProduct'))!.invalid
+            "
+            type="button"
+            class="btn btn-primary"
+            (click)="differenceViewComponent?.compare()"
+          >
+            Compare
+          </button>
+          <div
+            *ngIf="
+              (differenceViewComponent?.productComparisonForm?.get('firstProduct'))!.invalid ||
+              (differenceViewComponent?.productComparisonForm?.get('secondProduct'))!.invalid
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="
+                (differenceViewComponent?.productComparisonForm?.get('firstProduct'))!.errors?.required ||
+                (differenceViewComponent?.productComparisonForm?.get('secondProduct'))!.errors?.required
+              "
+            >
+              Select two products.
+            </small>
+          </div>
+        </div>
+      </ng-template>
+      <button class="btn btn-primary" (click)="openDifferenceViewModal(compareModal)">Compare Products</button>
+    </div>
+
+    <div class="col-md-auto">
+      <button class="btn btn-info me-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+      </button>
+
+      <button
+        *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-product"
+        [routerLink]="['/product/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Product </span>
+      </button>
+    </div>
+  </div>
+  <hr />
+  <h5>Search</h5>
+  <div class="row">
+    <div class="col">
+      <form name="searchForm" role="form" novalidate (ngSubmit)="search()" [formGroup]="searchForm">
+        <div class="row mb-2">
+          <div class="col-md mb-2">
+            <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" placeholder="Name" />
+          </div>
+          <div class="col-md mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="identifier"
+              id="field_identifier"
+              data-cy="identifier"
+              formControlName="identifier"
+              placeholder="Identifier"
+            />
+          </div>
+          <div class="col-md mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="version"
+              id="field_version"
+              data-cy="version"
+              formControlName="version"
+              placeholder="Version"
+            />
+          </div>
+          <div class="col-sm-auto">
+            <button type="submit" id="save-entity" data-cy="entityCreateSaveButton" class="btn btn-primary">
+              <fa-icon icon="search"></fa-icon>
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm">
+            <div class="form-check form-switch">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="field_hideDelivered"
+                name="hideDelivered"
+                data-cy="hideDelivered"
+                formControlName="hideDelivered"
+                (change)="search()"
+              />
+              <label class="form-check-label" for="field_hideDelivered">Hide delivered products</label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="jh-card card" *ngIf="products?.length === 0">
+  <div class="alert alert-warning" id="no-result">
+    <span>No products found</span>
+  </div>
+</div>
+
+<div class="table-responsive jh-card card" id="entities" *ngIf="products && products.length > 0">
+  <table class="table table-sm" aria-describedby="page-heading">
+    <thead>
+      <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+        <th scope="col" jhiSortBy="uploadState">
+          <span placement="right" ngbTooltip="Last Upload Status">U</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="name">
+          <span>Name</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="identifier">
+          <span>Identifier</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="version">
+          <span>Version</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="createdDate">
+          <span>Creation Date</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="lastUpdatedDate">
+          <span>Last Upload</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th class="text-center" scope="col" jhiSortBy="delivered">
+          <span>Delivery Status</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products; trackBy: trackId" data-cy="entityTable">
+        <td>
+          <span [ngSwitch]="product.uploadState">
+            <span *ngSwitchCase="'SUCCESSFUL'" class="rectangle-sm bg-success" placement="top" ngbTooltip="Successful"></span>
+            <span *ngSwitchCase="'PROCESSING'" class="rectangle-sm bg-warning" placement="top" ngbTooltip="Processing"></span>
+            <span *ngSwitchCase="'FAILURE'" class="rectangle-sm bg-danger" placement="top" ngbTooltip="Failure"></span>
+          </span>
+        </td>
+        <td>
+          <a [routerLink]="['/product', product.id, 'view']">{{ product.name }}</a>
+        </td>
+        <td>{{ product.identifier }}</td>
+        <td>{{ product.version }}</td>
+        <td>{{ product.createdDate | formatMediumDate }}</td>
+        <td>{{ product.lastUpdatedDate | formatMediumDate }}</td>
+        <td class="text-center">
+          <span
+            *ngIf="product.delivered"
+            class="badge bg-success"
+            placement="top"
+            [ngbTooltip]="product.deliveredDate | formatMediumDatetime"
+            >Delivered</span
+          >
+          <span *ngIf="!product.delivered" class="badge bg-secondary">In Development</span>
+        </td>
+        <td class="text-right" *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+          <div class="btn-group">
+            <button
+              type="submit"
+              [routerLink]="['/product', product.id, 'edit']"
+              class="btn btn-primary btn-sm w-50"
+              data-cy="entityEditButton"
+              placement="top"
+              ngbTooltip="Edit product"
+            >
+              <fa-icon icon="pencil-alt"></fa-icon>
+            </button>
+
+            <button
+              type="submit"
+              (click)="delete(product)"
+              class="btn btn-danger btn-sm w-50"
+              data-cy="entityDeleteButton"
+              placement="top"
+              ngbTooltip="Delete product"
+            >
+              <fa-icon icon="times"></fa-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="products && products.length > 0">
+    <div class="row justify-content-center mb-2">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

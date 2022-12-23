@@ -1,0 +1,52 @@
+<div class="card jh-card">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <div *ngIf="libraryErrorLog">
+        <h2 data-cy="libraryErrorLogDetailsHeading"><span>Library Error Log</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ libraryErrorLog.id }}</span>
+          </dd>
+          <dt><span>Message</span></dt>
+          <dd>
+            <span>{{ libraryErrorLog.message }}</span>
+          </dd>
+          <dt><span>Severity</span></dt>
+          <dd>
+            <span>{{ libraryErrorLog.severity }}</span>
+          </dd>
+          <dt><span>Status</span></dt>
+          <dd>
+            <span>{{ libraryErrorLog.status }}</span>
+          </dd>
+          <dt><span>Timestamp</span></dt>
+          <dd>
+            <span>{{ libraryErrorLog.timestamp | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span>Library</span></dt>
+          <dd>
+            <div *ngIf="libraryErrorLog.library">
+              <a [routerLink]="['/library', libraryErrorLog.library.id, 'view']">{{ libraryErrorLog.library.id }}</a>
+            </div>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/library-error-log', libraryErrorLog.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

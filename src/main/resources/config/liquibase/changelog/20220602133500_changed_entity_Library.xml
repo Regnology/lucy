@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added reviewedDeepScan, lastReviewedDeepScanDate and lastReviewedDeepScanById column for library.
+    -->
+    <changeSet id="20220602133500-1" author="patrick.wojciech">
+        <addColumn tableName="library">
+            <column name="reviewed_deep_scan" type="boolean" defaultValue="false">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_reviewed_deep_scan_date" type="date">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_reviewed_deep_scan_by_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

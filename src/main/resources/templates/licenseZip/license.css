@@ -1,0 +1,10 @@
+body {
+  width: 50%;
+  font-family: courier new, helvetica, arial, sans-serif;
+  margin: 1em 0 1em 1em;
+  line-height: 1.5em;
+}
+
+li {
+  margin: 1em 0;
+}

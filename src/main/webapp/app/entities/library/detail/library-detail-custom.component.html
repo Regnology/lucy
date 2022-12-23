@@ -1,0 +1,560 @@
+<ng-template #noContent>
+  <p>
+    <fa-icon icon="times"></fa-icon>
+  </p>
+</ng-template>
+
+<div>
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div *ngIf="library">
+    <div class="jh-card card">
+      <div class="row justify-content-center">
+        <div class="col-lg">
+          <div class="row align-items-end mb-2">
+            <div class="col-auto">
+              <fa-icon style="position: relative; top: -1.8rem" icon="cube" size="lg"></fa-icon>
+            </div>
+            <div *ngIf="library.groupId" class="col-auto">
+              <div class="detail-attribute">
+                <h4>{{ library.groupId }}</h4>
+                <small>GroupId</small>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="detail-attribute">
+                <h2 data-cy="libraryDetailsHeading">{{ library.artifactId }}</h2>
+                <small>ArtifactId</small>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="detail-attribute">
+                <h4>{{ library.version }}</h4>
+                <small>Version</small>
+              </div>
+            </div>
+
+            <ng-template #reviewTooltip>
+              <span *ngIf="library.reviewed">
+                This library has been reviewed by<br /><b>{{ library.lastReviewedBy?.login }}</b
+                ><br />on<br /><b>{{ library.lastReviewedDate | formatMediumDate }}</b>
+              </span>
+              <span *ngIf="!library.reviewed"
+                >Information of the library, such as license, details, license text and fulfillment of all requirements has not been
+                reviewed by any person.</span
+              >
+            </ng-template>
+
+            <ng-template #reviewDeepScanTooltip>
+              <span *ngIf="library.reviewedDeepScan">
+                A deep scan analysis and review of the result has been done by <br /><b>{{ library.lastReviewedDeepScanBy?.login }}</b
+                ><br />on<br /><b>{{ library.lastReviewedDeepScanDate | formatMediumDate }}</b>
+              </span>
+              <span *ngIf="!library.reviewedDeepScan">A deep scan analysis and review of the result has not been done by any person.</span>
+            </ng-template>
+
+            <div class="col-auto library-review-fields">
+              <div class="row py-1" placement="right" [ngbTooltip]="reviewTooltip">
+                <div
+                  class="card lucy-card pt-1 pb-1"
+                  [ngClass]="{ 'bg-success': library.reviewed === true, 'bg-secondary': library.reviewed === false }"
+                >
+                  <span *ngIf="library.reviewed; else notReviewed"><fa-icon icon="user-check"></fa-icon> Review done</span>
+                  <ng-template #notReviewed
+                    ><span><fa-icon icon="user-xmark"></fa-icon> Review pending</span></ng-template
+                  >
+                </div>
+              </div>
+              <div class="row" placement="right" [ngbTooltip]="reviewDeepScanTooltip">
+                <div
+                  class="card lucy-card pt-1 pb-1"
+                  [ngClass]="{ 'bg-success': library.reviewedDeepScan === true, 'bg-secondary': library.reviewedDeepScan === false }"
+                >
+                  <span *ngIf="library.reviewedDeepScan; else notDeepScanReviewed"
+                    ><fa-icon icon="user-check"></fa-icon> Deep Scan done</span
+                  >
+                  <ng-template #notDeepScanReviewed
+                    ><span><fa-icon icon="user-xmark"></fa-icon> Deep Scan pending</span></ng-template
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="row mt-2">
+            <div class="col-auto">
+              <fa-icon class="mb-4" style="position: relative; top: 0.4rem" icon="gavel" size="lg"></fa-icon>
+            </div>
+            <div class="col-auto">
+              <div class="detail-attribute">
+                <span *ngFor="let licenseToPublish of library.licenseToPublishes; let last = last" class="detail-attribute-title">
+                  <a [routerLink]="['/license', licenseToPublish?.id, 'view']">{{ licenseToPublish.shortIdentifier }}</a
+                  >{{ last ? '' : ' AND ' }}
+                </span>
+                <br />
+                <small>License To Publish</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto me-3">
+          <div class="card lucy-card text-center">
+            <div class="card-header lucy-card-header-white">
+              <fa-icon class="me-1" icon="shield-alt"></fa-icon>
+              License Risk
+            </div>
+            <a
+              [routerLink]="['/license-risk', libraryRisk().id, 'view']"
+              [ngStyle]="{ 'background-color': libraryRisk().color }"
+              class="card-body card-body-risk text-white btn-light"
+            >
+              {{ libraryRisk().name }}
+            </a>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="card lucy-card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <div class="detail-attribute-sm">
+                    <fa-icon icon="code" placement="left" ngbTooltip="Library type"></fa-icon>
+                    <span>{{ library.type }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col">
+                  <div class="detail-attribute-sm">
+                    <fa-icon icon="calendar-plus" placement="left" ngbTooltip="Added to database on"></fa-icon>
+                    <span>{{ library.createdDate | formatMediumDate }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col">
+                  <div class="detail-attribute-sm">
+                    <fa-icon
+                      *ngIf="library.hideForPublishing"
+                      icon="eye-slash"
+                      placement="left"
+                      ngbTooltip="Library will not be published"
+                    ></fa-icon>
+                    <fa-icon
+                      *ngIf="!library.hideForPublishing"
+                      icon="eye"
+                      placement="left"
+                      ngbTooltip="Library will be published"
+                    ></fa-icon>
+                    <span *ngIf="library.hideForPublishing">Hidden</span>
+                    <span *ngIf="!library.hideForPublishing">Publish</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card jh-card mb-3">
+      <ul ngbNav #nav="ngbNav" activeId="License" class="nav nav-pills">
+        <li ngbNavItem="License">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="gavel"></fa-icon>
+            License</a
+          >
+          <ng-template ngbNavContent>
+            <div class="row mb-3">
+              <div class="col-lg">
+                <div class="detail-attribute">
+                  <ng-container *ngIf="library.licenses && library.licenses.length > 0; else noContent">
+                    <span *ngFor="let license of library.licenses; let last = last">
+                      <a [routerLink]="['/license', license?.license?.id, 'view']">{{ license?.license?.shortIdentifier }}</a>
+                      {{ license.linkType }}
+                    </span>
+                    <br />
+                  </ng-container>
+                  <small
+                    >License
+                    <fa-icon icon="question-circle" placement="top" ngbTooltip="License specified by the copyright holder"></fa-icon>
+                  </small>
+                </div>
+              </div>
+              <div class="col-lg">
+                <div class="detail-attribute">
+                  <ng-container *ngIf="library.licenseToPublishes && library.licenseToPublishes.length > 0; else noContent">
+                    <span *ngFor="let licenseToPublish of library.licenseToPublishes; let last = last">
+                      <a [routerLink]="['/license', licenseToPublish?.id, 'view']">{{ licenseToPublish.shortIdentifier }}</a
+                      >{{ last ? '' : ' AND ' }}
+                    </span>
+                    <br />
+                  </ng-container>
+                  <small
+                    >License To Publish
+                    <fa-icon
+                      icon="question-circle"
+                      placement="top"
+                      ngbTooltip='Final license that will be visible in the "Publish" OSS list'
+                    ></fa-icon>
+                  </small>
+                </div>
+              </div>
+              <div class="col-lg">
+                <div class="detail-attribute">
+                  <ng-container *ngIf="library.licenseOfFiles && library.licenseOfFiles.length > 0; else noContent">
+                    <span *ngFor="let licenseOfFiles of library.licenseOfFiles; let last = last">
+                      <a [routerLink]="['/license', licenseOfFiles?.id, 'view']">{{ licenseOfFiles.shortIdentifier }}</a
+                      >{{ last ? '' : ' AND ' }}
+                    </span>
+                    <br />
+                  </ng-container>
+                  <small
+                    >License Of Files
+                    <fa-icon
+                      icon="question-circle"
+                      placement="top"
+                      ngbTooltip="License that was found by a deep scan of this library.
+                    Some files may be under a different license than the whole library."
+                    ></fa-icon>
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <p *ngIf="library.originalLicense; else noContent">{{ library.originalLicense }}</p>
+                  <small
+                    >Original License
+                    <fa-icon
+                      icon="question-circle"
+                      placement="top"
+                      ngbTooltip="Original license that was set from an upload. It may not match the license or license to publish."
+                    ></fa-icon>
+                  </small>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <h5>Requirements</h5>
+            <button
+              *ngFor="let requirement of getRequirements(); let last = last"
+              [routerLink]="['/requirement', requirement?.id, 'view']"
+              class="badge btn btn-primary text-white me-2 mb-1"
+              style="font-size: 84%"
+            >
+              {{ requirement.shortText }}
+            </button>
+          </ng-template>
+        </li>
+        <li ngbNavItem="Details">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="ellipsis-h"></fa-icon>
+            Details</a
+          >
+          <ng-template ngbNavContent>
+            <div class="row mb-3">
+              <!--<div class="col-sm">
+                <button type="button" class="btn btn-outline-secondary btn-sm">Find License URL</button>
+              </div>
+              <div class="col-sm">
+                <button type="button" class="btn btn-outline-secondary btn-sm">Find Source Code URL</button>
+              </div>-->
+              <div class="col-sm">
+                <button (click)="analyseCopyright()" type="button" class="btn btn-outline-secondary btn-sm">
+                  Analyse Copyright
+                  <fa-icon *ngIf="isLoadingCopyright" icon="sync" [spin]="isLoadingCopyright"></fa-icon>
+                </button>
+              </div>
+            </div>
+
+            <hr />
+
+            <div class="row mb-3 align-items-end">
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <p *ngIf="library.licenseUrl; else noContent" [innerHtml]="library.licenseUrl | urlTransformation"></p>
+                  <small>License Url</small>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <p *ngIf="library.sourceCodeUrl; else noContent" [innerHtml]="library.sourceCodeUrl | urlTransformation"></p>
+                  <small>Source Code Url</small>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <p *ngIf="library.pUrl; else noContent">{{ library.pUrl }}</p>
+                  <small>purl</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3 align-items-end">
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <p *ngIf="library.md5; else noContent">{{ library.md5 }}</p>
+                  <small>MD5</small>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <div *ngIf="library.sha1; else noContent">
+                    {{ library.sha1 }}
+                  </div>
+                  <small>SHA-1</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3 align-items-end">
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <p *ngIf="library.compliance; else noContent">{{ library.compliance }}</p>
+                  <small>Compliance</small>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <div *ngIf="library.complianceComment; else noContent" class="long-text">
+                    {{ library.complianceComment }}
+                  </div>
+                  <small>Compliance Comment</small>
+                </div>
+              </div>
+            </div>
+            <div class="row align-items-end">
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <div *ngIf="library.copyright; else noContent" class="long-text">
+                    {{ library.copyright }}
+                  </div>
+                  <small>Copyright</small>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <div *ngIf="library.comment; else noContent" class="long-text">
+                    {{ library.comment }}
+                  </div>
+                  <small>Comment</small>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+        <li ngbNavItem="License Text">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="align-left"></fa-icon>
+            <span>License Text</span></a
+          >
+          <ng-template ngbNavContent>
+            <div *ngIf="library.licenseText" [innerHTML]="library.licenseText"></div>
+            <div *ngIf="!library.licenseText" class="text-muted">No license text</div>
+          </ng-template>
+        </li>
+        <li ngbNavItem="Error Log" *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="bug"></fa-icon>
+            <span>Error Log</span>
+            <fa-icon
+              *ngIf="hasErrors()"
+              class="text-warning"
+              icon="exclamation-triangle"
+              placement="top"
+              ngbTooltip="Library has open error logs"
+            ></fa-icon>
+          </a>
+          <ng-template ngbNavContent>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Message</th>
+                  <th>Severity</th>
+                  <th>Log Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let log of library.errorLogs">
+                  <td>{{ log.message }}</td>
+                  <td>
+                    <span *ngIf="log.severity === 'HIGH'"
+                      >High
+                      <fa-icon class="text-danger" icon="exclamation-triangle"></fa-icon>
+                    </span>
+                    <span *ngIf="log.severity === 'MEDIUM'"
+                      >Medium
+                      <fa-icon class="text-warning" icon="exclamation-triangle"></fa-icon>
+                    </span>
+                    <span *ngIf="log.severity === 'LOW'"
+                      >Low
+                      <fa-icon class="text-primary" icon="exclamation-triangle"></fa-icon>
+                    </span>
+                  </td>
+                  <td>{{ log.timestamp | formatMediumDatetime }}</td>
+                  <td>
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-sm"
+                        [ngClass]="{
+                          'btn-warning': log.status === 'OPEN',
+                          'btn-success': log.status === 'FIXED' || log.status === 'CLOSED'
+                        }"
+                        disabled
+                      >
+                        <b>{{ log.status }}</b>
+                      </button>
+                      <div class="btn-group" ngbDropdown role="group" aria-label="Change log status">
+                        <button
+                          class="btn dropdown-toggle-split btn-sm"
+                          ngbDropdownToggle
+                          [ngClass]="{
+                            'btn-warning': log.status === 'OPEN',
+                            'btn-success': log.status === 'FIXED' || log.status === 'CLOSED'
+                          }"
+                        ></button>
+                        <div class="dropdown-menu" ngbDropdownMenu>
+                          <button ngbDropdownItem (click)="changeStatus(log, 'OPEN')">
+                            OPEN
+                            <fa-icon icon="question-circle" placement="right" ngbTooltip="Error that still needs to be checked"></fa-icon>
+                          </button>
+                          <button ngbDropdownItem (click)="changeStatus(log, 'CLOSED')">
+                            CLOSED
+                            <fa-icon
+                              icon="question-circle"
+                              placement="right"
+                              ngbTooltip="Error has been checked and could not or does not need to be fixed"
+                            ></fa-icon>
+                          </button>
+                          <button ngbDropdownItem (click)="changeStatus(log, 'FIXED')">
+                            FIXED
+                            <fa-icon
+                              icon="question-circle"
+                              placement="right"
+                              ngbTooltip="Error has been checked and could be fixed"
+                            ></fa-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+        </li>
+
+        <!-- Tab Fossology -->
+        <ng-container *ngIf="isFossologyEnabled">
+          <li ngbNavItem="Fossology" *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+            <a ngbNavLink>
+              <fa-icon class="mr-1" icon="bug"></fa-icon>
+              <span>Fossology</span>
+            </a>
+            <ng-template ngbNavContent>
+              <div class="row mb-3">
+                <div class="col-sm">
+                  <button
+                    (click)="analyseWithFossology()"
+                    [disabled]="isLoadingFossology"
+                    type="button"
+                    class="btn btn-outline-secondary btn-sm"
+                  >
+                    Analyse With Fossology
+                  </button>
+                </div>
+                <div class="col-sm text-end">
+                  <button (click)="fossologyAnalysis()" [disabled]="isLoadingFossology" type="button" class="btn btn-info btn-sm">
+                    Refresh
+                  </button>
+                </div>
+              </div>
+
+              <hr />
+              <div class="row mb-3 align-items-end">
+                <div class="col-md">
+                  <div class="detail-attribute">
+                    <p
+                      *ngIf="library.fossology?.uploadId; else noContent"
+                      [innerHtml]="fossologyUrl + '/?mod=browse&upload=' + library.fossology?.uploadId | urlTransformation"
+                    ></p>
+                    <small>Result In Fossology</small>
+                  </div>
+                </div>
+                <div class="col-md">
+                  <div class="detail-attribute">
+                    <div [ngSwitch]="library.fossology?.status">
+                      <span *ngSwitchCase="'NOT_STARTED'">Starting upload. Please wait</span>
+                      <span *ngSwitchCase="'FAILURE'"
+                        >Analysis failed. Check error in Fossology <fa-icon class="text-danger" icon="times"></fa-icon
+                      ></span>
+                      <span *ngSwitchCase="'UPLOAD_STARTED'">Upload started. Please wait</span>
+                      <span *ngSwitchCase="'UPLOAD_FINISHED'">Upload finished</span>
+                      <span *ngSwitchCase="'SCAN_STARTED'">Analysis started. Please wait</span>
+                      <span *ngSwitchCase="'SCAN_FINISHED'"
+                        >Analysis finished successfully <fa-icon class="text-success" icon="check"></fa-icon
+                      ></span>
+                    </div>
+                    <div *ngIf="library.fossology; else fossologyAnalysisExist" class="progress">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        [ngClass]="{
+                          'w-0': library.fossology.status === 'NOT_STARTED',
+                          'w-100': library.fossology.status === 'FAILURE' || library.fossology.status === 'SCAN_FINISHED',
+                          'progress-bar-striped progress-bar-animated bg-primary':
+                            library.fossology.status === 'UPLOAD_STARTED' ||
+                            library.fossology.status === 'UPLOAD_FINISHED' ||
+                            library.fossology.status === 'SCAN_STARTED',
+                          'w-25': library.fossology.status === 'UPLOAD_STARTED',
+                          'w-50': library.fossology.status === 'UPLOAD_FINISHED',
+                          'w-75': library.fossology.status === 'SCAN_STARTED',
+                          'bg-success': library.fossology.status === 'SCAN_FINISHED',
+                          'bg-danger': library.fossology.status === 'FAILURE'
+                        }"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                    <ng-template #fossologyAnalysisExist>
+                      <p>Analysis has not yet been started</p>
+                    </ng-template>
+                    <small>Analysis Status</small>
+                  </div>
+                </div>
+                <div class="col-md">
+                  <div class="detail-attribute">
+                    <p *ngIf="library.fossology?.lastScan; else noContent">{{ library.fossology?.lastScan | formatMediumDatetime }}</p>
+                    <small>Last Analysis</small>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </li>
+        </ng-container>
+        <!-- END Tab Fossology -->
+      </ul>
+      <hr />
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
+
+    <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+      <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+    </button>
+
+    <button
+      *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
+      type="button"
+      [routerLink]="['/library', library.id, 'edit']"
+      class="btn btn-primary"
+    >
+      <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+    </button>
+  </div>
+</div>

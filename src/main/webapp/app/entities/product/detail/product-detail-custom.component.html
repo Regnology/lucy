@@ -1,0 +1,1864 @@
+<div>
+  <jhi-alert-error></jhi-alert-error>
+  <jhi-alert></jhi-alert>
+
+  <div *ngIf="product">
+    <!-- START HEADER -->
+    <div class="jh-card card">
+      <div class="row justify-content-center g-3">
+        <div class="col-lg">
+          <div class="row align-items-end mb-2">
+            <div class="col-auto">
+              <fa-icon style="position: relative; top: -1.8rem" icon="sitemap" size="lg"></fa-icon>
+            </div>
+            <div class="col-auto">
+              <div class="detail-attribute">
+                <h2 data-cy="productDetailsHeading">{{ product.name }}</h2>
+                <small>Product</small>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="detail-attribute">
+                <h4>{{ product.identifier }}</h4>
+                <small>Identifier</small>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="detail-attribute">
+                <h4>{{ product.version }}</h4>
+                <small>Version</small>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="row gy-3">
+            <div
+              class="col-auto card lucy-card product-overview-card ms-5"
+              placement="top"
+              ngbTooltip="Number of libraries in the product with percentage change to the previous version (if available)."
+              container="body"
+            >
+              <div class="p-2">
+                <ng-container *ngIf="overview; else loadingOverview">
+                  <div class="row fw-bolder">
+                    <div class="col-auto">{{ overview.numberOfLibraries }}</div>
+                    <ng-container *ngIf="growthLibraries != null">
+                      <div *ngIf="growthLibraries > 0" class="col text-danger">
+                        <fa-icon icon="long-arrow-alt-up"></fa-icon>
+                        {{ growthLibraries }}%
+                      </div>
+
+                      <div *ngIf="growthLibraries < 0" class="col text-success">
+                        <fa-icon icon="long-arrow-alt-down"></fa-icon>
+                        {{ growthLibraries | absoluteNumberPipe }}%
+                      </div>
+
+                      <div *ngIf="growthLibraries === 0" class="col text-secondary">±{{ growthLibraries }}%</div>
+                    </ng-container>
+                  </div>
+                  <div class="row">
+                    <div class="col">Libraries</div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <div
+              class="col-auto card lucy-card product-overview-card ms-5"
+              placement="top"
+              ngbTooltip="Number of different licenses in the product with percentage change to the previous version (if available)."
+              container="body"
+            >
+              <div class="p-2">
+                <ng-container *ngIf="overview; else loadingOverview">
+                  <div class="row fw-bolder">
+                    <div class="col-auto">{{ overview.numberOfLicenses }}</div>
+                    <ng-container *ngIf="growthLicenses != null">
+                      <div *ngIf="growthLicenses > 0" class="col text-danger">
+                        <fa-icon icon="long-arrow-alt-up"></fa-icon>
+                        {{ growthLicenses }}%
+                      </div>
+
+                      <div *ngIf="growthLicenses < 0" class="col text-success">
+                        <fa-icon icon="long-arrow-alt-down"></fa-icon>
+                        {{ growthLicenses | absoluteNumberPipe }}%
+                      </div>
+
+                      <div *ngIf="growthLicenses === 0" class="col text-secondary">±{{ growthLicenses }}%</div>
+                    </ng-container>
+                  </div>
+                  <div class="row">
+                    <div class="col">Licenses</div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <div
+              class="col-auto card lucy-card product-overview-card ms-5"
+              placement="top"
+              [ngbTooltip]="reviewedLibrariesTooltip"
+              container="body"
+            >
+              <div class="p-2">
+                <ng-container *ngIf="overview; else loadingOverview">
+                  <div class="col-12 fw-bolder">{{ percentageReviewedLibraries }}% Reviewed</div>
+                  <div class="col-12">Libraries</div>
+                </ng-container>
+              </div>
+            </div>
+            <ng-template #reviewedLibrariesTooltip>
+              <p>Percentage of reviewed libraries in the product.</p>
+              <p>Absolute numbers:<br />{{ overview?.reviewedLibraries }} of {{ overview?.numberOfLibraries }} Libraries</p>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="col-auto me-3">
+          <div class="card lucy-card text-center">
+            <div class="card-header lucy-card-header-white">Delivery Status</div>
+            <div [ngSwitch]="product.delivered">
+              <div *ngSwitchCase="true" class="card-body lucy-card-body-sm bg-success text-white">Delivered</div>
+              <div *ngSwitchCase="false" class="card-body lucy-card-body-sm card-body-risk bg-secondary text-white">In Development</div>
+              <div *ngSwitchCase="true" class="card-footer lucy-card-footer bg-white">
+                {{ product.deliveredDate | formatMediumDatetime }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-auto">
+          <div class="card lucy-card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <div class="detail-attribute-sm">
+                    <fa-icon icon="fingerprint" placement="left" ngbTooltip="ID"></fa-icon>
+                    <span>{{ product.id }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <div class="detail-attribute-sm">
+                    <fa-icon icon="calendar-plus" placement="left" ngbTooltip="Creation date"></fa-icon>
+                    <span>{{ product.createdDate | formatMediumDate }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col">
+                  <div class="detail-attribute-sm">
+                    <fa-icon icon="file-upload" placement="left" ngbTooltip="Last upload status"></fa-icon>
+                    <span [ngSwitch]="product.uploadState">
+                      <span *ngSwitchCase="'SUCCESSFUL'" class="badge bg-success">Successful</span>
+                      <span *ngSwitchCase="'PROCESSING'" class="badge bg-warning">Processing</span>
+                      <span *ngSwitchCase="'FAILURE'" class="badge bg-danger">Failure</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="detail-attribute-sm">
+                    <fa-icon icon="calendar-day" placement="left" ngbTooltip="Last upload"></fa-icon>
+                    <span *ngIf="product.lastUpdatedDate">{{ product.lastUpdatedDate | formatMediumDate }}</span>
+                    <span *ngIf="!product.lastUpdatedDate">No Upload</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-2">
+                <div class="col">
+                  <div class="detail-attribute-sm">
+                    <fa-icon icon="caret-square-left" placement="left" ngbTooltip="Previous product version"></fa-icon>
+                    <a *ngIf="product.previousProductId" [routerLink]="['/product', product.previousProductId, 'view']">{{
+                      product.identifier
+                    }}</a>
+                    <span *ngIf="!product.previousProductId">No Product</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END HEADER -->
+
+    <!-- START MAIN -->
+    <div class="card jh-card mb-3">
+      <ul ngbNav #nav="ngbNav" activeId="Libraries" class="nav nav-pills" (navChange)="navTabChange($event)">
+        <!-- START tab Libraries -->
+        <li ngbNavItem="Libraries">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="cubes"></fa-icon>
+            Libraries <span class="badge bg-light text-dark">{{ totalItems }}</span>
+          </a>
+          <ng-template ngbNavContent>
+            <!-- START header before libraries table -->
+            <div class="row mb-3 align-items-start">
+              <!-- START risk filter -->
+              <div class="col-xl-4 col-5">
+                <div class="row">
+                  <span class="text-muted"
+                    >Filter by License Risk
+                    <fa-icon
+                      icon="question-circle"
+                      placement="top"
+                      ngbTooltip="A library can have several risks if several licences have to be published.
+                        Therefore, it may happen that other risks are also shown in the filtered view.
+                        For the libraries, only the consolidated risk with the highest risk level is displayed"
+                    ></fa-icon>
+                  </span>
+                </div>
+                <div class="row">
+                  <form name="riskForm" role="form" novalidate [formGroup]="riskForm">
+                    <div *ngIf="licenseRisks && licenseRisks.length > 0">
+                      <label
+                        class="badge btn-light btn-badge"
+                        [ngClass]="{ 'badge-unselected': riskForm.get('1')?.value === false }"
+                        [ngStyle]="{ 'background-color': licenseRisks[0].color }"
+                        for="permissiveFilter"
+                      >
+                        <input
+                          type="checkbox"
+                          formControlName="1"
+                          id="permissiveFilter"
+                          class="btn-check"
+                          autocomplete="off"
+                          (change)="filterRisk()"
+                        />Permissive
+                        <fa-icon *ngIf="riskForm.get('1')?.value === true" icon="times-circle"></fa-icon>
+                      </label>
+                      <label
+                        class="badge btn-light btn-badge"
+                        [ngClass]="{ 'badge-unselected': riskForm.get('2')?.value === false }"
+                        [ngStyle]="{ 'background-color': licenseRisks[1].color }"
+                        for="limitedCopyleftFilter"
+                      >
+                        <input
+                          type="checkbox"
+                          formControlName="2"
+                          id="limitedCopyleftFilter"
+                          class="btn-check"
+                          autocomplete="off"
+                          (change)="filterRisk()"
+                        />Limited Copyleft
+                        <fa-icon *ngIf="riskForm.get('2')?.value === true" icon="times-circle"></fa-icon>
+                      </label>
+                      <label
+                        class="badge btn-light btn-badge"
+                        [ngClass]="{ 'badge-unselected': riskForm.get('4')?.value === false }"
+                        [ngStyle]="{ 'background-color': licenseRisks[2].color }"
+                        for="commercialFilter"
+                      >
+                        <input
+                          type="checkbox"
+                          formControlName="4"
+                          id="commercialFilter"
+                          class="btn-check"
+                          autocomplete="off"
+                          (change)="filterRisk()"
+                        />Commercial
+                        <fa-icon *ngIf="riskForm.get('4')?.value === true" icon="times-circle"></fa-icon>
+                      </label>
+                      <label
+                        class="badge btn-light btn-badge"
+                        [ngClass]="{ 'badge-unselected': riskForm.get('6')?.value === false }"
+                        [ngStyle]="{ 'background-color': licenseRisks[3].color }"
+                        for="proprietaryFreeFilter"
+                      >
+                        <input
+                          type="checkbox"
+                          formControlName="6"
+                          id="proprietaryFreeFilter"
+                          class="btn-check"
+                          autocomplete="off"
+                          (change)="filterRisk()"
+                        />Proprietary Free
+                        <fa-icon *ngIf="riskForm.get('6')?.value === true" icon="times-circle"></fa-icon>
+                      </label>
+                      <label
+                        class="badge btn-light btn-badge"
+                        [ngClass]="{ 'badge-unselected': riskForm.get('3')?.value === false }"
+                        [ngStyle]="{ 'background-color': licenseRisks[4].color }"
+                        for="strongCopyleftFilter"
+                      >
+                        <input
+                          type="checkbox"
+                          formControlName="3"
+                          id="strongCopyleftFilter"
+                          class="btn-check"
+                          autocomplete="off"
+                          (change)="filterRisk()"
+                        />Strong Copyleft
+                        <fa-icon *ngIf="riskForm.get('3')?.value === true" icon="times-circle"></fa-icon>
+                      </label>
+                      <label
+                        class="badge btn-light btn-badge"
+                        [ngClass]="{ 'badge-unselected': riskForm.get('5')?.value === false }"
+                        [ngStyle]="{ 'background-color': licenseRisks[5].color }"
+                        for="forbiddenFilter"
+                      >
+                        <input
+                          type="checkbox"
+                          formControlName="5"
+                          id="forbiddenFilter"
+                          class="btn-check"
+                          autocomplete="off"
+                          (change)="filterRisk()"
+                        />Forbidden
+                        <fa-icon *ngIf="riskForm.get('5')?.value === true" icon="times-circle"></fa-icon>
+                      </label>
+                      <label
+                        class="badge btn-light btn-badge"
+                        [ngClass]="{ 'badge-unselected': riskForm.get('7')?.value === false }"
+                        [ngStyle]="{ 'background-color': licenseRisks[6].color }"
+                        for="unknownFilter"
+                      >
+                        <input
+                          type="checkbox"
+                          formControlName="7"
+                          id="unknownFilter"
+                          class="btn-check"
+                          autocomplete="off"
+                          (change)="filterRisk()"
+                        />Unknown
+                        <fa-icon *ngIf="riskForm.get('7')?.value === true" icon="times-circle"></fa-icon>
+                      </label>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- END risk filter -->
+              <!-- START general filter -->
+              <div class="col-3">
+                <div class="row">
+                  <span class="text-muted"
+                    >Filter by
+                    <fa-icon icon="question-circle" placement="top" [ngbTooltip]="filterByTooltip"></fa-icon>
+                  </span>
+                </div>
+                <ng-template #filterByTooltip>
+                  <p>Filter Libraries based on:</p>
+                  <div class="text-start">
+                    <p><b>License Conflicts:</b> Shows libraries with open license conflicts in the error log.</p>
+                    <p><b>New Libraries:</b> Show libraries that have been newly created since the last upload to the product.</p>
+                  </div>
+                </ng-template>
+
+                <div class="row">
+                  <form name="filterForm" role="form" novalidate [formGroup]="filterForm">
+                    <div>
+                      <label
+                        class="badge btn-light btn-badge bg-info"
+                        [ngClass]="{ 'badge-unselected': filterForm.get('licenseConflicts')?.value === false }"
+                        for="licenseConflictsFilter"
+                      >
+                        <input
+                          type="checkbox"
+                          formControlName="licenseConflicts"
+                          id="licenseConflictsFilter"
+                          class="btn-check"
+                          autocomplete="off"
+                          (change)="filter()"
+                        />License Conflicts
+                        <fa-icon *ngIf="filterForm.get('licenseConflicts')!.value === true" icon="times-circle"></fa-icon>
+                      </label>
+                      <label
+                        class="badge btn-light btn-badge bg-info"
+                        [ngClass]="{ 'badge-unselected': filterForm.get('newLibrariesSinceLastUpload')?.value === false }"
+                        for="newLibrariesSinceLastUploadFilter"
+                      >
+                        <input
+                          type="checkbox"
+                          formControlName="newLibrariesSinceLastUpload"
+                          id="newLibrariesSinceLastUploadFilter"
+                          class="btn-check"
+                          autocomplete="off"
+                          (change)="filter()"
+                        />New Libraries
+                        <fa-icon *ngIf="filterForm.get('newLibrariesSinceLastUpload')!.value === true" icon="times-circle"></fa-icon>
+                      </label>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- END general filter -->
+              <!-- START upload, add, search, table buttons -->
+              <div class="col-xl-5 col-4 vstack gap-2">
+                <form
+                  class="row g-3 justify-content-end"
+                  name="searchForm"
+                  role="form"
+                  novalidate
+                  (ngSubmit)="search()"
+                  [formGroup]="searchForm"
+                >
+                  <!-- START search field -->
+                  <div class="col-md">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="artifactId"
+                      id="field_artifactId"
+                      data-cy="artifactId"
+                      formControlName="artifactId"
+                      placeholder="Search for Library"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="col-md">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="licenses"
+                      id="field_license"
+                      data-cy="licenses"
+                      formControlName="licenses"
+                      placeholder="Search for License"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="col-sm-auto">
+                    <button type="submit" id="save-entity" data-cy="entityCreateSaveButton" class="btn btn-primary">
+                      <fa-icon icon="search"></fa-icon>
+                    </button>
+                  </div>
+                  <!-- END search field -->
+                </form>
+
+                <div class="row g-3 justify-content-end align-items-end">
+                  <!-- START upload button -->
+                  <div class="col-sm-auto" *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+                    <ng-template #content let-modal>
+                      <div class="modal-header">
+                        <h4 class="modal-title" id="modal-basic-title">Upload</h4>
+                        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form class="vstack" name="uploadForm" role="form" novalidate [formGroup]="uploadForm">
+                          <ul ngbNav #navUpload="ngbNav" activeId="File" class="nav nav-pills">
+                            <li ngbNavItem="File">
+                              <a ngbNavLink>By File</a>
+                              <ng-template ngbNavContent>
+                                <div class="vstack gap-3">
+                                  <div>
+                                    Upload a BOM (CSV, XML) or archive file format (ZIP, TAR, WAR..)
+                                    <input
+                                      class="form-control"
+                                      type="file"
+                                      id="upload_file"
+                                      data-cy="file"
+                                      (change)="setFileData($event, 'file')"
+                                      accept=".csv, .xml, .zip, .jar, .war, .tar.gz"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    Upload a CSV file with additional libraries
+                                    <input
+                                      class="form-control"
+                                      type="file"
+                                      id="upload_additionalLibraries"
+                                      data-cy="additionalLibraries"
+                                      (change)="setAdditionalLibrariesData($event, 'additionalLibraries')"
+                                      accept=".csv"
+                                    />
+                                  </div>
+                                </div>
+                              </ng-template>
+                            </li>
+                            <li ngbNavItem="Url">
+                              <a ngbNavLink>From URL</a>
+                              <ng-template ngbNavContent>
+                                <div class="vstack gap-3">
+                                  <div>
+                                    <input type="text" class="form-control" name="url" formControlName="url" placeholder="URL" />
+                                  </div>
+
+                                  <a
+                                    (click)="collapseUploadWithAuthentication.toggle()"
+                                    [attr.aria-expanded]="!isCollapsedUploadWithAuthentication"
+                                  >
+                                    With authentication
+                                    <fa-icon
+                                      *ngIf="isCollapsedUploadWithAuthentication; else elseWithAuthenticationIcon"
+                                      icon="angle-down"
+                                    ></fa-icon>
+                                    <ng-template #elseWithAuthenticationIcon><fa-icon icon="angle-up"></fa-icon></ng-template>
+                                  </a>
+                                  <div
+                                    #collapseUploadWithAuthentication="ngbCollapse"
+                                    [(ngbCollapse)]="isCollapsedUploadWithAuthentication"
+                                  >
+                                    <div class="vstack gap-3">
+                                      <div>
+                                        <input
+                                          type="text"
+                                          class="form-control"
+                                          name="username"
+                                          formControlName="username"
+                                          placeholder="Username"
+                                          autocomplete="new-username"
+                                        />
+                                      </div>
+
+                                      <div>
+                                        <input
+                                          type="password"
+                                          class="form-control"
+                                          name="password"
+                                          formControlName="password"
+                                          placeholder="Password"
+                                          autocomplete="new-password"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </ng-template>
+                            </li>
+                          </ul>
+                          <hr />
+                          <div [ngbNavOutlet]="navUpload"></div>
+
+                          <div class="row g-3 mt-3">
+                            <div class="col text-end">
+                              <label for="field_deleteData">Delete existing results</label>
+                              <ng-template #deleteDataTooltip
+                                ><p>
+                                  Whether existing results for this product should be deleted before the upload. This is enabled by default.
+                                </p>
+                                <p>
+                                  <b>WARNING:</b> Enabling this will completely remove existing results before adding the new results!
+                                </p></ng-template
+                              >
+                              <fa-icon icon="question-circle" placement="right" [ngbTooltip]="deleteDataTooltip"></fa-icon>
+                            </div>
+                            <div class="col-auto">
+                              <div class="form-check form-switch">
+                                <input
+                                  type="checkbox"
+                                  class="form-check-input"
+                                  id="field_deleteData"
+                                  name="deleteData"
+                                  data-cy="deleteData"
+                                  formControlName="deleteData"
+                                />
+                                <label class="form-check-label" for="field_deleteData"></label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="text-end mt-3">
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-outline-info"
+                              (click)="collapse.toggle()"
+                              [attr.aria-expanded]="!isCollapsedUploadFilter"
+                              aria-controls="collapseExample"
+                            >
+                              Show Upload Filter
+                            </button>
+                            <div class="pt-2" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsedUploadFilter">
+                              <div *ngIf="product.uploadFilter; else noUploadFilter" class="multiline-text-sm">
+                                {{ product.uploadFilter }}
+                              </div>
+                              <ng-template #noUploadFilter>
+                                <span class="text-muted">No upload filter specified</span>
+                              </ng-template>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" (click)="upload()">Upload</button>
+                      </div>
+                    </ng-template>
+
+                    <button class="btn btn-outline-info" (click)="open(content)">Upload</button>
+                  </div>
+                  <!-- END upload button -->
+
+                  <!-- START add button -->
+                  <div class="col-sm-auto" *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+                    <ng-template #contentAddLibrary let-modal>
+                      <div class="modal-header">
+                        <h4 class="modal-title" id="modal-basic-title-AL">Add Library</h4>
+                        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div
+                            class="col-lg-5 mb-lg-0 mb-4"
+                            *ngIf="addLibraryForm.get('libraries')!.value && addLibraryForm.get('libraries')!.value.length > 0"
+                          >
+                            <ng-container>
+                              <div class="card lucy-card">
+                                <div class="card-header lucy-card-header">Libraries to be added</div>
+                                <div class="card-body lucy-card-body-sm">
+                                  <div class="selected-values">
+                                    <span *ngFor="let library of addLibraryForm.get('libraries')!.value; let i = index">
+                                      <button class="badge btn-secondary btn-badge btn" (click)="removeLibraryFromAddLibraryForm(i)">
+                                        <span *ngIf="library.groupId">{{ library.groupId }}:</span>{{ library.artifactId }} :{{
+                                          library.version
+                                        }}
+                                        <fa-icon icon="times-circle"></fa-icon>
+                                      </button>
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
+
+                          <div class="col">
+                            <form name="addLibraryForm" role="form" novalidate (ngSubmit)="searchAddLibrary()" [formGroup]="addLibraryForm">
+                              <div class="row">
+                                <div class="col-md mb-2">
+                                  <input type="text" class="form-control" name="groupId" formControlName="groupId" placeholder="GroupId" />
+                                </div>
+                                <div class="col-md mb-2">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    name="artifactId"
+                                    formControlName="artifactId"
+                                    placeholder="ArtifactId"
+                                  />
+                                </div>
+                                <div class="col-md mb-2">
+                                  <input type="text" class="form-control" name="version" formControlName="version" placeholder="Version" />
+                                </div>
+                                <div class="col-sm-auto">
+                                  <button type="submit" class="btn btn-primary" [disabled]="isLoadingAddSearch">
+                                    <fa-icon icon="search"></fa-icon>
+                                  </button>
+                                </div>
+                              </div>
+                            </form>
+
+                            <div class="alert alert-info" *ngIf="isLoadingAddSearch">
+                              <span>Loading libraries</span>
+                            </div>
+
+                            <ng-container *ngIf="addSearchLibraries && addSearchLibraries.length > 0">
+                              <hr />
+                              <div class="row">
+                                <div class="col">
+                                  <div class="table-responsive">
+                                    <table class="table table-sm">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col" *ngIf="tableForm.get('groupId')!.value">
+                                            <span>GroupId</span>
+                                          </th>
+                                          <th scope="col" *ngIf="tableForm.get('artifactId')!.value">
+                                            <span>ArtifactId</span>
+                                          </th>
+                                          <th scope="col" *ngIf="tableForm.get('version')!.value">
+                                            <span>Version</span>
+                                          </th>
+                                          <th>Add</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let library of addSearchLibraries">
+                                          <td>{{ library.groupId }}</td>
+                                          <td>{{ library.artifactId }}</td>
+                                          <td>{{ library.version }}</td>
+                                          <td>
+                                            <button class="btn btn-sm btn-outline-primary" (click)="addLibraryToAddLibraryForm(library)">
+                                              <fa-icon icon="plus"></fa-icon>
+                                            </button>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" (click)="addLibrariesToProduct()">Add to product</button>
+                      </div>
+                    </ng-template>
+
+                    <button class="btn btn-outline-info" (click)="openScrollableContent(contentAddLibrary, 'xl')">Add Library</button>
+                  </div>
+                  <!-- END add button -->
+
+                  <div class="col-auto pe-1">
+                    <button
+                      class="btn btn-outline-info"
+                      (click)="loadLibraries(undefined, true)"
+                      [disabled]="isLoading"
+                      ngbTooltip="Reload"
+                    >
+                      <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+                    </button>
+                  </div>
+
+                  <!-- START table columns button -->
+                  <div class="col-auto pl-1">
+                    <div class="btn-group" ngbDropdown role="group" aria-label="Table columns" container="body" placement="bottom-right">
+                      <button type="button" class="btn btn-outline-info" ngbDropdownToggle>
+                        <fa-icon icon="table"></fa-icon>
+                      </button>
+                      <div class="dropdown-menu" style="white-space: nowrap" ngbDropdownMenu>
+                        <form class="ps-2 pe-2" name="tableForm" role="form" novalidate [formGroup]="tableForm">
+                          <table class="mb-0 table table-sm table-hover">
+                            <tbody>
+                              <tr>
+                                <td style="border-top: none">
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="groupId"
+                                      id="groupId"
+                                      data-cy="groupId"
+                                      formControlName="groupId"
+                                    />
+                                    <label class="form-check-label w-100" for="groupId"> GroupId </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="artifactId"
+                                      id="artifactId"
+                                      data-cy="artifactId"
+                                      formControlName="artifactId"
+                                    />
+                                    <label class="form-check-label w-100" for="artifactId"> ArtifactId </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="version"
+                                      id="version"
+                                      data-cy="version"
+                                      formControlName="version"
+                                    />
+                                    <label class="form-check-label w-100" for="version"> Version </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="type"
+                                      id="type"
+                                      data-cy="type"
+                                      formControlName="type"
+                                    />
+                                    <label class="form-check-label w-100" for="type"> Type </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="licenses"
+                                      id="licenses"
+                                      data-cy="licenses"
+                                      formControlName="licenses"
+                                    />
+                                    <label class="form-check-label w-100" for="licenses"> License </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="licenseToPublish"
+                                      id="licenseToPublish"
+                                      data-cy="licenseToPublish"
+                                      formControlName="licenseToPublish"
+                                    />
+                                    <label class="form-check-label w-100" for="licenseToPublish"> License To Publish </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="risk"
+                                      id="risk"
+                                      data-cy="risk"
+                                      formControlName="risk"
+                                    />
+                                    <label class="form-check-label w-100" for="risk"> Risk </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="licenseUrl"
+                                      id="licenseUrl"
+                                      data-cy="licenseUrl"
+                                      formControlName="licenseUrl"
+                                    />
+                                    <label class="form-check-label w-100" for="licenseUrl"> License URL </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="licenseText"
+                                      id="licenseText"
+                                      data-cy="licenseText"
+                                      formControlName="licenseText"
+                                    />
+                                    <label class="form-check-label w-100" for="licenseText"> LicenseText </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="sourceCodeUrl"
+                                      id="sourceCodeUrl"
+                                      data-cy="sourceCodeUrl"
+                                      formControlName="sourceCodeUrl"
+                                    />
+                                    <label class="form-check-label w-100" for="sourceCodeUrl"> Source Code URL </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="copyright_field"
+                                      id="copyright_field"
+                                      data-cy="copyright"
+                                      formControlName="copyright"
+                                    />
+                                    <label class="form-check-label w-100" for="copyright_field"> Copyright </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="reviewed"
+                                      id="reviewed"
+                                      data-cy="reviewed"
+                                      formControlName="reviewed"
+                                    />
+                                    <label class="form-check-label w-100" for="reviewed"> Reviewed </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="hideForPublishing"
+                                      id="hideForPublishing"
+                                      data-cy="hideForPublishing"
+                                      formControlName="hideForPublishing"
+                                    />
+                                    <label class="form-check-label w-100" for="hideForPublishing"> Hidden </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="localComment"
+                                      id="localComment"
+                                      data-cy="localComment"
+                                      formControlName="localComment"
+                                    />
+                                    <label class="form-check-label w-100" for="localComment"> Local Comment </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="errorLog"
+                                      id="errorLog"
+                                      data-cy="errorLog"
+                                      formControlName="errorLog"
+                                    />
+                                    <label class="form-check-label w-100" for="errorLog"> Error Log </label>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-check">
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      name="manuallyAdded"
+                                      id="manuallyAdded"
+                                      data-cy="manuallyAdded"
+                                      formControlName="manuallyAdded"
+                                    />
+                                    <label class="form-check-label w-100" for="manuallyAdded"> Manually Added </label>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- END table columns button -->
+                </div>
+              </div>
+              <!-- END upload, add, search, table buttons -->
+            </div>
+            <!-- END header before libraries table -->
+
+            <div class="alert alert-warning" id="no-result" *ngIf="!isLoading && (!librariesPerProduct || librariesPerProduct.length == 0)">
+              <span>No libraries found</span>
+            </div>
+            <div class="alert alert-info" id="loading-result" *ngIf="isLoading">
+              <span>Loading libraries</span>
+            </div>
+
+            <!-- START libraries table -->
+            <div class="table-responsive" *ngIf="librariesPerProduct && librariesPerProduct.length > 0">
+              <table class="table table-sm" aria-describedby="page-heading">
+                <thead>
+                  <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadLibraries(1, true)">
+                    <th scope="col" *ngIf="tableForm.get('groupId')!.value" jhiSortBy="library.groupId">
+                      <span>Group Id</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" *ngIf="tableForm.get('artifactId')!.value" jhiSortBy="library.artifactId">
+                      <span>Artifact Id</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" *ngIf="tableForm.get('version')!.value" jhiSortBy="library.version">
+                      <span>Version</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" *ngIf="tableForm.get('type')!.value" jhiSortBy="library.type">
+                      <span>Type</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" *ngIf="tableForm.get('licenses')!.value" jhiSortBy="library.licenses.license.shortIdentifier">
+                      <span>License</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" *ngIf="tableForm.get('licenseToPublish')!.value" jhiSortBy="library.licenseToPublishes.shortIdentifier">
+                      <span>License To Publish</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" *ngIf="tableForm.get('risk')!.value" jhiSortBy="library.licenseToPublishes.licenseRisk">
+                      <span>Risk</span>
+                      <fa-icon icon="sort"></fa-icon>
+                      <fa-icon
+                        icon="question-circle"
+                        size="sm"
+                        placement="top"
+                        ngbTooltip="Consolidated licence risk of all licences to be published. The risk with the highest risk level is displayed."
+                      ></fa-icon>
+                    </th>
+                    <th scope="col" *ngIf="tableForm.get('licenseUrl')!.value" jhiSortBy="library.licenseUrl">
+                      <span>License Url</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" class="text-center" *ngIf="tableForm.get('licenseText')!.value" jhiSortBy="library.licenseText">
+                      <span>License Text</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" *ngIf="tableForm.get('sourceCodeUrl')!.value" jhiSortBy="library.sourceCodeUrl">
+                      <span>Source Code Url</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" class="text-center" *ngIf="tableForm.get('copyright')!.value" jhiSortBy="library.copyright">
+                      <span>Copyright</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" class="text-center" *ngIf="tableForm.get('reviewed')!.value" jhiSortBy="library.reviewed">
+                      <span>Reviewed</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <th scope="col" class="text-center" *ngIf="tableForm.get('hideForPublishing')!.value">
+                      <span>Hidden</span>
+                      <br />
+                      <span class="text-muted"> Local | Global </span>
+                    </th>
+                    <th scope="col" class="text-center" *ngIf="tableForm.get('localComment')!.value" jhiSortBy="comment">
+                      <span>Local Comment</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                    <ng-container *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+                      <th scope="col" class="text-center" *ngIf="tableForm.get('errorLog')!.value">
+                        <span>Error Log</span>
+                      </th>
+                    </ng-container>
+                    <th scope="col" class="text-center" *ngIf="tableForm.get('manuallyAdded')!.value" jhiSortBy="addedManually">
+                      <span>Manually Added</span>
+                      <fa-icon icon="sort"></fa-icon>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let libraryPerProduct of librariesPerProduct; let last = last">
+                    <td *ngIf="tableForm.get('groupId')!.value">{{ libraryPerProduct.library?.groupId }}</td>
+                    <td *ngIf="tableForm.get('artifactId')!.value">
+                      <a [routerLink]="['/library', libraryPerProduct.library?.id, 'view']">{{ libraryPerProduct.library?.artifactId }}</a>
+                    </td>
+                    <td *ngIf="tableForm.get('version')!.value">{{ libraryPerProduct.library?.version }}</td>
+                    <td *ngIf="tableForm.get('type')!.value">{{ libraryPerProduct.library?.type }}</td>
+                    <td *ngIf="tableForm.get('licenses')!.value">
+                      <span *ngFor="let license of libraryPerProduct.library?.licenses; let last = last">
+                        <a [routerLink]="['/license', license?.license?.id, 'view']">{{ license?.license?.shortIdentifier }}</a>
+                        {{ license.linkType }}
+                        {{ last ? '' : ' ' }}
+                      </span>
+                    </td>
+                    <td *ngIf="tableForm.get('licenseToPublish')!.value">
+                      <span *ngFor="let licenseToPublish of libraryPerProduct.library?.licenseToPublishes; let last = last">
+                        <a [routerLink]="['/license', licenseToPublish?.id, 'view']">{{ licenseToPublish.shortIdentifier }}</a>
+                        {{ last ? '' : ' AND ' }}
+                      </span>
+                    </td>
+                    <td *ngIf="tableForm.get('risk')!.value">
+                      <ng-template #popRiskContent>
+                        <div class="text-center">
+                          <span *ngFor="let licenseToPublish of libraryPerProduct.library?.licenseToPublishes; let last = last">
+                            <a
+                              class="badge btn-light text-white"
+                              [ngStyle]="{ 'background-color': licenseToPublish.licenseRisk?.color }"
+                              [routerLink]="['/license-risk', licenseToPublish.licenseRisk?.id, 'view']"
+                              >{{ licenseToPublish.licenseRisk?.name }}</a
+                            >
+                            {{ last ? '' : ' AND ' }}
+                          </span>
+                        </div>
+                      </ng-template>
+                      <span>
+                        <a
+                          class="badge btn-light text-white"
+                          [ngStyle]="{ 'background-color': libraryRisk(libraryPerProduct.library)?.color }"
+                          [routerLink]="['/license-risk', libraryRisk(libraryPerProduct.library)?.id, 'view']"
+                          >{{ libraryRisk(libraryPerProduct.library)?.name }}</a
+                        >
+                        <fa-icon
+                          *ngIf="
+                            libraryPerProduct.library &&
+                            libraryPerProduct.library.licenseToPublishes &&
+                            libraryPerProduct.library.licenseToPublishes.length > 1
+                          "
+                          class="hand"
+                          icon="info-circle"
+                          placement="top"
+                          [ngbPopover]="popRiskContent"
+                          popoverTitle="All license risks"
+                        ></fa-icon>
+                      </span>
+                    </td>
+                    <td *ngIf="tableForm.get('licenseUrl')!.value">
+                      <span [innerHtml]="libraryPerProduct.library?.licenseUrl | urlTransformation"></span>
+                    </td>
+                    <td class="text-center" *ngIf="tableForm.get('licenseText')!.value">
+                      <ng-template #longContent let-modal let-link="licenseText">
+                        <div class="modal-header">
+                          <h4 class="modal-title">License Text</h4>
+                          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                        </div>
+                        <div
+                          *ngIf="libraryPerProduct.library?.licenseText"
+                          class="modal-body"
+                          [innerHTML]="libraryPerProduct.library?.licenseText"
+                        ></div>
+                        <div *ngIf="!libraryPerProduct.library?.licenseText" class="modal-body text-muted">No license text</div>
+                      </ng-template>
+                      <fa-icon
+                        *ngIf="libraryPerProduct.library?.licenseText; else noLicenseText"
+                        icon="search"
+                        class="hand"
+                        placement="top"
+                        ngbTooltip="Preview"
+                        (click)="openScrollableContent(longContent, 'lg')"
+                      ></fa-icon>
+                      <ng-template #noLicenseText>
+                        <fa-icon icon="times" placement="top" ngbTooltip="No specific license text"></fa-icon>
+                      </ng-template>
+                    </td>
+                    <td *ngIf="tableForm.get('sourceCodeUrl')!.value">
+                      <span [innerHtml]="libraryPerProduct.library?.sourceCodeUrl | urlTransformation"></span>
+                    </td>
+                    <td class="text-center" *ngIf="tableForm.get('copyright')!.value">
+                      <ng-template #longContent let-modal let-link="copyright">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Copyright</h4>
+                          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                        </div>
+                        <div
+                          *ngIf="libraryPerProduct.library?.copyright && libraryPerProduct.library?.copyright !== no_copyright"
+                          class="modal-body"
+                          style="white-space: pre-line"
+                        >
+                          {{ libraryPerProduct.library?.copyright }}
+                        </div>
+                        <div *ngIf="!libraryPerProduct.library?.copyright" class="modal-body text-muted">No copyright</div>
+                      </ng-template>
+                      <fa-icon
+                        *ngIf="
+                          libraryPerProduct.library?.copyright && libraryPerProduct.library?.copyright !== no_copyright;
+                          else noCopyright
+                        "
+                        icon="search"
+                        class="hand"
+                        placement="top"
+                        ngbTooltip="Preview"
+                        (click)="openScrollableContent(longContent, 'lg')"
+                      ></fa-icon>
+                      <ng-template #noCopyright>
+                        <fa-icon icon="times" placement="top" ngbTooltip="No copyright"></fa-icon>
+                      </ng-template>
+                    </td>
+                    <td class="text-center" *ngIf="tableForm.get('reviewed')!.value">
+                      <fa-icon icon="check" class="text-success" *ngIf="libraryPerProduct.library?.reviewed"></fa-icon>
+                      <fa-icon icon="times" class="text-danger" *ngIf="!libraryPerProduct.library?.reviewed"></fa-icon>
+                    </td>
+                    <td class="text-center" *ngIf="tableForm.get('hideForPublishing')!.value">
+                      <table class="table table-sm m-0">
+                        <thead></thead>
+                        <tbody>
+                          <tr>
+                            <td class="p-0" style="width: 18px">
+                              <fa-icon
+                                icon="eye"
+                                class="text-success"
+                                *ngIf="!libraryPerProduct.hideForPublishing"
+                                placement="top"
+                                ngbTooltip="Not hidden in this product. It will be visible in reports if it is also not hidden globally."
+                              ></fa-icon>
+                              <fa-icon
+                                icon="eye-slash"
+                                class="text-danger"
+                                *ngIf="libraryPerProduct.hideForPublishing"
+                                placement="top"
+                                ngbTooltip="Hidden in this product. It won't be visible in reports."
+                              ></fa-icon>
+                            </td>
+                            <td style="width: 18px">|</td>
+                            <td class="p-0" style="width: 18px">
+                              <fa-icon
+                                icon="eye"
+                                class="text-success"
+                                *ngIf="!libraryPerProduct.library?.hideForPublishing"
+                                placement="top"
+                                ngbTooltip="Not hidden globally. It will be visible in reports if it is also not hidden locally."
+                              ></fa-icon>
+                              <fa-icon
+                                icon="eye-slash"
+                                class="text-danger"
+                                *ngIf="libraryPerProduct.library?.hideForPublishing"
+                                placement="top"
+                                ngbTooltip="Hidden globally. It won't be visible in reports for all products."
+                              ></fa-icon>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                    <td class="text-center" *ngIf="tableForm.get('localComment')!.value">
+                      <ng-template #longContent let-modal let-link="localComment">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Local Comment</h4>
+                          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                        </div>
+                        <div *ngIf="libraryPerProduct.comment" class="modal-body" style="white-space: pre-line">
+                          {{ libraryPerProduct.comment }}
+                        </div>
+                        <div *ngIf="!libraryPerProduct.comment" class="modal-body text-muted">No local comment</div>
+                      </ng-template>
+                      <fa-icon
+                        *ngIf="libraryPerProduct.comment; else noLocalComment"
+                        icon="search"
+                        class="hand"
+                        placement="top"
+                        ngbTooltip="Preview"
+                        (click)="openScrollableContent(longContent, 'lg')"
+                      ></fa-icon>
+                      <ng-template #noLocalComment>
+                        <fa-icon icon="times" placement="top" ngbTooltip="No local comment"></fa-icon>
+                      </ng-template>
+                    </td>
+                    <ng-container *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+                      <td class="text-center" *ngIf="tableForm.get('errorLog')!.value">
+                        <fa-icon
+                          icon="exclamation-triangle"
+                          class="text-warning"
+                          *ngIf="hasErrors(libraryPerProduct.library)"
+                          placement="top"
+                          ngbTooltip="Library has open error logs"
+                        ></fa-icon>
+                        <fa-icon
+                          icon="times"
+                          *ngIf="!hasErrors(libraryPerProduct.library)"
+                          placement="top"
+                          ngbTooltip="No open errors"
+                        ></fa-icon>
+                      </td>
+                    </ng-container>
+                    <td class="text-center" *ngIf="tableForm.get('manuallyAdded')!.value">
+                      <fa-icon icon="check" class="text-success" *ngIf="libraryPerProduct.addedManually"></fa-icon>
+                      <fa-icon icon="times" class="text-danger" *ngIf="!libraryPerProduct.addedManually"></fa-icon>
+                    </td>
+                    <td *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']" class="text-end">
+                      <div class="btn-group">
+                        <button
+                          type="submit"
+                          [routerLink]="['/library', libraryPerProduct.library?.id, 'edit']"
+                          class="btn btn-primary btn-sm"
+                          data-cy="entityEditButton"
+                          placement="top"
+                          ngbTooltip="Edit library"
+                          container="body"
+                        >
+                          <fa-icon icon="pencil-alt"></fa-icon>
+                        </button>
+
+                        <button
+                          type="submit"
+                          (click)="openSide(productUpdateLibraryOffcanvas, libraryPerProduct)"
+                          class="btn btn-info btn-sm w-50"
+                          data-cy="entityDetailsButton"
+                          placement="left"
+                          ngbTooltip="Details of a library for this specific product"
+                          container="body"
+                        >
+                          <fa-icon icon="ellipsis"></fa-icon>
+                        </button>
+
+                        <button
+                          type="submit"
+                          (click)="delete(libraryPerProduct)"
+                          class="btn btn-danger btn-sm w-50"
+                          data-cy="entityDeleteButton"
+                          placement="left"
+                          ngbTooltip="Remove library from product"
+                          container="body"
+                        >
+                          <fa-icon icon="times"></fa-icon>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="librariesPerProduct && librariesPerProduct.length > 0">
+                <div class="row w-100 justify-content-center mb-2">
+                  <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+                </div>
+
+                <div class="row w-100 justify-content-center">
+                  <ngb-pagination
+                    [collectionSize]="totalItems"
+                    [(page)]="ngbPaginationPage"
+                    [pageSize]="itemsPerPage"
+                    [maxSize]="5"
+                    [rotate]="true"
+                    [boundaryLinks]="true"
+                    (pageChange)="loadPage($event)"
+                  ></ngb-pagination>
+                </div>
+              </div>
+            </div>
+            <!-- END libraries table -->
+          </ng-template>
+        </li>
+        <!-- END tab Libraries -->
+
+        <!-- START tab Reports -->
+        <li ngbNavItem="Reports">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="download"></fa-icon>
+            Reports</a
+          >
+          <ng-template ngbNavContent>
+            <div class="row justify-content-center">
+              <!-- START card OSS List -->
+              <div class="col-lg col-md-8 col-sm-9 mb-3">
+                <div class="card lucy-card">
+                  <div class="card-header lucy-card-header-white-with-border">
+                    OSS List
+                    <div class="btn-group btn-group-sm" style="float: right">
+                      <label class="btn btn-outline-dark" [ngClass]="{ active: ossFormat === 'CSV' }" style="width: 80px; line-height: 1">
+                        <input class="btn-check" type="radio" name="ossFormat" id="ossCsvFormat" [(ngModel)]="ossFormat" value="CSV" />
+                        CSV
+                      </label>
+                      <label class="btn btn-outline-dark" [ngClass]="{ active: ossFormat === 'HTML' }" style="width: 80px; line-height: 1">
+                        <input class="btn-check" type="radio" name="ossFormat" id="ossHtmlFormat" [(ngModel)]="ossFormat" value="HTML" />
+                        HTML
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="card-body lucy-card-body">
+                    <div class="mb-3">
+                      <div class="text-muted">Options</div>
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="ossType"
+                          id="ossRequirementType"
+                          [(ngModel)]="ossType"
+                          value="REQUIREMENT"
+                        />
+                        <label class="form-check-label" for="ossRequirementType">Full</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="ossType"
+                          id="ossPublishType"
+                          [(ngModel)]="ossType"
+                          value="PUBLISH"
+                        />
+                        <label class="form-check-label" for="ossPublishType">Publish</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="ossType"
+                          id="ossMainType"
+                          [(ngModel)]="ossType"
+                          value="DEFAULT"
+                        />
+                        <label class="form-check-label" for="ossMainType">Risk</label>
+                      </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-sm" style="width: 100%" (click)="downloadOssList()" [disabled]="isDownloadingOss">
+                      <span *ngIf="isDownloadingOss" class="spinner-border spinner-border-sm" role="status"></span>
+                      <fa-icon *ngIf="!isDownloadingOss" icon="file-download"></fa-icon>
+                      <span *ngIf="!isDownloadingOss">Download</span>
+                      <span *ngIf="isDownloadingOss">Loading</span>
+                    </button>
+                  </div>
+
+                  <div class="card-footer lucy-card-footer" [ngClass]="!showMoreOss ? 'lucy-card-footer-more' : 'lucy-card-footer-less'">
+                    <div class="text-muted btn-more" (click)="showMoreOss = !showMoreOss">{{ !showMoreOss ? 'More' : 'Less' }}</div>
+                    <p>Download the OSS list as a CSV or HTML file and choose between the options:</p>
+                    <p>
+                      <b>Full:</b> List with all libraries, license risk and requirements.<br />
+                      <b>Publish:</b> List with library name and license. Libraries with the same name but different versions are displayed
+                      in one line.<br />
+                      <b>Risk:</b> List with all libraries and license risk.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- END card OSS List -->
+
+              <!-- START card License Text Archive -->
+              <div class="col-lg col-md-8 col-sm-9 mb-3">
+                <div class="card lucy-card">
+                  <div class="card-header lucy-card-header-white-with-border">License Text Archive</div>
+                  <div class="card-body lucy-card-body">
+                    <button class="btn btn-primary btn-sm" style="width: 100%" (click)="downloadZip()" [disabled]="isDownloadingZip">
+                      <div *ngIf="isDownloadingZip" class="spinner-border spinner-border-sm" role="status"></div>
+                      <fa-icon *ngIf="!isDownloadingZip" icon="file-download"></fa-icon>
+                      <span *ngIf="!isDownloadingZip">Download</span>
+                      <span *ngIf="isDownloadingZip">Loading</span>
+                    </button>
+                  </div>
+                  <div class="card-footer lucy-card-footer">
+                    Download an archive with the license texts of each library which needs to be published.
+                  </div>
+                </div>
+              </div>
+              <!-- END card License Text Archive -->
+
+              <!-- START card Source Code Archive -->
+              <div class="col-lg col-md-8 col-sm-9 mb-3">
+                <div class="card lucy-card">
+                  <div class="card-header lucy-card-header-white-with-border">
+                    Source Code Archive
+                    <div class="btn-group btn-group-sm" style="float: right">
+                      <label
+                        class="btn btn-outline-dark"
+                        [ngClass]="{ active: archiveShipment === 'DOWNLOAD' }"
+                        style="width: 90px; line-height: 1"
+                      >
+                        <input
+                          class="btn-check"
+                          type="radio"
+                          name="archiveShipment"
+                          id="downloadArchive"
+                          [(ngModel)]="archiveShipment"
+                          value="DOWNLOAD"
+                        />
+                        Download
+                      </label>
+                      <label
+                        *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
+                        class="btn btn-outline-dark"
+                        [ngClass]="{ active: archiveShipment === 'EXPORT' }"
+                        style="width: 90px; line-height: 1"
+                      >
+                        <input
+                          class="btn-check"
+                          type="radio"
+                          name="archiveShipment"
+                          id="exportArchive"
+                          [(ngModel)]="archiveShipment"
+                          value="EXPORT"
+                        />
+                        Transfer
+                      </label>
+                    </div>
+                  </div>
+                  <div class="card-body lucy-card-body">
+                    <!-- START row Options -->
+                    <div class="row mb-3">
+                      <div class="col">
+                        <div class="text-muted">Options</div>
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="archiveFormat"
+                            id="fullArchive"
+                            [(ngModel)]="archiveFormat"
+                            value="FULL"
+                          />
+                          <label class="form-check-label" for="fullArchive">Full</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="archiveFormat"
+                            id="deliveryArchive"
+                            [(ngModel)]="archiveFormat"
+                            value="DELIVERY"
+                          />
+                          <label class="form-check-label" for="deliveryArchive">Delivery</label>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- END row Options -->
+
+                    <!-- START row Download button -->
+                    <div class="row">
+                      <div class="col">
+                        <button class="btn btn-primary btn-sm" style="width: 100%" (click)="createArchive()" [disabled]="isCreatingArchive">
+                          <span *ngIf="isCreatingArchive" class="spinner-border spinner-border-sm" role="status"></span>
+                          <fa-icon *ngIf="!isCreatingArchive && archiveShipment === 'DOWNLOAD'" icon="file-download"></fa-icon>
+                          <fa-icon *ngIf="!isCreatingArchive && archiveShipment === 'EXPORT'" icon="cloud-upload-alt"></fa-icon>
+                          <span *ngIf="!isCreatingArchive">{{ archiveShipment === 'DOWNLOAD' ? 'Download' : 'Transfer' }}</span>
+                          <span *ngIf="isCreatingArchive">Loading</span>
+                        </button>
+                      </div>
+                    </div>
+                    <!-- END row Download button -->
+                  </div>
+                  <div class="card-footer lucy-card-footer" [ngClass]="!showMoreSca ? 'lucy-card-footer-more' : 'lucy-card-footer-less'">
+                    <div class="text-muted btn-more" (click)="showMoreSca = !showMoreSca">{{ !showMoreSca ? 'More' : 'Less' }}</div>
+                    <p>
+                      Download<span *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+                        or
+                        <u
+                          placement="top"
+                          ngbTooltip="Archive will be transferred to the specified upload platform in the server configuration"
+                          >transfer</u
+                        ></span
+                      >
+                      a source code archive of libraries from this product. Choose between the options:
+                    </p>
+                    <p>
+                      <b>Full:</b> Archive with the source code of all libraries (if available).<br />
+                      <b>Delivery:</b> Archive with the source code of libraries where the requirement
+                      <a [routerLink]="['/requirement', 4, 'view']">Share Source</a> is specified.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- END card Source Code Archive -->
+
+              <div class="w-100"></div>
+
+              <div *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']" class="col-lg col-md-8 col-sm-9 mb-3">
+                <div class="card lucy-card">
+                  <div class="card-header lucy-card-header-white-with-border">Transfer To Target</div>
+                  <div class="card-body lucy-card-body">
+                    <div class="row mb-3">
+                      <div class="col">
+                        <div class="text-muted">Target URL</div>
+                        <span>{{ product.targetUrl }}</span>
+                        <span *ngIf="!product.targetUrl">
+                          <fa-icon icon="times"></fa-icon>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <button class="btn btn-primary btn-sm" style="width: 100%" (click)="transferToTarget()" [disabled]="isTransferring">
+                          <div *ngIf="isTransferring" class="spinner-border spinner-border-sm" role="status"></div>
+                          <fa-icon *ngIf="!isTransferring" icon="cloud-upload-alt"></fa-icon>
+                          <span *ngIf="!isTransferring">Transfer</span>
+                          <span *ngIf="isTransferring">Loading</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer lucy-card-footer">
+                    Transfer the &quot;Full&quot; and &quot;Publish&quot; <b>OSS list</b> as a CSV and HTML file and the
+                    <b>license text archive</b> to the specified URL.
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg col-md-8 col-sm-9"></div>
+              <div class="col-lg col-md-8 col-sm-9"></div>
+            </div>
+          </ng-template>
+        </li>
+        <!-- END tab Reports -->
+
+        <!-- START tab Statistics -->
+        <li ngbNavItem="Statistics">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="chart-pie"></fa-icon>
+            Statistics
+          </a>
+          <ng-template ngbNavContent>
+            <jhi-product-overview
+              [licenseRiskResult]="statistic?.licenseRiskDistribution"
+              [licenseResult]="statistic?.licenseDistribution"
+              [licenseRiskSeries]="statistic?.licenseRiskSeries"
+              [numberOfLibrariesSeries]="statistic?.numberOfLibrariesSeries"
+              [licenseRiskPieChart]="statistic?.licenseRiskDistribution"
+              [licenseDistribution]="statistic?.licenseDistribution"
+              [numberOfLibraries]="overview?.numberOfLibraries"
+              [numberOfLicenses]="overview?.numberOfLicenses"
+            ></jhi-product-overview>
+
+            <!--<div class="row">
+              <div class="col-md">
+                <div class="shadow-sm p-3">
+                <div class="mb-2">
+                  <h4 class="text-left">Licenses</h4>
+                  <div class="text-muted charts-subtitle">Distribution of licenses
+                  </div>
+                </div>
+                <ng-container *ngFor="let license of licenseDistribution">
+                  <span class="badge bg-primary">[ {{ license.value }} ] {{ license.name }}</span>
+                </ng-container>
+              </div>
+            </div>
+            </div>-->
+          </ng-template>
+        </li>
+
+        <!-- END tab Statistics -->
+
+        <!-- START tab Diff -->
+        <li ngbNavItem="Diff">
+          <a ngbNavLink>
+            <fa-icon icon="code-compare"></fa-icon>
+            Diff</a
+          >
+          <ng-template ngbNavContent>
+            <jhi-difference-view #differenceViewComponent [showProductSelection]="false"></jhi-difference-view>
+          </ng-template>
+        </li>
+        <!-- END tab Diff -->
+
+        <!-- START tab Details -->
+        <li ngbNavItem="Details">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="ellipsis-h"></fa-icon>
+            Details</a
+          >
+          <ng-template ngbNavContent>
+            <div class="row">
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <div *ngIf="product.contact" class="long-text">
+                    {{ product.contact }}
+                  </div>
+                  <p *ngIf="!product.contact">
+                    <fa-icon icon="times"></fa-icon>
+                  </p>
+                  <small>Contact</small>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <div *ngIf="product.comment" class="long-text">
+                    {{ product.comment }}
+                  </div>
+                  <p *ngIf="!product.comment">
+                    <fa-icon icon="times"></fa-icon>
+                  </p>
+                  <small>Comment</small>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+        <!-- END tab Details -->
+
+        <!-- START tab Disclaimer -->
+        <li ngbNavItem="Disclaimer">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="align-left"></fa-icon>
+            Disclaimer</a
+          >
+          <ng-template ngbNavContent>
+            <div [innerHTML]="product.disclaimer"></div>
+          </ng-template>
+        </li>
+        <!-- END tab Disclaimer -->
+      </ul>
+      <hr />
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
+    <!-- END MAIN -->
+
+    <!-- START BUTTONS -->
+    <button type="submit" routerLink="/product" class="btn btn-info" data-cy="entityDetailsBackButton">
+      <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+    </button>
+
+    <button
+      *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
+      type="button"
+      [routerLink]="['/product', product.id, 'edit']"
+      class="btn btn-primary"
+    >
+      <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+    </button>
+
+    <ng-template #contentNextProduct let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-nextProduct-title">Create next product version</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <form name="nextProductForm" role="form" [formGroup]="nextProductForm" novalidate>
+          <div class="row">
+            <div class="col-sm form-group">
+              <label class="form-control-label" for="field_version">Next Version</label>
+              <input
+                type="text"
+                class="form-control"
+                name="version"
+                id="field_version"
+                data-cy="version"
+                formControlName="version"
+                placeholder="Version"
+              />
+              <div
+                *ngIf="
+                  nextProductForm.get('version')!.invalid &&
+                  (nextProductForm.get('version')!.dirty || nextProductForm.get('version')!.touched)
+                "
+              >
+                <small class="form-text text-danger" *ngIf="nextProductForm.get('version')?.errors?.required">
+                  This field is required.
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm form-group">
+              <div class="custom-control custom-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="field_delivered"
+                  name="delivered"
+                  data-cy="delivered"
+                  formControlName="delivered"
+                />
+                <label class="custom-control-label" for="field_delivered">Set current Product to delivered?</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm form-group">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="field_copy" name="copy" data-cy="copy" formControlName="copy" />
+                <label class="custom-control-label" for="field_copy">Copy manually added libraries to next product?</label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="createNextProduct()" [disabled]="nextProductForm.invalid">Create</button>
+      </div>
+    </ng-template>
+
+    <button class="btn btn-primary" (click)="open(contentNextProduct)">
+      Create Next Product
+      <fa-icon icon="arrow-right"></fa-icon>
+    </button>
+    <!-- END BUTTONS -->
+  </div>
+</div>
+
+<ng-template #loadingOverview>
+  <div class="row align-items-center h-100" style="min-height: 48px">
+    <div class="col text-center">
+      <div class="spinner-grow spinner-grow-sm"></div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #productUpdateLibraryOffcanvas let-link="libraryPerProduct">
+  <div class="offcanvas-header offcanvas-header-custom">
+    <h6 class="offcanvas-title" id="offcanvas-basic-title">
+      <span *ngIf="libraryPerProduct?.library?.groupId">{{ libraryPerProduct?.library?.groupId }}:</span
+      >{{ libraryPerProduct?.library?.artifactId }}:{{ libraryPerProduct?.library?.version }}
+    </h6>
+    <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="dismiss('Cross click')"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form
+      class="row g-3 align-items-end"
+      name="libraryPerProductForm"
+      role="form"
+      novalidate
+      (ngSubmit)="save()"
+      [formGroup]="libraryPerProductForm"
+    >
+      <div class="col-sm-auto me-3">
+        <div class="input-group">
+          <span class="input-group-text"
+            ><span class="me-2">Hide library locally</span>
+            <fa-icon
+              icon="question-circle"
+              placement="top"
+              ngbTooltip="Hiding this library applies only to this product. It won't be visible in reports."
+              container="body"
+            ></fa-icon>
+          </span>
+          <span class="input-group-text input-group-checkbox-append">
+            <div class="switch-custom">
+              <label class="form-check-label" for="field_hideLibrary">Off</label>
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="field_hideLibrary"
+                  name="hideLibrary"
+                  data-cy="hideLibrary"
+                  formControlName="hide"
+                />
+              </div>
+              <label class="form-check-label" for="field_hideLibrary">On</label>
+            </div>
+          </span>
+        </div>
+      </div>
+
+      <div class="col-md-3 form-group me-3">
+        <label class="form-control-label" for="field_localComment"
+          >Local Comment
+          <fa-icon
+            icon="question-circle"
+            placement="top"
+            ngbTooltip="This comment applies only to this product."
+            container="body"
+          ></fa-icon>
+        </label>
+        <textarea
+          class="form-control"
+          name="localComment"
+          id="field_localComment"
+          data-cy="localComment"
+          formControlName="localComment"
+          placeholder="Comment"
+          ngbAutofocus
+        ></textarea>
+        <div
+          *ngIf="
+            libraryPerProductForm.get('localComment')!.invalid &&
+            (libraryPerProductForm.get('localComment')!.dirty || libraryPerProductForm.get('localComment')!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="libraryPerProductForm.get('localComment')?.errors?.maxlength">
+            This field cannot be longer than 4096 characters.
+          </small>
+        </div>
+      </div>
+
+      <div class="col text-end">
+        <span *ngIf="saved" class="text-success me-2">Saved!</span>
+        <button
+          type="submit"
+          data-cy="entityCreateSaveButton"
+          [disabled]="libraryPerProductForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>

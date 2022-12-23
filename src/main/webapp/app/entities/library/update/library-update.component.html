@@ -1,0 +1,335 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-library-heading" data-cy="LibraryCreateUpdateHeading">Create or edit a Library</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_groupId">Group Id</label>
+          <input type="text" class="form-control" name="groupId" id="field_groupId" data-cy="groupId" formControlName="groupId" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_artifactId">Artifact Id</label>
+          <input
+            type="text"
+            class="form-control"
+            name="artifactId"
+            id="field_artifactId"
+            data-cy="artifactId"
+            formControlName="artifactId"
+          />
+          <div *ngIf="editForm.get('artifactId')!.invalid && (editForm.get('artifactId')!.dirty || editForm.get('artifactId')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('artifactId')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_version">Version</label>
+          <input type="text" class="form-control" name="version" id="field_version" data-cy="version" formControlName="version" />
+          <div *ngIf="editForm.get('version')!.invalid && (editForm.get('version')!.dirty || editForm.get('version')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('version')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_type">Type</label>
+          <select class="form-control" name="type" formControlName="type" id="field_type" data-cy="type">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let libraryType of libraryTypeValues" [value]="libraryType">libraryType</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_originalLicense">Original License</label>
+          <input
+            type="text"
+            class="form-control"
+            name="originalLicense"
+            id="field_originalLicense"
+            data-cy="originalLicense"
+            formControlName="originalLicense"
+          />
+          <div
+            *ngIf="
+              editForm.get('originalLicense')!.invalid &&
+              (editForm.get('originalLicense')!.dirty || editForm.get('originalLicense')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('originalLicense')?.errors?.maxlength">
+              This field cannot be longer than 2048 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_licenseUrl">License Url</label>
+          <input
+            type="text"
+            class="form-control"
+            name="licenseUrl"
+            id="field_licenseUrl"
+            data-cy="licenseUrl"
+            formControlName="licenseUrl"
+          />
+          <div *ngIf="editForm.get('licenseUrl')!.invalid && (editForm.get('licenseUrl')!.dirty || editForm.get('licenseUrl')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('licenseUrl')?.errors?.maxlength">
+              This field cannot be longer than 2048 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_licenseText">License Text</label>
+          <textarea
+            class="form-control"
+            name="licenseText"
+            id="field_licenseText"
+            data-cy="licenseText"
+            formControlName="licenseText"
+          ></textarea>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_sourceCodeUrl">Source Code Url</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sourceCodeUrl"
+            id="field_sourceCodeUrl"
+            data-cy="sourceCodeUrl"
+            formControlName="sourceCodeUrl"
+          />
+          <div
+            *ngIf="
+              editForm.get('sourceCodeUrl')!.invalid && (editForm.get('sourceCodeUrl')!.dirty || editForm.get('sourceCodeUrl')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('sourceCodeUrl')?.errors?.maxlength">
+              This field cannot be longer than 2048 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_pUrl">P Url</label>
+          <input type="text" class="form-control" name="pUrl" id="field_pUrl" data-cy="pUrl" formControlName="pUrl" />
+          <div *ngIf="editForm.get('pUrl')!.invalid && (editForm.get('pUrl')!.dirty || editForm.get('pUrl')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('pUrl')?.errors?.maxlength">
+              This field cannot be longer than 2048 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_copyright">Copyright</label>
+          <input type="text" class="form-control" name="copyright" id="field_copyright" data-cy="copyright" formControlName="copyright" />
+          <div *ngIf="editForm.get('copyright')!.invalid && (editForm.get('copyright')!.dirty || editForm.get('copyright')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('copyright')?.errors?.maxlength">
+              This field cannot be longer than 16384 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_compliance">Compliance</label>
+          <input
+            type="text"
+            class="form-control"
+            name="compliance"
+            id="field_compliance"
+            data-cy="compliance"
+            formControlName="compliance"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_complianceComment">Compliance Comment</label>
+          <input
+            type="text"
+            class="form-control"
+            name="complianceComment"
+            id="field_complianceComment"
+            data-cy="complianceComment"
+            formControlName="complianceComment"
+          />
+          <div
+            *ngIf="
+              editForm.get('complianceComment')!.invalid &&
+              (editForm.get('complianceComment')!.dirty || editForm.get('complianceComment')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('complianceComment')?.errors?.maxlength">
+              This field cannot be longer than 4096 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_comment">Comment</label>
+          <input type="text" class="form-control" name="comment" id="field_comment" data-cy="comment" formControlName="comment" />
+          <div *ngIf="editForm.get('comment')!.invalid && (editForm.get('comment')!.dirty || editForm.get('comment')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('comment')?.errors?.maxlength">
+              This field cannot be longer than 4096 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_reviewed">Reviewed</label>
+          <input type="checkbox" class="form-check" name="reviewed" id="field_reviewed" data-cy="reviewed" formControlName="reviewed" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_lastReviewedDate">Last Reviewed Date</label>
+          <div class="input-group">
+            <input
+              id="field_lastReviewedDate"
+              data-cy="lastReviewedDate"
+              type="text"
+              class="form-control"
+              name="lastReviewedDate"
+              ngbDatepicker
+              #lastReviewedDateDp="ngbDatepicker"
+              formControlName="lastReviewedDate"
+            />
+            <button type="button" class="btn btn-secondary" (click)="lastReviewedDateDp.toggle()">
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_createdDate">Created Date</label>
+          <div class="input-group">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="text"
+              class="form-control"
+              name="createdDate"
+              ngbDatepicker
+              #createdDateDp="ngbDatepicker"
+              formControlName="createdDate"
+            />
+            <button type="button" class="btn btn-secondary" (click)="createdDateDp.toggle()">
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_hideForPublishing">Hide For Publishing</label>
+          <input
+            type="checkbox"
+            class="form-check"
+            name="hideForPublishing"
+            id="field_hideForPublishing"
+            data-cy="hideForPublishing"
+            formControlName="hideForPublishing"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_md5">Md 5</label>
+          <input type="text" class="form-control" name="md5" id="field_md5" data-cy="md5" formControlName="md5" />
+          <div *ngIf="editForm.get('md5')!.invalid && (editForm.get('md5')!.dirty || editForm.get('md5')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('md5')?.errors?.maxlength">
+              This field cannot be longer than 32 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_sha1">Sha 1</label>
+          <input type="text" class="form-control" name="sha1" id="field_sha1" data-cy="sha1" formControlName="sha1" />
+          <div *ngIf="editForm.get('sha1')!.invalid && (editForm.get('sha1')!.dirty || editForm.get('sha1')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('sha1')?.errors?.maxlength">
+              This field cannot be longer than 40 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_lastReviewedBy">Last Reviewed By</label>
+          <select
+            class="form-control"
+            id="field_lastReviewedBy"
+            data-cy="lastReviewedBy"
+            name="lastReviewedBy"
+            formControlName="lastReviewedBy"
+          >
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="userOption.id === editForm.get('lastReviewedBy')!.value?.id ? editForm.get('lastReviewedBy')!.value : userOption"
+              *ngFor="let userOption of usersSharedCollection; trackBy: trackUserById"
+            >
+              {{ userOption.login }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label for="field_licenseToPublishes">License To Publish</label>
+          <select
+            class="form-control"
+            id="field_licenseToPublishes"
+            data-cy="licenseToPublish"
+            multiple
+            name="licenseToPublishes"
+            formControlName="licenseToPublishes"
+          >
+            <option
+              [ngValue]="getSelectedLicense(licenseOption, editForm.get('licenseToPublishes')!.value)"
+              *ngFor="let licenseOption of licensesSharedCollection; trackBy: trackLicenseById"
+            >
+              {{ licenseOption.shortIdentifier }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label for="field_licenseOfFiles">License Of Files</label>
+          <select
+            class="form-control"
+            id="field_licenseOfFiles"
+            data-cy="licenseOfFiles"
+            multiple
+            name="licenseOfFiles"
+            formControlName="licenseOfFiles"
+          >
+            <option
+              [ngValue]="getSelectedLicense(licenseOption, editForm.get('licenseOfFiles')!.value)"
+              *ngFor="let licenseOption of licensesSharedCollection; trackBy: trackLicenseById"
+            >
+              {{ licenseOption.shortIdentifier }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

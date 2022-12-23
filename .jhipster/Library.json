@@ -1,0 +1,157 @@
+{
+  "applications": "*",
+  "changelogDate": "20210831153146",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "library",
+  "fields": [
+    {
+      "fieldName": "groupId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "artifactId",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "version",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "LibraryType",
+      "fieldValues": "MAVEN (maven),NPM (npm),NUGET (nuget),PYPI (pypi),GOLANG (golang),ALPINE (alpine),APACHE (apache),BITBUCKET (bitbucket),CARGO (cargo),COMPOSER (composer),DEB (deb),DOCKER (docker),GEM (gem),GENERIC (generic),GITHUB (github),GRADLE (gradle),HEX (hex),JAR (jar),JAVA (java),JS (js),POM (pom),RPM (rpm),XSD (xsd),ZIP (zip),UNKNOWN (unknown)"
+    },
+    {
+      "fieldName": "originalLicense",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2048"
+    },
+    {
+      "fieldName": "licenseUrl",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2048"
+    },
+    {
+      "fieldName": "licenseText",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "sourceCodeUrl",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2048"
+    },
+    {
+      "fieldName": "pUrl",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2048"
+    },
+    {
+      "fieldName": "copyright",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "16384"
+    },
+    {
+      "fieldName": "compliance",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "complianceComment",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "4096"
+    },
+    {
+      "fieldName": "comment",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "4096"
+    },
+    {
+      "fieldName": "reviewed",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "lastReviewedDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "hideForPublishing",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "md5",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "32"
+    },
+    {
+      "fieldName": "sha1",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "40"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Library",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "fossology",
+      "otherEntityRelationshipName": "library",
+      "ownerSide": true,
+      "relationshipName": "fossology",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "licensePerLibrary",
+      "otherEntityRelationshipName": "library",
+      "relationshipName": "license",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "libraryErrorLog",
+      "otherEntityRelationshipName": "library",
+      "relationshipName": "errorLog",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "login",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "library",
+      "relationshipName": "lastReviewedBy",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "shortIdentifier",
+      "otherEntityName": "license",
+      "otherEntityRelationshipName": "libraryPublish",
+      "ownerSide": true,
+      "relationshipName": "licenseToPublish",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityField": "shortIdentifier",
+      "otherEntityName": "license",
+      "otherEntityRelationshipName": "libraryFiles",
+      "ownerSide": true,
+      "relationshipName": "licenseOfFiles",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "serviceClass"
+}

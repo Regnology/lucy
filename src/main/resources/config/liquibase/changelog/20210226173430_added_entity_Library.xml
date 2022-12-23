@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added the entity Library.
+    -->
+    <changeSet id="20210226173430-1" author="jhipster">
+        <createTable tableName="library">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="group_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="artifact_id" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="version" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="original_license" type="varchar(2048)">
+                <constraints nullable="true" />
+            </column>
+            <column name="license_url" type="varchar(2048)">
+                <constraints nullable="true" />
+            </column>
+            <column name="license_text" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="source_code_url" type="varchar(2048)">
+                <constraints nullable="true" />
+            </column>
+            <column name="p_url" type="varchar(2048)">
+                <constraints nullable="true" />
+            </column>
+            <column name="copyright" type="varchar(8192)">
+                <constraints nullable="true" />
+            </column>
+            <column name="compliance" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="compliance_comment" type="varchar(4096)">
+                <constraints nullable="true" />
+            </column>
+            <column name="comment" type="varchar(4096)">
+                <constraints nullable="true" />
+            </column>
+            <column name="reviewed" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_reviewed_date" type="date">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_date" type="date">
+                <constraints nullable="true" />
+            </column>
+            <column name="hide_for_publishing" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_reviewed_by_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20210226173430-1-relations" author="jhipster">
+
+        <createTable tableName="rel_library__license">
+            <column name="license_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="library_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="library_id, license_id" tableName="rel_library__license"/>
+
+        <createTable tableName="rel_library__license_to_publish">
+            <column name="license_to_publish_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="library_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="library_id, license_to_publish_id" tableName="rel_library__license_to_publish"/>
+
+        <createTable tableName="rel_library__license_of_files">
+            <column name="license_of_files_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="library_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="library_id, license_of_files_id" tableName="rel_library__license_of_files"/>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+</databaseChangeLog>

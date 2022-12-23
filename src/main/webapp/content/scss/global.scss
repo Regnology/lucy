@@ -1,0 +1,708 @@
+@import 'bootstrap-variables';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+
+/* ==============================================================
+Bootstrap tweaks
+===============================================================*/
+
+body,
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+}
+
+/* Increase contrast of links to get 100% on Lighthouse Accessability Audit. Override this color if you want to change the link color, or use a Bootswatch theme */
+a {
+  font-weight: 600;
+}
+
+/*
+a:hover {
+  color: #533f03;
+}*/
+
+/* override hover color for dropdown-item forced by bootstrap to all a:not([href]):not([tabindex]) elements in _reboot.scss */
+a:not([href]):not([tabindex]):hover.dropdown-item {
+  color: $dropdown-link-hover-color;
+}
+
+/* override .dropdown-item.active background-color on hover */
+.dropdown-item.active:hover {
+  background-color: mix($dropdown-link-hover-bg, $dropdown-link-active-bg, 50%);
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  /* make sure browsers use the pointer cursor for anchors, even with no href */
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  color: $dropdown-link-hover-color;
+}
+
+/* ==========================================================================
+Browser Upgrade Prompt
+========================================================================== */
+.browserupgrade {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+/* ==========================================================================
+Generic styles
+========================================================================== */
+
+/* Error highlight on input fields */
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid green;
+}
+
+.ng-invalid:not(form) {
+  border-left: 5px solid red;
+}
+
+/* other generic styles */
+
+.jh-card {
+  padding: 2.5%;
+  margin-top: 1rem;
+  border: none;
+}
+
+.error {
+  color: white;
+  background-color: red;
+}
+
+.pad {
+  padding: 10px;
+}
+
+.w-0 {
+  width: 0% !important;
+}
+
+.w-10 {
+  width: 10% !important;
+}
+
+.w-40 {
+  width: 40% !important;
+}
+
+.w-60 {
+  width: 60% !important;
+}
+
+.custom-w-100 {
+  width: 100% !important;
+}
+
+.break {
+  white-space: normal;
+  word-break: break-all;
+}
+
+.readonly {
+  background-color: #eee;
+  opacity: 1;
+}
+
+.footer {
+  // border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.hand,
+[jhisortby] {
+  cursor: pointer;
+}
+
+/* ==========================================================================
+Custom alerts for notification
+========================================================================== */
+.alerts {
+  .alert {
+    box-shadow: $box-shadow-sm;
+    text-overflow: ellipsis;
+
+    pre {
+      background: none;
+      border: none;
+      font: inherit;
+      color: inherit;
+      padding: 0;
+      margin: 0;
+    }
+
+    .popover pre {
+      font-size: 10px;
+    }
+  }
+
+  .jhi-toast {
+    position: fixed;
+    width: 100%;
+
+    &.left {
+      left: 5px;
+    }
+
+    &.right {
+      right: 5px;
+    }
+
+    &.top {
+      top: 55px;
+    }
+
+    &.bottom {
+      bottom: 55px;
+    }
+  }
+}
+
+.alerts-top-right {
+  position: fixed;
+  top: 2rem;
+  right: 1rem;
+  z-index: $zindex-fixed;
+  width: 30%;
+}
+
+.alerts-bottom-right {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: $zindex-fixed;
+  width: 30%;
+}
+
+@media screen and (min-width: 480px) {
+  .alerts .jhi-toast {
+    width: 50%;
+  }
+}
+
+/* ==========================================================================
+entity detail page css
+========================================================================== */
+.row-md.jh-entity-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  line-height: 1.5;
+}
+
+@media screen and (min-width: 768px) {
+  .row-md.jh-entity-details > {
+    dt {
+      float: left;
+      overflow: hidden;
+      clear: left;
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding: 0.5em 0;
+    }
+
+    dd {
+      border-bottom: 1px solid #eee;
+      padding: 0.5em 0;
+      margin-left: 0;
+    }
+  }
+}
+
+/* ==========================================================================
+ui bootstrap tweaks
+========================================================================== */
+
+.thread-dump-modal-lock {
+  max-width: 450px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-menu {
+  padding-left: 0px;
+}
+
+/* ==========================================================================
+angular-cli removes postcss-rtl processed inline css, processed rules must be added here instead
+========================================================================== */
+/* page-ribbon.component.scss */
+.ribbon {
+  left: -3.5em;
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+/* navbar.component.scss */
+.navbar {
+  ul.navbar-nav {
+    .nav-item {
+      margin-left: 0.5em;
+    }
+  }
+}
+/* jhipster-needle-scss-add-main JHipster will add new css style */
+
+/* ==========================================================================
+Enter here custom CSS changes -->
+========================================================================== */
+
+.long-text {
+  white-space: pre-line;
+  max-height: 140px;
+  overflow: auto;
+  line-height: 1.3rem;
+}
+
+.multiline-text-sm {
+  white-space: pre-line;
+  max-height: 60px;
+  overflow: auto;
+}
+
+.badge {
+  padding: 0.25rem 0.7rem 0.3rem 0.7rem;
+}
+
+h2 .badge {
+  font-size: 50%;
+  vertical-align: super;
+  position: relative;
+  top: 7px;
+  left: 1em;
+}
+
+.badge-in-h2 {
+  font-size: 42%;
+  vertical-align: super;
+  position: relative;
+  top: 6px;
+  left: 1em;
+}
+
+.table {
+  font-size: 92%;
+}
+
+.table thead th {
+  white-space: nowrap;
+  border-top: none;
+  border-bottom: none;
+  color: $gray-700;
+  padding-bottom: 1.1rem;
+  font-size: $font-size-base;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.table > :not(:first-child) {
+  border-top: 1px solid $gray-300;
+}
+
+pre {
+  white-space: pre-wrap;
+}
+
+.popover-export {
+  background-color: transparent;
+  border: 0;
+}
+
+.popover-export .arrow::after {
+  border-bottom-color: $info;
+}
+
+.popover-export .arrow::before {
+  border: 0;
+}
+
+.popover-body-export {
+  background-color: $info;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem 0;
+  border-radius: $border-radius;
+}
+
+.btn-download {
+  width: 120px;
+}
+
+.btn-export {
+  width: 110px;
+}
+
+.selected-values {
+}
+
+.selected-values > span {
+  margin-right: 0;
+}
+
+.selected-values > span:not(:last-child) {
+  margin-right: 0.5rem;
+}
+
+.license-section {
+}
+
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pressable-icon:hover {
+  cursor: pointer;
+}
+
+.pressable-icon:active {
+  color: #888;
+}
+
+.nav-link {
+  white-space: nowrap;
+}
+
+.tab-content {
+  width: 100%;
+  background-color: white;
+}
+
+.preview-box {
+  overflow: auto;
+  border: 1px solid #ced4da;
+  background-color: white;
+  min-height: 300px;
+}
+
+.input-group-text {
+  box-shadow: $input-box-shadow;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+.input-group-checkbox-append {
+  background-color: $input-bg-color;
+  border-color: $input-bg-color;
+}
+
+.rectangle-sm {
+  width: 1rem;
+  height: 1rem;
+  border-radius: $border-radius;
+  display: inline-block;
+  vertical-align: sub;
+  background-color: $gray-400;
+}
+
+.detail-attribute-title {
+  font-size: $h4-font-size;
+}
+
+.detail-attribute-normal {
+  font-size: 105%;
+}
+
+.detail-attribute * {
+  margin-bottom: 0;
+}
+
+.detail-attribute small {
+  color: $gray-600;
+}
+
+.detail-attribute-sm {
+  color: $gray-700;
+}
+
+.border-left-color {
+  border-left: 4px solid #17a1ee4d;
+  border-radius: 0.26rem;
+  padding: 0 1rem;
+  margin: 0.4rem 0;
+}
+
+.header-thin {
+  line-height: 1;
+  margin-bottom: 0;
+}
+
+.card-body-risk {
+  border-radius: 0 0 $border-radius $border-radius;
+}
+
+.lucy-card-row {
+  border-radius: 0.8rem 0.8rem 0.8rem 0.8rem;
+  border: 0;
+  box-shadow: 0 0 10px $gray-200;
+  z-index: 2;
+  transition: $transition-base;
+  backface-visibility: hidden;
+}
+
+.lucy-card-row:hover {
+  transform: scale(1.03);
+}
+
+.lucy-card-header-row {
+  background: $primary-gradient;
+  color: $white;
+  border-radius: 0.8rem 0 0 0.8rem !important;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.lucy-card-detail-row {
+  margin-top: -1.2rem;
+  padding: 2rem 1rem 1rem 1rem;
+  z-index: 1;
+  border: 0;
+  background-color: $gray-100;
+  border-radius: 0.8rem;
+}
+
+.lucy-card-sm {
+  text-align: center;
+  background: $primary-gradient;
+  box-shadow: 0 0 10px $gray-200;
+  color: $white;
+  border-radius: 0.8rem !important;
+  border: 0;
+  padding: 1rem;
+  line-height: 3rem;
+  cursor: pointer;
+  transition: $transition-base;
+  backface-visibility: hidden;
+}
+
+.lucy-card-sm:hover {
+  transform: scale(1.03);
+}
+
+.lucy-card {
+  box-shadow: $box-shadow-sm;
+  border: 0;
+}
+
+.lucy-card-header {
+  background: $primary-gradient;
+  color: $white;
+  border-bottom: 0;
+  font-weight: 501;
+  padding: 0.5rem 1.4rem;
+}
+
+.lucy-card-header-white {
+  background: $white;
+  border-bottom: 0;
+  font-weight: 501;
+  padding: 0.5rem 1.4rem;
+}
+
+.lucy-card-header-white-with-border {
+  background: $white;
+  border-bottom: 2px solid $gray-200;
+  font-weight: 501;
+  padding: 0.5rem 1.4rem;
+}
+
+.lucy-card-body-sm {
+  padding: 0.5rem;
+}
+
+.lucy-card-footer {
+  border-top: 0;
+  padding: 0.5rem 1.4rem;
+  font-size: 90%;
+}
+
+.lucy-card-footer-more {
+  max-height: 78px;
+  overflow: hidden;
+  padding-bottom: 1rem;
+  transition: max-height 0.35s ease;
+  animation: 1s delay-overflow;
+}
+
+@keyframes delay-overflow {
+  from {
+    overflow: hidden;
+  }
+}
+
+.lucy-card-footer-less {
+  max-height: 500px;
+  overflow: hidden;
+  padding-bottom: 1rem;
+  transition: max-height 0.35s ease;
+}
+
+.btn-more {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  background-color: rgb(247, 247, 247);
+  cursor: pointer;
+  text-align: center;
+  padding: 0.2rem 0;
+}
+
+.btn-badge {
+  border-color: transparent;
+  color: $white !important;
+}
+
+.badge-unselected {
+  background-color: transparent !important;
+  border: 1px solid $secondary !important;
+  color: $secondary !important;
+}
+
+.badge-unselected:hover {
+  background-color: #e2e6ea !important;
+  border-color: transparent !important;
+}
+
+.risk-box {
+  color: $white;
+  border-radius: $border-radius-lg;
+  margin: 0.4rem;
+  padding: 0.2rem 1.2rem;
+  white-space: nowrap;
+}
+
+.risk-box > :last-child {
+  font-size: 88%;
+}
+
+.product-overview-card {
+  border-left: 4px solid black;
+  width: 164px;
+}
+
+.charts-card {
+  height: 260px;
+  width: 100%;
+}
+
+.charts-card-dynamic-height {
+  min-height: 260px;
+  width: 100%;
+}
+
+.charts-subtitle {
+  margin-top: -0.5rem;
+  font-size: 80%;
+}
+
+.legend-items {
+  scrollbar-width: thin;
+}
+
+.spinner-grow {
+  color: $gray-200;
+}
+
+.library-review-fields {
+  color: $white;
+  font-size: 76%;
+  margin-left: 1.5rem;
+}
+
+.offcanvas-header-custom {
+  background: $primary-gradient;
+  color: $white;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.switch-custom {
+  display: flex;
+}
+
+.switch-custom label:first-child {
+  margin-right: 0.5rem;
+}
+
+.switch-custom > div {
+  margin-top: 1px;
+}
+
+.bg-blue {
+  background: rgba(116, 211, 255, 0.15);
+}
+
+.bg-green {
+  background: rgba(153, 255, 153, 0.15);
+}
+
+.font-size-88 {
+  font-size: 88%;
+}
+
+.opacity-9 {
+  opacity: 0.9;
+}
+
+.opacity-8 {
+  opacity: 0.8;
+}
+
+.opacity-7 {
+  opacity: 0.7;
+}
+
+.opacity-6 {
+  opacity: 0.6;
+}
+
+.opacity-5 {
+  opacity: 0.5;
+}
+
+.opacity-4 {
+  opacity: 0.4;
+}
+
+.opacity-3 {
+  opacity: 0.3;
+}
+
+.opacity-2 {
+  opacity: 0.2;
+}
+
+.opacity-1 {
+  opacity: 0.1;
+}
+
+/* <-- end of custom changes */

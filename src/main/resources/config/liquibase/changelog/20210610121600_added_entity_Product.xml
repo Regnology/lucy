@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added target_url column for product.
+    -->
+    <changeSet id="20210610121600-1" author="patrick.wojciech">
+        <validCheckSum>8:5cf9f62221969b3f411ad877470f08d1</validCheckSum>
+        <addColumn tableName="product">
+            <column name="target_url" type="varchar(2048)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,93 @@
+{
+  "applications": "*",
+  "changelogDate": "20210304151313",
+  "clientRootFolder": "",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "product",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "identifier",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "version",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "targetUrl",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2048"
+    },
+    {
+      "fieldName": "uploadState",
+      "fieldType": "UploadState",
+      "fieldValues": "SUCCESSFUL (Successful),PROCESSING (Processing),FAILURE (Failure)"
+    },
+    {
+      "fieldName": "disclaimer",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "delivered",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "deliveredDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "contact",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2048"
+    },
+    {
+      "fieldName": "comment",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "4096"
+    },
+    {
+      "fieldName": "previousProductId",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "uploadFilter",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2048"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Product",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "libraryPerProduct",
+      "otherEntityRelationshipName": "product",
+      "relationshipName": "library",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "serviceClass"
+}

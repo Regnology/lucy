@@ -1,0 +1,99 @@
+{
+  "applications": "*",
+  "changelogDate": "20210226173530",
+  "clientRootFolder": "",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "license",
+  "fields": [
+    {
+      "fieldName": "fullName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "shortIdentifier",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "spdxIdentifier",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "url",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2048"
+    },
+    {
+      "fieldName": "genericLicenseText",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "other",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "2048"
+    },
+    {
+      "fieldName": "reviewed",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "lastReviewedDate",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "License",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "licenseConflict",
+      "otherEntityRelationshipName": "license",
+      "relationshipName": "licenseConflict",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "login",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "license",
+      "relationshipName": "lastReviewedBy",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "licenseRisk",
+      "otherEntityRelationshipName": "license",
+      "relationshipName": "licenseRisk",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityField": "shortText",
+      "otherEntityName": "requirement",
+      "otherEntityRelationshipName": "license",
+      "ownerSide": true,
+      "relationshipName": "requirement",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "library",
+      "otherEntityRelationshipName": "licenseToPublish",
+      "ownerSide": false,
+      "relationshipName": "libraryPublish",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "library",
+      "otherEntityRelationshipName": "licenseOfFiles",
+      "ownerSide": false,
+      "relationshipName": "libraryFiles",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "serviceClass"
+}

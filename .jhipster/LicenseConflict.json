@@ -1,0 +1,40 @@
+{
+  "applications": "*",
+  "changelogDate": "20220728085048",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "license_conflict",
+  "fields": [
+    {
+      "fieldName": "compatibility",
+      "fieldType": "CompatibilityState",
+      "fieldValues": "Compatible (Compatible),Incompatible (Incompatible),Unknown (Unknown)"
+    },
+    {
+      "fieldName": "comment",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "4096"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "LicenseConflict",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "license",
+      "otherEntityRelationshipName": "licenseConflict",
+      "relationshipName": "license",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "license",
+      "otherEntityRelationshipName": "licenseConflict",
+      "relationshipName": "license",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

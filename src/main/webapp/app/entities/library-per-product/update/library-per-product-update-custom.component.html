@@ -1,0 +1,105 @@
+<div class="card jh-card">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+        <h2 id="jhi-library-per-product-heading" data-cy="LibraryPerProductCreateUpdateHeading">Create or edit a Library Per Product</h2>
+
+        <div>
+          <jhi-alert-error></jhi-alert-error>
+
+          <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+            <label class="form-control-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_addedDate">Added Date</label>
+            <div class="input-group">
+              <input
+                id="field_addedDate"
+                data-cy="addedDate"
+                type="text"
+                class="form-control"
+                name="addedDate"
+                ngbDatepicker
+                #addedDateDp="ngbDatepicker"
+                formControlName="addedDate"
+              />
+              <span class="input-group-append">
+                <button type="button" class="btn btn-secondary" (click)="addedDateDp.toggle()">
+                  <fa-icon icon="calendar-alt"></fa-icon>
+                </button>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_addedManually">Added Manually</label>
+            <input
+              type="checkbox"
+              class="form-check"
+              name="addedManually"
+              id="field_addedManually"
+              data-cy="addedManually"
+              formControlName="addedManually"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_hideForPublishing">Hide For Publishing</label>
+            <input
+              type="checkbox"
+              class="form-check"
+              name="hideForPublishing"
+              id="field_hideForPublishing"
+              data-cy="hideForPublishing"
+              formControlName="hideForPublishing"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_library">Library</label>
+            <select class="form-control" id="field_library" data-cy="library" name="library" formControlName="library">
+              <option [ngValue]="null"></option>
+              <option
+                [ngValue]="libraryOption.id === editForm.get('library')!.value?.id ? editForm.get('library')!.value : libraryOption"
+                *ngFor="let libraryOption of librariesSharedCollection; trackBy: trackLibraryById"
+              >
+                {{ libraryOption.id }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_product">Product</label>
+            <select class="form-control" id="field_product" data-cy="product" name="product" formControlName="product">
+              <option [ngValue]="null"></option>
+              <option
+                [ngValue]="productOption.id === editForm.get('product')!.value?.id ? editForm.get('product')!.value : productOption"
+                *ngFor="let productOption of productsSharedCollection; trackBy: trackProductById"
+              >
+                {{ productOption.id }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+            <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+          </button>
+
+          <button
+            type="submit"
+            id="save-entity"
+            data-cy="entityCreateSaveButton"
+            [disabled]="editForm.invalid || isSaving"
+            class="btn btn-primary"
+          >
+            <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

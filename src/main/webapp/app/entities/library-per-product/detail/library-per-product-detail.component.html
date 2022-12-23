@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="libraryPerProduct">
+      <h2 data-cy="libraryPerProductDetailsHeading"><span>Library Per Product</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ libraryPerProduct.id }}</span>
+        </dd>
+        <dt><span>Added Date</span></dt>
+        <dd>
+          <span>{{ libraryPerProduct.addedDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Added Manually</span></dt>
+        <dd>
+          <span>{{ libraryPerProduct.addedManually }}</span>
+        </dd>
+        <dt><span>Hide For Publishing</span></dt>
+        <dd>
+          <span>{{ libraryPerProduct.hideForPublishing }}</span>
+        </dd>
+        <dt><span>Library</span></dt>
+        <dd>
+          <div *ngIf="libraryPerProduct.library">
+            <a [routerLink]="['/library', libraryPerProduct.library.id, 'view']">{{ libraryPerProduct.library.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Product</span></dt>
+        <dd>
+          <div *ngIf="libraryPerProduct.product">
+            <a [routerLink]="['/product', libraryPerProduct.product.id, 'view']">{{ libraryPerProduct.product.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/library-per-product', libraryPerProduct.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

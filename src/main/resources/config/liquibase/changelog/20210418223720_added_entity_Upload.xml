@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added the entity Upload.
+    -->
+    <changeSet id="20210418223720-1" author="jhipster">
+        <createTable tableName="upload">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="file" type="longblob">
+                <constraints nullable="false" />
+            </column>
+            <column name="file_content_type" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="entity_to_upload" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="record" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="overwrite_data" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="uploaded_date" type="date">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+</databaseChangeLog>

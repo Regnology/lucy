@@ -1,0 +1,69 @@
+<div class="card jh-card">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+        <h2 id="jhi-license-per-library-heading" data-cy="LicensePerLibraryCreateUpdateHeading">Create or edit a License Per Library</h2>
+
+        <div>
+          <jhi-alert-error></jhi-alert-error>
+
+          <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+            <label class="form-control-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_linkType">Link Type</label>
+            <select class="form-control" name="linkType" formControlName="linkType" id="field_linkType" data-cy="linkType">
+              <option [ngValue]="null"></option>
+              <option value="AND">and</option>
+              <option value="OR">or</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_license">License</label>
+            <select class="form-control" id="field_license" data-cy="license" name="license" formControlName="license">
+              <option [ngValue]="null"></option>
+              <option
+                [ngValue]="licenseOption.id === editForm.get('license')!.value?.id ? editForm.get('license')!.value : licenseOption"
+                *ngFor="let licenseOption of licensesSharedCollection; trackBy: trackLicenseById"
+              >
+                {{ licenseOption.id }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_library">Library</label>
+            <select class="form-control" id="field_library" data-cy="library" name="library" formControlName="library">
+              <option [ngValue]="null"></option>
+              <option
+                [ngValue]="libraryOption.id === editForm.get('library')!.value?.id ? editForm.get('library')!.value : libraryOption"
+                *ngFor="let libraryOption of librariesSharedCollection; trackBy: trackLibraryById"
+              >
+                {{ libraryOption.id }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+            <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+          </button>
+
+          <button
+            type="submit"
+            id="save-entity"
+            data-cy="entityCreateSaveButton"
+            [disabled]="editForm.invalid || isSaving"
+            class="btn btn-primary"
+          >
+            <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

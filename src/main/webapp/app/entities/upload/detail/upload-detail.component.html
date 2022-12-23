@@ -1,0 +1,51 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="upload">
+      <h2 data-cy="uploadDetailsHeading"><span>Upload</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ upload.id }}</span>
+        </dd>
+        <dt><span>File</span></dt>
+        <dd>
+          <div *ngIf="upload.file">
+            <a (click)="openFile(upload.file, upload.fileContentType)">open</a>
+            {{ upload.fileContentType }}, {{ byteSize(upload.file) }}
+          </div>
+        </dd>
+        <dt><span>Entity To Upload</span></dt>
+        <dd>
+          <span>{{ upload.entityToUpload }}</span>
+        </dd>
+        <dt><span>Record</span></dt>
+        <dd>
+          <span>{{ upload.record }}</span>
+        </dd>
+        <dt><span>Overwrite Data</span></dt>
+        <dd>
+          <span>{{ upload.overwriteData }}</span>
+        </dd>
+        <dt><span>Uploaded Date</span></dt>
+        <dd>
+          <span>{{ upload.uploadedDate | formatMediumDate }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/upload', upload.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

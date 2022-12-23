@@ -1,0 +1,44 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="licensePerLibrary">
+      <h2 data-cy="licensePerLibraryDetailsHeading"><span>License Per Library</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ licensePerLibrary.id }}</span>
+        </dd>
+        <dt><span>Link Type</span></dt>
+        <dd>
+          <span>{{ licensePerLibrary.linkType }}</span>
+        </dd>
+        <dt><span>License</span></dt>
+        <dd>
+          <div *ngIf="licensePerLibrary.license">
+            <a [routerLink]="['/license', licensePerLibrary.license.id, 'view']">{{ licensePerLibrary.license.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Library</span></dt>
+        <dd>
+          <div *ngIf="licensePerLibrary.library">
+            <a [routerLink]="['/library', licensePerLibrary.library.id, 'view']">{{ licensePerLibrary.library.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/license-per-library', licensePerLibrary.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Dropped license field from Library and licensePerLibrary table.
+    -->
+    <changeSet id="20210929091500-1" author="patrick.wojciech">
+        <dropTable  cascadeConstraints="true"
+                    tableName="rel_library__license"/>
+    </changeSet>
+</databaseChangeLog>

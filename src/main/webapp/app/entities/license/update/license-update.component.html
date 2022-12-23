@@ -1,0 +1,180 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-license-heading" data-cy="LicenseCreateUpdateHeading">Create or edit a License</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_fullName">Full Name</label>
+          <input type="text" class="form-control" name="fullName" id="field_fullName" data-cy="fullName" formControlName="fullName" />
+          <div *ngIf="editForm.get('fullName')!.invalid && (editForm.get('fullName')!.dirty || editForm.get('fullName')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('fullName')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_shortIdentifier">Short Identifier</label>
+          <input
+            type="text"
+            class="form-control"
+            name="shortIdentifier"
+            id="field_shortIdentifier"
+            data-cy="shortIdentifier"
+            formControlName="shortIdentifier"
+          />
+          <div
+            *ngIf="
+              editForm.get('shortIdentifier')!.invalid &&
+              (editForm.get('shortIdentifier')!.dirty || editForm.get('shortIdentifier')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('shortIdentifier')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_spdxIdentifier">Spdx Identifier</label>
+          <input
+            type="text"
+            class="form-control"
+            name="spdxIdentifier"
+            id="field_spdxIdentifier"
+            data-cy="spdxIdentifier"
+            formControlName="spdxIdentifier"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_url">Url</label>
+          <input type="text" class="form-control" name="url" id="field_url" data-cy="url" formControlName="url" />
+          <div *ngIf="editForm.get('url')!.invalid && (editForm.get('url')!.dirty || editForm.get('url')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('url')?.errors?.maxlength">
+              This field cannot be longer than 2048 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_genericLicenseText">Generic License Text</label>
+          <textarea
+            class="form-control"
+            name="genericLicenseText"
+            id="field_genericLicenseText"
+            data-cy="genericLicenseText"
+            formControlName="genericLicenseText"
+          ></textarea>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_other">Other</label>
+          <input type="text" class="form-control" name="other" id="field_other" data-cy="other" formControlName="other" />
+          <div *ngIf="editForm.get('other')!.invalid && (editForm.get('other')!.dirty || editForm.get('other')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('other')?.errors?.maxlength">
+              This field cannot be longer than 2048 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_reviewed">Reviewed</label>
+          <input type="checkbox" class="form-check" name="reviewed" id="field_reviewed" data-cy="reviewed" formControlName="reviewed" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_lastReviewedDate">Last Reviewed Date</label>
+          <div class="input-group">
+            <input
+              id="field_lastReviewedDate"
+              data-cy="lastReviewedDate"
+              type="text"
+              class="form-control"
+              name="lastReviewedDate"
+              ngbDatepicker
+              #lastReviewedDateDp="ngbDatepicker"
+              formControlName="lastReviewedDate"
+            />
+            <button type="button" class="btn btn-secondary" (click)="lastReviewedDateDp.toggle()">
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_lastReviewedBy">Last Reviewed By</label>
+          <select
+            class="form-control"
+            id="field_lastReviewedBy"
+            data-cy="lastReviewedBy"
+            name="lastReviewedBy"
+            formControlName="lastReviewedBy"
+          >
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="userOption.id === editForm.get('lastReviewedBy')!.value?.id ? editForm.get('lastReviewedBy')!.value : userOption"
+              *ngFor="let userOption of usersSharedCollection; trackBy: trackUserById"
+            >
+              {{ userOption.login }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_licenseRisk">License Risk</label>
+          <select class="form-control" id="field_licenseRisk" data-cy="licenseRisk" name="licenseRisk" formControlName="licenseRisk">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                licenseRiskOption.id === editForm.get('licenseRisk')!.value?.id ? editForm.get('licenseRisk')!.value : licenseRiskOption
+              "
+              *ngFor="let licenseRiskOption of licenseRisksSharedCollection; trackBy: trackLicenseRiskById"
+            >
+              {{ licenseRiskOption.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label for="field_requirements">Requirement</label>
+          <select
+            class="form-control"
+            id="field_requirements"
+            data-cy="requirement"
+            multiple
+            name="requirements"
+            formControlName="requirements"
+          >
+            <option
+              [ngValue]="getSelectedRequirement(requirementOption, editForm.get('requirements')!.value)"
+              *ngFor="let requirementOption of requirementsSharedCollection; trackBy: trackRequirementById"
+            >
+              {{ requirementOption.shortText }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

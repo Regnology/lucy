@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added the entity Fossology.
+    -->
+    <changeSet id="20220412123722-1" author="patrick.wojciech">
+        <createTable tableName="fossology">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="status" type="varchar(255)" defaultValue="NOT_STARTED">
+                <constraints nullable="false" />
+            </column>
+            <column name="upload_id" type="varchar(64)">
+                <constraints nullable="true" />
+            </column>
+            <column name="job_id" type="varchar(64)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_scan" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <dropDefaultValue tableName="fossology" columnName="last_scan" columnDataType="${datetimeType}"/>
+
+    </changeSet>
+
+    <changeSet id="20220412123722-1-library" author="patrick.wojciech">
+        <addColumn tableName="library">
+            <column name="fossology_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20220412123722-1-relations" author="patrick.wojciech">
+        <addForeignKeyConstraint baseColumnNames="fossology_id"
+                                 baseTableName="library"
+                                 constraintName="fk_library__fossology_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="fossology"/>
+    </changeSet>
+</databaseChangeLog>

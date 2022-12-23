@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql, mariadb"/>
+    <property name="clobType" value="longvarchar" dbms="h2"/>
+    <property name="clobType" value="clob" dbms="mysql, oracle, mssql, mariadb, postgresql"/>
+    <property name="uuidType" value="uuid" dbms="h2, postgresql"/>
+    <property name="datetimeType" value="datetime(6)" dbms="mysql, mariadb"/>
+    <property name="datetimeType" value="datetime" dbms="oracle, mssql, postgresql, h2"/>
+
+    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210304151313_added_entity_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210226173630_added_entity_LicenseRisk.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210226173430_added_entity_Library.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210304151413_added_entity_LibraryPerProduct.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210226173730_added_entity_Requirement.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210226173530_added_entity_License.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210331075344_added_entity_LicenseNamingMapping.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210407131645_added_entity_GenericLicenseUrl.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210418223720_added_entity_Upload.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210615115333_added_entity_LicensePerLibrary.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210831153147_added_entity_LibraryErrorLog.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210226173430_added_entity_constraints_Library.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210705150000_changed_entity_LicenseRisk.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210226173530_added_entity_constraints_License.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210304151413_added_entity_constraints_LibraryPerProduct.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210615115333_added_entity_constraints_LicensePerLibrary.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210831153147_added_entity_constraints_LibraryErrorLog.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210610121600_added_entity_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210712130000_changed_entity_Authority.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210718120000_changed_entity_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210913102000_changed_entity_Library.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210929091500_changed_entity_Library.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20211004100000_changed_entity_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20211014120000_changed_entity_Library.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220127100000_changed_entity_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220412123722_added_entity_Fossology.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220512173300_changed_entity_LicensePerLibrary.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220602133500_changed_entity_Library.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220623151900_changed_entity_LibraryPerProduct.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220711143800_changed_entity_LibraryPerProduct.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220728085048_added_entity_LicenseConflict.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220728085048_added_entity_constraints_LicenseConflict.xml" relativeToChangelogFile="false"/>
+</databaseChangeLog>

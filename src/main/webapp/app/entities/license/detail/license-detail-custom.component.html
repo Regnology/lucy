@@ -1,0 +1,213 @@
+<div>
+  <jhi-alert-error></jhi-alert-error>
+  <jhi-alert></jhi-alert>
+  <div *ngIf="license">
+    <div class="jh-card card">
+      <div class="row justify-content-center">
+        <div class="col-lg">
+          <div class="row align-items-end mb-2">
+            <div class="col-auto">
+              <fa-icon style="position: relative; top: -1.8rem" icon="gavel" size="lg"></fa-icon>
+            </div>
+            <div *ngIf="license.fullName" class="col-auto">
+              <div class="detail-attribute">
+                <h2 data-cy="licenseDetailsHeading">{{ license.fullName }}</h2>
+                <small>Full Name</small>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="row mt-2">
+            <div class="col-auto">
+              <div class="detail-attribute">
+                <h4>{{ license.shortIdentifier }}</h4>
+                <small>Short Identifier</small>
+              </div>
+            </div>
+            <div *ngIf="license.spdxIdentifier" class="col-auto">
+              <div class="detail-attribute">
+                <h4>{{ license.spdxIdentifier }}</h4>
+                <small>SPDX Identifier</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto me-3">
+          <div class="card lucy-card text-center">
+            <div class="card-header lucy-card-header-white">
+              <fa-icon class="me-1" icon="shield-alt"></fa-icon>
+              License Risk
+            </div>
+            <a
+              [routerLink]="['/license-risk', license.licenseRisk?.id, 'view']"
+              [ngStyle]="{ 'background-color': license.licenseRisk?.color }"
+              class="card-body card-body-risk text-white btn-light"
+            >
+              {{ license.licenseRisk?.name }}
+            </a>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="card lucy-card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <div class="detail-attribute-sm">
+                    <fa-icon icon="user-edit" placement="left" ngbTooltip="Reviewed by"></fa-icon>
+                    <span>{{ license.lastReviewedBy?.login }}</span>
+                    <span *ngIf="!license.reviewed">Not reviewed</span>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="license.reviewed" class="row">
+                <div class="col">
+                  <div class="detail-attribute-sm">
+                    <fa-icon icon="edit" placement="left" ngbTooltip="Last review date"></fa-icon>
+                    <span>{{ license.lastReviewedDate | formatMediumDate }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card jh-card mb-3">
+      <ul ngbNav #nav="ngbNav" activeId="Requirements" class="nav nav-pills" (navChange)="navTabChange($event)">
+        <li ngbNavItem="Requirements">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="gavel"></fa-icon>
+            Requirements <span class="badge bg-light text-black">{{ license.requirements?.length }}</span></a
+          >
+          <ng-template ngbNavContent>
+            <div class="row">
+              <div *ngFor="let requirement of license.requirements; let last = last" class="col-md-4">
+                <div class="card lucy-card mb-3">
+                  <div class="card-header lucy-card-header hand" [routerLink]="['/requirement', requirement?.id, 'view']">
+                    {{ requirement.shortText }}
+                  </div>
+                  <div class="card-body">{{ requirement.description }}</div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+
+        <li ngbNavItem="License Conflicts">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="bolt-lightning"></fa-icon>
+            License Conflicts (BETA)</a
+          >
+          <ng-template ngbNavContent>
+            <div class="row g-3">
+              <div class="col-lg-6 col-md-12" *ngFor="let mapEntry of licenseConflictsMap | keyvalue: asIsOrder">
+                <div class="card lucy-card">
+                  <div class="card-header text-white" [ngStyle]="{ 'background-color': licenseRiskColor(mapEntry.key) }">
+                    {{ mapEntry.key }}
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-sm" aria-describedby="page-heading">
+                      <thead>
+                        <tr>
+                          <th>License</th>
+                          <th>Compatibility</th>
+                          <th class="text-center">Comment</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let licenseConflict of mapEntry.value">
+                          <td>{{ licenseConflict.secondLicenseConflict?.shortIdentifier }}</td>
+                          <td>{{ licenseConflict.compatibility }}</td>
+                          <td class="text-center">
+                            <ng-template #longContent let-modal>
+                              <div class="modal-header">
+                                <h4 class="modal-title">License Conflict Comment</h4>
+                                <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                              </div>
+                              <div *ngIf="licenseConflict.comment" class="modal-body" style="white-space: pre-line">
+                                {{ licenseConflict.comment }}
+                              </div>
+                              <div *ngIf="!licenseConflict.comment" class="modal-body text-muted">No comment</div>
+                            </ng-template>
+                            <fa-icon
+                              *ngIf="licenseConflict.comment; else noComment"
+                              icon="search"
+                              class="hand"
+                              placement="top"
+                              ngbTooltip="Preview"
+                              (click)="openScrollableContent(longContent, 'md')"
+                            ></fa-icon>
+                            <ng-template #noComment>
+                              <fa-icon icon="times" placement="top" ngbTooltip="No comment"></fa-icon>
+                            </ng-template>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+
+        <li ngbNavItem="Details">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="ellipsis-h"></fa-icon>
+            Details</a
+          >
+          <ng-template ngbNavContent>
+            <div class="row mb-4">
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <p>
+                    <a [href]="license.url" target="_blank">{{ license.url }}</a>
+                  </p>
+                  <p *ngIf="!license.url">
+                    <fa-icon icon="times"></fa-icon>
+                  </p>
+                  <small>License Url</small>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md">
+                <div class="detail-attribute">
+                  <div *ngIf="license.other" class="long-text">
+                    <p>{{ license.other }}</p>
+                  </div>
+                  <small>Other</small>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+        <li ngbNavItem="License Text">
+          <a ngbNavLink>
+            <fa-icon class="me-1" icon="align-left"></fa-icon>
+            License Text</a
+          >
+          <ng-template ngbNavContent>
+            <div [innerHTML]="license.genericLicenseText"></div>
+          </ng-template>
+        </li>
+      </ul>
+      <hr />
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
+
+    <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+      <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+    </button>
+
+    <button
+      *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
+      type="button"
+      [routerLink]="['/license', license.id, 'edit']"
+      class="btn btn-primary"
+    >
+      <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+    </button>
+  </div>
+</div>

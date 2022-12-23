@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    <!--
+        Added the constraints for entity Library.
+    -->
+    <changeSet id="20210226173430-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="last_reviewed_by_id"
+                                 baseTableName="library"
+                                 constraintName="fk_library__last_reviewed_by_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="library_id"
+                                 baseTableName="rel_library__license"
+                                 constraintName="fk_rel_library__license__library_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="library"/>
+
+        <addForeignKeyConstraint baseColumnNames="license_id"
+                                 baseTableName="rel_library__license"
+                                 constraintName="fk_rel_library__license__license_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="license"/>
+
+        <addForeignKeyConstraint baseColumnNames="library_id"
+                                 baseTableName="rel_library__license_to_publish"
+                                 constraintName="fk_rel_library__license_to_publish__library_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="library"/>
+
+        <addForeignKeyConstraint baseColumnNames="license_to_publish_id"
+                                 baseTableName="rel_library__license_to_publish"
+                                 constraintName="fk_rel_library__license_to_publish__license_to_publish_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="license"/>
+
+        <addForeignKeyConstraint baseColumnNames="library_id"
+                                 baseTableName="rel_library__license_of_files"
+                                 constraintName="fk_rel_library__license_of_files__library_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="library"/>
+
+        <addForeignKeyConstraint baseColumnNames="license_of_files_id"
+                                 baseTableName="rel_library__license_of_files"
+                                 constraintName="fk_rel_library__license_of_files__license_of_files_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="license"/>
+    </changeSet>
+</databaseChangeLog>

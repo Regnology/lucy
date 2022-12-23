@@ -1,0 +1,71 @@
+<div class="modal-header">
+  <h5 class="modal-title">Result from copyright analysis</h5>
+  <button type="button" class="close" data-dismiss="modal" (click)="closeModal('dismiss')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row mb-3">
+    <div class="col-lg card lucy-card m-2">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>
+              <b>Copyright from all files</b>
+              <fa-icon
+                icon="question-circle"
+                placement="top"
+                ngbTooltip="All files in the source code archive are scanned"
+                container="body"
+              ></fa-icon>
+            </th>
+          </tr>
+        </thead>
+        <tbody *ngIf="fromParent.full.length > 0">
+          <tr *ngFor="let copyright of fromParent.full; let last = last">
+            <td>{{ copyright }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="fromParent.full.length === 0" class="alert alert-warning" id="no-result-full">
+        <span>No copyrights found</span>
+      </div>
+    </div>
+    <div class="col-lg card lucy-card m-2">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th>
+              <b>Copyright from documentation files</b>
+              <fa-icon
+                icon="question-circle"
+                placement="top"
+                ngbTooltip="Documentation files are readme, license, notice etc. files. Only these files are scanned"
+                container="body"
+              ></fa-icon>
+            </th>
+          </tr>
+        </thead>
+        <tbody *ngIf="fromParent.simple.length > 0">
+          <tr *ngFor="let copyright of fromParent.simple; let last = last">
+            <td>{{ copyright }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="fromParent.simple.length === 0" class="alert alert-warning" id="no-result-simple">
+        <span>No copyrights found</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg text-center">
+      <label for="finalCopyright"><h5>Copyright to be saved</h5></label>
+      <textarea [(ngModel)]="finalCopyright" class="form-control" id="finalCopyright" rows="5" placeholder="Copyright"></textarea>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal('close')">Close</button>
+  <button type="button" class="btn btn-primary" (click)="save()">Save copyright</button>
+</div>

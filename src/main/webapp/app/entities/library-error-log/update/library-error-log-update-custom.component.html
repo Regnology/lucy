@@ -1,0 +1,102 @@
+<div class="card jh-card">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+        <h2 id="jhi-library-error-log-heading" data-cy="LibraryErrorLogCreateUpdateHeading">Create or edit a Library Error Log</h2>
+
+        <div>
+          <jhi-alert-error></jhi-alert-error>
+
+          <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+            <label class="form-control-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_message">Message</label>
+            <input type="text" class="form-control" name="message" id="field_message" data-cy="message" formControlName="message" />
+            <div *ngIf="editForm.get('message')!.invalid && (editForm.get('message')!.dirty || editForm.get('message')!.touched)">
+              <small class="form-text text-danger" *ngIf="editForm.get('message')?.errors?.required"> This field is required. </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_severity">Severity</label>
+            <select class="form-control" name="severity" formControlName="severity" id="field_severity" data-cy="severity">
+              <option [ngValue]="null"></option>
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+            </select>
+            <div *ngIf="editForm.get('severity')!.invalid && (editForm.get('severity')!.dirty || editForm.get('severity')!.touched)">
+              <small class="form-text text-danger" *ngIf="editForm.get('severity')?.errors?.required"> This field is required. </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_status">Status</label>
+            <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+              <option [ngValue]="null"></option>
+              <option value="CLOSED">CLOSED</option>
+              <option value="FIXED">FIXED</option>
+              <option value="OPEN">OPEN</option>
+            </select>
+            <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
+              <small class="form-text text-danger" *ngIf="editForm.get('status')?.errors?.required"> This field is required. </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_timestamp">Timestamp</label>
+            <div class="d-flex">
+              <input
+                id="field_timestamp"
+                data-cy="timestamp"
+                type="datetime-local"
+                class="form-control"
+                name="timestamp"
+                formControlName="timestamp"
+                placeholder="YYYY-MM-DD HH:mm"
+              />
+            </div>
+            <div *ngIf="editForm.get('timestamp')!.invalid && (editForm.get('timestamp')!.dirty || editForm.get('timestamp')!.touched)">
+              <small class="form-text text-danger" *ngIf="editForm.get('timestamp')?.errors?.required"> This field is required. </small>
+              <small class="form-text text-danger" [hidden]="!editForm.get('timestamp')?.errors?.ZonedDateTimelocal">
+                This field should be a date and time.
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_library">Library</label>
+            <select class="form-control" id="field_library" data-cy="library" name="library" formControlName="library">
+              <option [ngValue]="null"></option>
+              <option
+                [ngValue]="libraryOption.id === editForm.get('library')!.value?.id ? editForm.get('library')!.value : libraryOption"
+                *ngFor="let libraryOption of librariesSharedCollection; trackBy: trackLibraryById"
+              >
+                {{ libraryOption.id }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+            <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+          </button>
+
+          <button
+            type="submit"
+            id="save-entity"
+            data-cy="entityCreateSaveButton"
+            [disabled]="editForm.invalid || isSaving"
+            class="btn btn-primary"
+          >
+            <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

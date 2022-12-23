@@ -1,0 +1,11 @@
+
+  ${AnsiColor.BLUE} _
+  ${AnsiColor.BLUE}| |
+  ${AnsiColor.BLUE}| |    _   _  ___ _   _
+  ${AnsiColor.BLUE}| |   | | | |/ __| | | |
+  ${AnsiColor.BLUE}| |___| |_| | (__| |_| |
+  ${AnsiColor.BLUE}\_____/\__,_|\___|\__, |
+  ${AnsiColor.BLUE}                   __/ |
+  ${AnsiColor.BLUE}                  |___/
+
+${AnsiColor.BRIGHT_BLUE}:: Lucy :: Running Spring Boot ${spring-boot.version} ::

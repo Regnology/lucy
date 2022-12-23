@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added MD5 and SHA-1 column for library.
+    -->
+    <changeSet id="20211014120000-1" author="patrick.wojciech">
+        <addColumn tableName="library">
+            <column name="md5" type="varchar(32)">
+                <constraints nullable="true" />
+            </column>
+            <column name="sha1" type="varchar(40)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

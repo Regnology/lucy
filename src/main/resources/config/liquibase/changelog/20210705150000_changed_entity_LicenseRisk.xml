@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added color column for license_risk.
+    -->
+    <changeSet id="20210705150000-1" author="patrick.wojciech">
+        <validCheckSum>8:5f93ca5cb2bc745772cac11fe165f1d3</validCheckSum>
+        <addColumn tableName="license_risk">
+            <column name="color" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20210226173630-1-data" author="jhipster">
+        <validCheckSum>8:1b5720e23d7a1806c42976acf7707807</validCheckSum>
+        <loadData
+            file="config/liquibase/data/license_risk.csv"
+            separator=";"
+            tableName="license_risk"
+            usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="name" type="string"/>
+            <column name="level" type="numeric"/>
+            <column name="description" type="string"/>
+            <column name="color" type="string"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

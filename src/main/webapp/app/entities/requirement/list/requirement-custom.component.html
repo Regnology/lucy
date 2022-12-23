@@ -1,0 +1,76 @@
+<jhi-alert-error></jhi-alert-error>
+
+<jhi-alert></jhi-alert>
+
+<div class="card jh-card">
+  <div class="row">
+    <div class="col-md">
+      <h2 id="page-heading" data-cy="RequirementHeading">
+        <span>Requirements</span>
+      </h2>
+    </div>
+
+    <div class="col-md">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-info me-2" (click)="reset()" [disabled]="isLoading">
+          <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        </button>
+
+        <button
+          *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
+          id="jh-create-entity"
+          data-cy="entityCreateButton"
+          class="btn btn-primary jh-create-entity create-requirement"
+          [routerLink]="['/requirement/new']"
+        >
+          <fa-icon icon="plus"></fa-icon>
+          <span> Create a new Requirement </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card jh-card">
+  <div class="alert alert-warning" id="no-result" *ngIf="requirements?.length === 0">
+    <span>No requirements found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="requirements && requirements.length > 0">
+    <table class="table table-sm" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="reset()">
+          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="shortText"><span>Short Text</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="description"><span>Description</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+        <tr *ngFor="let requirement of requirements; trackBy: trackId" data-cy="entityTable">
+          <td>{{ requirement.id }}</td>
+          <td>
+            <a [routerLink]="['/requirement', requirement.id, 'view']">{{ requirement.shortText }}</a>
+          </td>
+          <td>{{ requirement.description }}</td>
+          <td *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']" class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/requirement', requirement.id, 'edit']"
+                class="btn btn-primary"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+              </button>
+
+              <button type="submit" (click)="delete(requirement)" class="btn btn-danger" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

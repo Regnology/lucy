@@ -1,0 +1,77 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="license">
+      <h2 data-cy="licenseDetailsHeading"><span>License</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ license.id }}</span>
+        </dd>
+        <dt><span>Full Name</span></dt>
+        <dd>
+          <span>{{ license.fullName }}</span>
+        </dd>
+        <dt><span>Short Identifier</span></dt>
+        <dd>
+          <span>{{ license.shortIdentifier }}</span>
+        </dd>
+        <dt><span>Spdx Identifier</span></dt>
+        <dd>
+          <span>{{ license.spdxIdentifier }}</span>
+        </dd>
+        <dt><span>Url</span></dt>
+        <dd>
+          <span>{{ license.url }}</span>
+        </dd>
+        <dt><span>Generic License Text</span></dt>
+        <dd>
+          <span>{{ license.genericLicenseText }}</span>
+        </dd>
+        <dt><span>Other</span></dt>
+        <dd>
+          <span>{{ license.other }}</span>
+        </dd>
+        <dt><span>Reviewed</span></dt>
+        <dd>
+          <span>{{ license.reviewed }}</span>
+        </dd>
+        <dt><span>Last Reviewed Date</span></dt>
+        <dd>
+          <span>{{ license.lastReviewedDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Last Reviewed By</span></dt>
+        <dd>
+          <span>{{ license.lastReviewedBy?.login }}</span>
+        </dd>
+        <dt><span>License Risk</span></dt>
+        <dd>
+          <div *ngIf="license.licenseRisk">
+            <a [routerLink]="['/license-risk', license.licenseRisk.id, 'view']">{{ license.licenseRisk.name }}</a>
+          </div>
+        </dd>
+        <dt><span>Requirement</span></dt>
+        <dd>
+          <span *ngFor="let requirement of license.requirements; let last = last">
+            <a [routerLink]="['/requirement', requirement?.id, 'view']">{{ requirement.shortText }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/license', license.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

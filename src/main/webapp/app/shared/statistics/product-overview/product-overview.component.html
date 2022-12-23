@@ -1,0 +1,188 @@
+<div>
+  <div class="row container-xl m-auto">
+    <ng-container *ngIf="licenseRiskResult">
+      <div class="col-sm risk-box" style="background-color: #85cf00">
+        <div class="fw-bolder">
+          {{ licenseRiskResult[0].value }}
+        </div>
+        <div class="">
+          {{ licenseRiskResult[0].name }}
+        </div>
+      </div>
+
+      <div class="col-sm risk-box" style="background-color: #ffc300">
+        <div class="fw-bolder">
+          {{ licenseRiskResult[1].value }}
+        </div>
+        <div class="">
+          {{ licenseRiskResult[1].name }}
+        </div>
+      </div>
+
+      <div class="col-sm risk-box" style="background-color: #20a8d8">
+        <div class="fw-bolder">
+          {{ licenseRiskResult[2].value }}
+        </div>
+        <div class="">
+          {{ licenseRiskResult[2].name }}
+        </div>
+      </div>
+
+      <div class="col-sm risk-box" style="background-color: #9933ff">
+        <div class="fw-bolder">
+          {{ licenseRiskResult[3].value }}
+        </div>
+        <div class="">
+          {{ licenseRiskResult[3].name }}
+        </div>
+      </div>
+
+      <div class="col-sm risk-box" style="background-color: #ff5733">
+        <div class="fw-bolder">
+          {{ licenseRiskResult[4].value }}
+        </div>
+        <div class="">
+          {{ licenseRiskResult[4].name }}
+        </div>
+      </div>
+
+      <div class="col-sm risk-box" style="background-color: #c70039">
+        <div class="fw-bolder">
+          {{ licenseRiskResult[5].value }}
+        </div>
+        <div class="">
+          {{ licenseRiskResult[5].name }}
+        </div>
+      </div>
+
+      <div class="col-sm risk-box" style="background-color: #cccccc">
+        <div class="fw-bolder">
+          {{ licenseRiskResult[6].value }}
+        </div>
+        <div class="">
+          {{ licenseRiskResult[6].name }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <hr />
+
+  <div class="row">
+    <div class="col-md mb-3">
+      <div class="shadow-sm">
+        <div class="pt-2 ms-3 me-3">
+          <h4 class="text-left">License Risks</h4>
+          <div class="text-muted charts-subtitle">License Risks per Version</div>
+        </div>
+        <div #containerRef1 class="charts-card">
+          <div *ngIf="!licenseRiskSeries; then loading"></div>
+          <ngx-charts-line-chart
+            *ngIf="licenseRiskSeries"
+            [customColors]="colorSchemeLicenseRisk"
+            [legend]="false"
+            [legendPosition]="legendPosition"
+            [showXAxisLabel]="false"
+            [showYAxisLabel]="false"
+            [xAxis]="true"
+            [yAxis]="true"
+            xAxisLabel="Version"
+            yAxisLabel="Number of License Risks"
+            [timeline]="false"
+            [results]="licenseRiskSeries"
+            [view]="[containerRef1.offsetWidth, containerRef1.offsetHeight]"
+          >
+          </ngx-charts-line-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md mb-3">
+      <div class="shadow-sm">
+        <div class="pt-2 ms-3 me-3">
+          <h4 class="text-left">Libraries</h4>
+          <div class="text-muted charts-subtitle">Total Libraries per Version</div>
+        </div>
+        <div #containerRef2 class="charts-card">
+          <div *ngIf="!numberOfLibrariesSeries; then loading"></div>
+          <ngx-charts-line-chart
+            *ngIf="numberOfLibrariesSeries"
+            [legend]="false"
+            [legendPosition]="legendPosition"
+            [showXAxisLabel]="false"
+            [showYAxisLabel]="false"
+            [xAxis]="true"
+            [yAxis]="true"
+            xAxisLabel="Version"
+            yAxisLabel="Number of Libraries"
+            [timeline]="false"
+            [results]="numberOfLibrariesSeries"
+            [view]="[containerRef2.offsetWidth, containerRef2.offsetHeight]"
+          >
+          </ngx-charts-line-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md mb-3">
+      <div class="shadow-sm">
+        <div class="pt-2 ms-3 me-3">
+          <h4 class="text-left">License Risk</h4>
+          <div class="text-muted charts-subtitle">License Risk Distribution</div>
+        </div>
+        <div #containerRef3 class="charts-card">
+          <div *ngIf="!licenseRiskPieChart; then loading"></div>
+          <div *ngIf="licenseRiskPieChart && numberOfLibraries === 0; then noData"></div>
+          <ngx-charts-advanced-pie-chart
+            *ngIf="licenseRiskPieChart && numberOfLibraries != null && numberOfLibraries > 0"
+            [view]="[containerRef3.offsetWidth, containerRef3.offsetHeight]"
+            [customColors]="colorSchemeLicenseRisk"
+            [results]="licenseRiskPieChart"
+            label="Libraries"
+          >
+          </ngx-charts-advanced-pie-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md mb-3">
+      <div class="shadow-sm">
+        <div class="pt-2 ms-3 me-3">
+          <h4 class="text-left">Licenses</h4>
+          <div class="text-muted charts-subtitle">License Distribution</div>
+        </div>
+        <div class="charts-card-dynamic-height">
+          <div *ngIf="!licenseDistribution; then loading"></div>
+          <div *ngIf="licenseDistribution != null && licenseDistribution.length === 0; then noData"></div>
+          <div class="row p-3" *ngIf="licenseDistribution != null && licenseDistribution.length > 0">
+            <div class="col-sm-auto mb-1" *ngFor="let license of licenseDistribution">
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-info font-weight-bold" style="font-size: 76%; cursor: default">
+                  {{ license.value }}
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary text-nowrap" style="font-size: 76%; cursor: default">
+                  {{ license.name }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noData>
+  <div class="row align-items-center" style="position: relative; top: 100px">
+    <div class="col text-center">No data</div>
+  </div>
+</ng-template>
+<ng-template #loading>
+  <div class="row align-items-center" style="position: relative; top: 100px">
+    <div class="col text-center">
+      <div class="spinner-grow"></div>
+    </div>
+  </div>
+</ng-template>

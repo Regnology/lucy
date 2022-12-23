@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Update hideForPublishing from null to false for libraryPerProduct.
+    -->
+    <changeSet id="20220711143800-1" author="patrick.wojciech">
+        <update tableName="library_per_product">
+            <column name="hide_for_publishing" value="false"/>
+            <where>hide_for_publishing is null</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

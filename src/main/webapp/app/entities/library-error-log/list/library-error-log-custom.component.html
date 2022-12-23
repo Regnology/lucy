@@ -1,0 +1,98 @@
+<div class="card jh-card">
+  <h2 id="page-heading" data-cy="LibraryErrorLogHeading">
+    <span>Library Error Logs</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-library-error-log"
+        [routerLink]="['/library-error-log/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Library Error Log </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="libraryErrorLogs?.length === 0">
+    <span>No libraryErrorLogs found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="libraryErrorLogs && libraryErrorLogs.length > 0">
+    <table class="table" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="message"><span>Message</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="severity"><span>Severity</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="status"><span>Status</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="timestamp"><span>Timestamp</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="library.id"><span>Library</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let libraryErrorLog of libraryErrorLogs; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/library-error-log', libraryErrorLog.id, 'view']">{{ libraryErrorLog.id }}</a>
+          </td>
+          <td>{{ libraryErrorLog.message }}</td>
+          <td>{{ libraryErrorLog.severity }}</td>
+          <td>{{ libraryErrorLog.status }}</td>
+          <td>{{ libraryErrorLog.timestamp | formatMediumDatetime }}</td>
+          <td>
+            <div *ngIf="libraryErrorLog.library">
+              <a [routerLink]="['/library', libraryErrorLog.library.id, 'view']">{{ libraryErrorLog.library.id }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/library-error-log', libraryErrorLog.id, 'edit']"
+                class="btn btn-primary"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline"></span>
+              </button>
+
+              <button type="submit" (click)="delete(libraryErrorLog)" class="btn btn-danger" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline"></span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="libraryErrorLogs && libraryErrorLogs.length > 0">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,265 @@
+<jhi-alert-error></jhi-alert-error>
+
+<jhi-alert></jhi-alert>
+<div class="jh-card card">
+  <div class="row">
+    <div class="col-md">
+      <h2 id="page-heading" data-cy="LibraryHeading">
+        <fa-icon icon="cubes"></fa-icon>
+        <span
+          >Libraries<span class="badge bg-secondary" style="color: white">{{ totalItems }}</span></span
+        >
+      </h2>
+    </div>
+
+    <div class="col-md-auto">
+      <button class="btn btn-info me-2" (click)="loadPage()" [disabled]="isLoading" ngbTooltip="Reload">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+      </button>
+
+      <ng-template #popContent>
+        <div>
+          <input type="radio" id="formatJson" name="exportFormat" [(ngModel)]="jsonExport" [value]="true" />
+          <label for="formatJson">JSON - Full</label>
+        </div>
+
+        <div>
+          <input type="radio" id="formatCsv" name="exportFormat" [(ngModel)]="jsonExport" [value]="false" />
+          <label for="formatCsv">CSV - Basic</label>
+        </div>
+      </ng-template>
+
+      <div class="btn-group me-2" role="group">
+        <button class="btn btn-info btn-export" (click)="export()" [disabled]="isExporting">
+          <span *ngIf="isExporting" class="spinner-border spinner-border-sm" role="status"></span>
+          <fa-icon *ngIf="!isExporting" icon="file-download"></fa-icon>
+          <span *ngIf="!isExporting">Export</span>
+          <span *ngIf="isExporting">Loading</span>
+        </button>
+        <button class="btn btn-info" [ngbPopover]="popContent" placement="bottom" [autoClose]="'outside'">
+          <fa-icon icon="caret-down"></fa-icon>
+        </button>
+      </div>
+
+      <button
+        *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-library"
+        [routerLink]="['/library/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Library </span>
+      </button>
+    </div>
+  </div>
+  <hr />
+  <h5>Search</h5>
+  <div class="row">
+    <div class="col">
+      <form name="searchForm" role="form" novalidate (ngSubmit)="search()" [formGroup]="searchForm">
+        <div class="row">
+          <div class="col-md mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="groupId"
+              id="field_groupId"
+              data-cy="license"
+              formControlName="groupId"
+              placeholder="GroupId"
+            />
+          </div>
+          <div class="col-md mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="artifactId"
+              id="field_artifactId"
+              data-cy="license"
+              formControlName="artifactId"
+              placeholder="ArtifactId"
+            />
+          </div>
+          <div class="col-md mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="version"
+              id="field_version"
+              data-cy="version"
+              formControlName="version"
+              placeholder="Version"
+            />
+          </div>
+          <div class="col-md mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="license"
+              id="field_license"
+              data-cy="license"
+              formControlName="license"
+              placeholder="License"
+            />
+          </div>
+          <div class="col-sm-auto">
+            <button type="submit" id="save-entity" data-cy="entityCreateSaveButton" class="btn btn-primary">
+              <fa-icon icon="search"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="jh-card card" *ngIf="libraries?.length === 0">
+  <div class="alert alert-warning" id="no-result">
+    <span>No libraries found</span>
+  </div>
+</div>
+
+<div class="table-responsive jh-card card" id="entities" *ngIf="libraries && libraries.length > 0">
+  <table class="table table-sm" aria-describedby="page-heading">
+    <thead>
+      <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+        <th scope="col" jhiSortBy="groupId">
+          <span>GroupId</span>
+          <fa-icon icon="sort" style="color: gray('700')"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="artifactId">
+          <span>ArtifactId</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="version">
+          <span>Version</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="type">
+          <span>Type</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="licenses.license.shortIdentifier">
+          <span>License</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="licenseToPublishes.licenseRisk">
+          <span>License Risk</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="licenseUrl">
+          <span>License Url</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="sourceCodeUrl">
+          <span>Source Code Url</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="reviewed">
+          <span>Reviewed</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let library of libraries; trackBy: trackId" data-cy="entityTable">
+        <td>{{ library.groupId }}</td>
+        <td>
+          <a [routerLink]="['/library', library.id, 'view']">{{ library.artifactId }}</a>
+          <span *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
+            ><fa-icon
+              *ngIf="hasErrors(library)"
+              class="text-warning"
+              icon="exclamation-triangle"
+              placement="top"
+              ngbTooltip="Library has open error logs"
+            ></fa-icon
+          ></span>
+        </td>
+        <td>{{ library.version }}</td>
+        <td>{{ library.type }}</td>
+        <td>
+          <span *ngFor="let license of library.licenses; let last = last">
+            <a [routerLink]="['/license', license?.license?.id, 'view']">{{ license?.license?.shortIdentifier }}</a>
+            {{ license.linkType }}
+            {{ last ? '' : ' ' }}
+          </span>
+        </td>
+        <td>
+          <a
+            class="badge btn-light text-white"
+            [ngStyle]="{ 'background-color': libraryRisk(library).color }"
+            [routerLink]="['/license-risk', libraryRisk(library).id, 'view']"
+            >{{ libraryRisk(library).name }}</a
+          >
+        </td>
+        <td>
+          <span
+            [innerHtml]="
+              library?.licenseUrl && library.licenseUrl!.length > 17
+                ? (library.licenseUrl | urlTransformation: true)
+                : (library.licenseUrl | urlTransformation)
+            "
+          ></span>
+        </td>
+        <td>
+          <span
+            [innerHtml]="
+              library?.sourceCodeUrl && library.sourceCodeUrl!.length > 17
+                ? (library.sourceCodeUrl | urlTransformation: true)
+                : (library.sourceCodeUrl | urlTransformation)
+            "
+          ></span>
+        </td>
+        <td class="text-center">
+          <fa-icon icon="check" class="text-success" *ngIf="library.reviewed"></fa-icon>
+          <fa-icon icon="times" class="text-danger" *ngIf="!library.reviewed"></fa-icon>
+        </td>
+        <td *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']" class="text-right">
+          <div class="btn-group">
+            <button
+              type="submit"
+              [routerLink]="['/library', library.id, 'edit']"
+              class="btn btn-primary btn-sm w-50"
+              data-cy="entityEditButton"
+              placement="top"
+              ngbTooltip="Edit library"
+            >
+              <fa-icon icon="pencil-alt"></fa-icon>
+            </button>
+
+            <button
+              type="submit"
+              (click)="delete(library)"
+              class="btn btn-danger btn-sm w-50"
+              data-cy="entityDeleteButton"
+              placement="top"
+              ngbTooltip="Delete library"
+            >
+              <fa-icon icon="times"></fa-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="libraries && libraries.length > 0">
+    <div class="row justify-content-center mb-2">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

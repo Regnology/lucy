@@ -1,0 +1,122 @@
+<div>
+  <h2 id="page-heading" data-cy="ProductHeading">
+    <span>Products</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-product"
+        [routerLink]="['/product/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Product </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="products?.length === 0">
+    <span>No products found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="products && products.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="name"><span>Name</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="identifier"><span>Identifier</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="version"><span>Version</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="createdDate"><span>Created Date</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="lastUpdatedDate"><span>Last Updated Date</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="targetUrl"><span>Target Url</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="uploadState"><span>Upload State</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="disclaimer"><span>Disclaimer</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="delivered"><span>Delivered</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="deliveredDate"><span>Delivered Date</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="contact"><span>Contact</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="comment"><span>Comment</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="previousProductId"><span>Previous Product Id</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="uploadFilter"><span>Upload Filter</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/product', product.id, 'view']">{{ product.id }}</a>
+          </td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.identifier }}</td>
+          <td>{{ product.version }}</td>
+          <td>{{ product.createdDate | formatMediumDate }}</td>
+          <td>{{ product.lastUpdatedDate | formatMediumDate }}</td>
+          <td>{{ product.targetUrl }}</td>
+          <td>{{ product.uploadState }}</td>
+          <td>{{ product.disclaimer }}</td>
+          <td>{{ product.delivered }}</td>
+          <td>{{ product.deliveredDate | formatMediumDatetime }}</td>
+          <td>{{ product.contact }}</td>
+          <td>{{ product.comment }}</td>
+          <td>{{ product.previousProductId }}</td>
+          <td>{{ product.uploadFilter }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/product', product.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/product', product.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(product)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="products && products.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

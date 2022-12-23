@@ -1,0 +1,71 @@
+<div class="card jh-card">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-7 col-sm-9">
+      <h1 data-cy="loginTitle">Sign in</h1>
+      <div class="alert alert-danger" *ngIf="authenticationError" data-cy="loginError">
+        <strong>Failed to sign in!</strong> Please check your credentials and try again.
+      </div>
+      <form class="row g-3" role="form" (ngSubmit)="login()" [formGroup]="loginForm">
+        <div class="col-12">
+          <label class="form-label" for="username">Login</label>
+          <input
+            type="text"
+            class="form-control"
+            name="username"
+            id="username"
+            placeholder="Your username or email"
+            formControlName="username"
+            #username
+            data-cy="username"
+          />
+        </div>
+
+        <div class="col-12">
+          <label class="form-label" for="password">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            id="password"
+            placeholder="Your password"
+            formControlName="password"
+            data-cy="password"
+          />
+        </div>
+
+        <div class="mb-3">
+          <a routerLink="/account/reset/request" data-cy="forgetYourPasswordSelector">Forgot your password?</a>
+        </div>
+
+        <div class="row align-items-center">
+          <div class="col-sm">
+            <div class="form-check">
+              <label class="form-check-label" for="rememberMe">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="rememberMe"
+                  id="rememberMe"
+                  formControlName="rememberMe"
+                  style="width: 15px; height: 17px"
+                />
+                <span>Remember me</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="col-sm text-end">
+            <button type="submit" class="btn btn-primary w-50" data-cy="submit">Sign in</button>
+          </div>
+        </div>
+      </form>
+
+      <hr />
+
+      <div class="mt-3 mb-3 text-center">
+        <h5 class="mb-3">You don't have an account?</h5>
+        <button routerLink="/account/register" class="btn btn-info">Register a new account</button>
+      </div>
+    </div>
+  </div>
+</div>

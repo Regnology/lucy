@@ -1,0 +1,84 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="product">
+      <h2 data-cy="productDetailsHeading"><span>Product</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ product.id }}</span>
+        </dd>
+        <dt><span>Name</span></dt>
+        <dd>
+          <span>{{ product.name }}</span>
+        </dd>
+        <dt><span>Identifier</span></dt>
+        <dd>
+          <span>{{ product.identifier }}</span>
+        </dd>
+        <dt><span>Version</span></dt>
+        <dd>
+          <span>{{ product.version }}</span>
+        </dd>
+        <dt><span>Created Date</span></dt>
+        <dd>
+          <span>{{ product.createdDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Last Updated Date</span></dt>
+        <dd>
+          <span>{{ product.lastUpdatedDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Target Url</span></dt>
+        <dd>
+          <span>{{ product.targetUrl }}</span>
+        </dd>
+        <dt><span>Upload State</span></dt>
+        <dd>
+          <span>{{ product.uploadState }}</span>
+        </dd>
+        <dt><span>Disclaimer</span></dt>
+        <dd>
+          <span>{{ product.disclaimer }}</span>
+        </dd>
+        <dt><span>Delivered</span></dt>
+        <dd>
+          <span>{{ product.delivered }}</span>
+        </dd>
+        <dt><span>Delivered Date</span></dt>
+        <dd>
+          <span>{{ product.deliveredDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Contact</span></dt>
+        <dd>
+          <span>{{ product.contact }}</span>
+        </dd>
+        <dt><span>Comment</span></dt>
+        <dd>
+          <span>{{ product.comment }}</span>
+        </dd>
+        <dt><span>Previous Product Id</span></dt>
+        <dd>
+          <span>{{ product.previousProductId }}</span>
+        </dd>
+        <dt><span>Upload Filter</span></dt>
+        <dd>
+          <span>{{ product.uploadFilter }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/product', product.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

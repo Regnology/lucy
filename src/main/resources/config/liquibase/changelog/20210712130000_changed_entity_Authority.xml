@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added new role "ROLE_READONLY" to Authority entity.
+    -->
+    <changeSet id="20210712130000-1" author="patrick.wojciech">
+        <loadData
+            file="config/liquibase/data/authority_readonly.csv"
+            separator=";"
+            tableName="jhi_authority"
+            usePreparedStatements="true">
+            <column name="name" type="string"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,392 @@
+<div class="row justify-content-center">
+  <div class="col">
+    <div>
+      <jhi-alert-error></jhi-alert-error>
+      <jhi-alert></jhi-alert>
+    </div>
+
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <div class="card jh-card">
+        <div class="row g-3 mt-0">
+          <div class="col-xl-4 form-group">
+            <label class="form-control-label" for="field_fullName">Full Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="fullName"
+              id="field_fullName"
+              data-cy="fullName"
+              formControlName="fullName"
+              placeholder="Full Name"
+            />
+            <div *ngIf="editForm.get('fullName')!.invalid && (editForm.get('fullName')!.dirty || editForm.get('fullName')!.touched)">
+              <small class="form-text text-danger" *ngIf="editForm.get('fullName')?.errors?.required"> This field is required. </small>
+            </div>
+          </div>
+          <div class="col-xl-4 form-group">
+            <label class="form-control-label" for="field_shortIdentifier">Short Identifier</label>
+            <input
+              type="text"
+              class="form-control"
+              name="shortIdentifier"
+              id="field_shortIdentifier"
+              data-cy="shortIdentifier"
+              formControlName="shortIdentifier"
+              placeholder="Short Identifier"
+            />
+            <div
+              *ngIf="
+                editForm.get('shortIdentifier')!.invalid &&
+                (editForm.get('shortIdentifier')!.dirty || editForm.get('shortIdentifier')!.touched)
+              "
+            >
+              <small class="form-text text-danger" *ngIf="editForm.get('shortIdentifier')?.errors?.required">
+                This field is required.
+              </small>
+            </div>
+          </div>
+          <div class="col-sm form-group">
+            <label class="form-control-label" for="field_spdxIdentifier">SPDX Identifier</label>
+            <input
+              type="text"
+              class="form-control"
+              name="spdxIdentifier"
+              id="field_spdxIdentifier"
+              data-cy="spdxIdentifier"
+              formControlName="spdxIdentifier"
+              placeholder="SPDX Identifier"
+            />
+          </div>
+        </div>
+
+        <div class="row g-3 mt-0">
+          <div class="col-md-auto form-group">
+            <div class="input-group">
+              <span class="input-group-text">
+                <span class="me-2">Review done?</span>
+              </span>
+              <span class="input-group-text input-group-checkbox-append">
+                <div class="switch-custom">
+                  <label class="form-check-label" for="field_reviewed">No</label>
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="field_reviewed"
+                      name="reviewed"
+                      data-cy="reviewed"
+                      formControlName="reviewed"
+                    />
+                  </div>
+                  <label class="form-check-label" for="field_reviewed">Yes</label>
+                </div>
+              </span>
+            </div>
+          </div>
+          <div class="col-lg-4 form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">By</span>
+              </div>
+              <select
+                class="form-control"
+                id="field_lastReviewedBy"
+                data-cy="lastReviewedBy"
+                name="lastReviewedBy"
+                formControlName="lastReviewedBy"
+              >
+                <option [ngValue]="null">Choose</option>
+                <option
+                  [ngValue]="
+                    userOption.id === editForm.get('lastReviewedBy')!.value?.id ? editForm.get('lastReviewedBy')!.value : userOption
+                  "
+                  *ngFor="let userOption of usersSharedCollection; trackBy: trackUserById"
+                >
+                  {{ userOption.login }}
+                </option>
+              </select>
+              <input
+                id="field_lastReviewedDate"
+                data-cy="lastReviewedDate"
+                type="text"
+                class="form-control"
+                name="lastReviewedDate"
+                ngbDatepicker
+                #lastReviewedDateDp="ngbDatepicker"
+                formControlName="lastReviewedDate"
+                placeholder="yyyy-mm-dd"
+              />
+              <span class="input-group-append">
+                <button type="button" class="btn btn-primary" (click)="lastReviewedDateDp.toggle()">
+                  <fa-icon icon="calendar-alt"></fa-icon>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-0">
+          <span>Select License Risk</span>
+          <div class="btn-group mt-1" role="group" aria-label="License risks">
+            <ng-container *ngFor="let licenseRiskOption of licenseRisksSharedCollection; let i = index; trackBy: trackLicenseRiskById">
+              <input
+                type="radio"
+                formControlName="licenseRisk"
+                [value]="licenseRiskOption"
+                class="btn-check"
+                [id]="i"
+                (change)="onLicenseRiskChange(licenseRiskOption)"
+                autocomplete="off"
+              />
+              <label
+                class="badge btn-light btn-badge me-2"
+                [ngClass]="{ 'badge-unselected': licenseRiskOption.name !== selectedLicenseRisk?.name }"
+                [ngStyle]="{ 'background-color': licenseRiskOption.color }"
+                [for]="i"
+                >{{ licenseRiskOption.name }}</label
+              >
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="card jh-card">
+        <ul ngbNav #nav="ngbNav" activeId="Requirements" class="nav nav-pills" (navChange)="navTabChange($event)">
+          <li ngbNavItem="Requirements">
+            <a ngbNavLink>Requirements</a>
+            <ng-template ngbNavContent>
+              <div class="form-group">
+                <label for="field_requirements">Requirements</label>
+                <div class="selected-values mb-2">
+                  <span
+                    class="badge rounded-pill bg-secondary"
+                    *ngFor="let requirementOption of editForm.get('requirements')!.value; trackBy: trackRequirementById"
+                  >
+                    {{ requirementOption.shortText }}
+                  </span>
+                </div>
+                <select
+                  class="form-control"
+                  id="field_requirements"
+                  data-cy="requirements"
+                  multiple
+                  name="requirements"
+                  formControlName="requirements"
+                  style="height: 300px"
+                >
+                  <option
+                    [ngValue]="getSelectedRequirement(requirementOption, editForm.get('requirements')!.value)"
+                    *ngFor="let requirementOption of requirementsSharedCollection; trackBy: trackRequirementById"
+                  >
+                    {{ requirementOption.shortText }}
+                  </option>
+                </select>
+              </div>
+            </ng-template>
+          </li>
+
+          <li ngbNavItem="License Conflicts">
+            <a ngbNavLink>License Conflicts (BETA)</a>
+            <ng-template ngbNavContent>
+              <ng-template #licenseRiskCompatibilityTooltip
+                >For each license risk, a compatibility can be set automatically for each license.<br />Comp. = Compatible<br />Incom. =
+                Incompatible<br />Unk. = Unknown</ng-template
+              >
+              <h5 class="mb-3">
+                Change the compatibility based on the license risk
+                <fa-icon icon="question-circle" [ngbTooltip]="licenseRiskCompatibilityTooltip"></fa-icon>
+              </h5>
+              <div class="row g-3 container justify-content-center row-cols-4">
+                <div class="col-auto text-center" *ngFor="let risk of licenseRisksSharedCollection">
+                  <div class="card lucy-card" style="font-size: 90%">
+                    <div class="card-header lucy-card-header" [style]="{ background: risk.color }">{{ risk.name }}</div>
+                    <div class="card-body">
+                      <div class="btn-group" role="group">
+                        <button
+                          class="btn btn-sm btn-outline-info"
+                          style="font-size: 90%"
+                          type="button"
+                          (click)="selectAllAsCompatible(risk.name)"
+                        >
+                          Comp.
+                        </button>
+                        <button
+                          class="btn btn-sm btn-outline-info"
+                          style="font-size: 90%"
+                          type="button"
+                          (click)="selectAllAsIncompatible(risk.name)"
+                        >
+                          Incom.
+                        </button>
+                        <button
+                          class="btn btn-sm btn-outline-info"
+                          style="font-size: 90%"
+                          type="button"
+                          (click)="selectAllAsUnknown(risk.name)"
+                        >
+                          Unk.
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr />
+              <h5>Change individually the compatibility of each license</h5>
+
+              <table class="table" formArrayName="licenseConflicts">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <span>Risk</span>
+                    </th>
+                    <th scope="col">
+                      <span>Name</span>
+                    </th>
+                    <th scope="col">
+                      <span>Compatibility</span>
+                    </th>
+                    <th scope="col">
+                      <span>Comment</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let licenseConflict of getLicenseConflicts()?.controls; let i = index" [formGroupName]="i">
+                    <ng-template #riskNameTooltip>{{ getSecondLicense(i)?.licenseRisk?.name }}</ng-template>
+                    <td style="width: 4%">
+                      <span
+                        class="rectangle-sm"
+                        [style]="{ background: getSecondLicense(i)?.licenseRisk?.color }"
+                        [ngbTooltip]="riskNameTooltip"
+                      ></span>
+                    </td>
+                    <td style="width: 30%">
+                      <a [routerLink]="['/license', getSecondLicense(i)?.id, 'view']" target="_blank">
+                        {{ getSecondLicense(i)?.shortIdentifier }}
+                      </a>
+                    </td>
+                    <td style="width: 10%">
+                      <div class="input-group">
+                        <select
+                          class="form-control"
+                          id="field_compatibility"
+                          data-cy="compatibility"
+                          name="compatibility"
+                          formControlName="compatibility"
+                        >
+                          <option *ngFor="let compatibility of compatiblityStates" [ngValue]="compatibility">{{ compatibility }}</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group">
+                        <textarea
+                          class="form-control"
+                          name="comment"
+                          id="field_comment"
+                          data-cy="comment"
+                          formControlName="comment"
+                          placeholder="Comment"
+                          style="height: 54px"
+                        ></textarea>
+                        <div
+                          *ngIf="
+                            (getLicenseConflicts()?.at(i)?.get('comment'))!.invalid &&
+                            ((getLicenseConflicts()?.at(i)?.get('comment'))!.dirty ||
+                              (getLicenseConflicts()?.at(i)?.get('comment'))!.touched)
+                          "
+                        >
+                          <small class="form-text text-danger" *ngIf="getLicenseConflicts()?.at(i)?.get('comment')?.errors?.maxlength">
+                            This field cannot be longer than 4096 characters.
+                          </small>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+          </li>
+
+          <li ngbNavItem="Details">
+            <a ngbNavLink>Details</a>
+            <ng-template ngbNavContent>
+              <div class="row g-3 mt-0">
+                <div class="col-md form-group">
+                  <label class="form-control-label" for="field_url">URL</label>
+                  <input type="text" class="form-control" name="url" id="field_url" data-cy="url" formControlName="url" placeholder="URL" />
+                  <div *ngIf="editForm.get('url')!.invalid && (editForm.get('url')!.dirty || editForm.get('url')!.touched)">
+                    <small class="form-text text-danger" *ngIf="editForm.get('url')?.errors?.maxlength">
+                      This field cannot be longer than 2048 characters.
+                    </small>
+                  </div>
+                </div>
+                <div class="col-md form-group">
+                  <label class="form-control-label" for="field_other">Additional Information</label>
+                  <textarea
+                    class="form-control"
+                    name="other"
+                    id="field_other"
+                    data-cy="other"
+                    formControlName="other"
+                    placeholder="Additional Information"
+                  ></textarea>
+                  <div *ngIf="editForm.get('other')!.invalid && (editForm.get('other')!.dirty || editForm.get('other')!.touched)">
+                    <small class="form-text text-danger" *ngIf="editForm.get('other')?.errors?.maxlength">
+                      This field cannot be longer than 2048 characters.
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </li>
+
+          <li ngbNavItem="License Text">
+            <a ngbNavLink>License Text</a>
+            <ng-template ngbNavContent>
+              <div class="row g-3 mt-0">
+                <div class="col-lg form-group">
+                  <label class="form-control-label" for="field_genericLicenseText">License Text</label>
+                  <textarea
+                    class="form-control"
+                    name="genericLicenseText"
+                    id="field_genericLicenseText"
+                    data-cy="genericLicenseText"
+                    formControlName="genericLicenseText"
+                    style="min-height: 300px"
+                    placeholder="License Text"
+                  ></textarea>
+                </div>
+                <div class="col-lg form-group">
+                  <label class="form-control-label">Preview</label>
+                  <div class="preview-box form-control" [innerHTML]="editForm.get('genericLicenseText')?.value"></div>
+                </div>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+        <hr />
+
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+      </div>
+
+      <div class="mt-3">
+        <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

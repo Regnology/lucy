@@ -1,0 +1,84 @@
+<div class="offcanvas-header offcanvas-header-custom">
+  <h6 class="offcanvas-title" id="offcanvas-basic-title">
+    <span *ngIf="libraryPerProduct?.library?.groupId">{{ libraryPerProduct?.library?.groupId }} :</span
+    >{{ libraryPerProduct?.library?.artifactId }}:{{ libraryPerProduct?.library?.version }}
+  </h6>
+  <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="dismiss('Cross click')"></button>
+</div>
+<div class="offcanvas-body">
+  <form
+    class="row g-3 align-items-start"
+    name="libraryPerProductForm"
+    role="form"
+    novalidate
+    (ngSubmit)="save()"
+    [formGroup]="libraryPerProductForm"
+  >
+    <div class="col-sm-auto me-3">
+      <div class="input-group">
+        <span class="input-group-text"
+          ><span class="me-2">Hide library</span>
+          <fa-icon
+            icon="question-circle"
+            placement="top"
+            ngbTooltip="Hide library from publishing in FOSS report"
+            container="body"
+          ></fa-icon>
+        </span>
+        <span class="input-group-text input-group-checkbox-append">
+          <div class="switch-custom">
+            <label class="form-check-label" for="field_hideLibrary">Off</label>
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="field_hideLibrary"
+                name="hideLibrary"
+                data-cy="hideLibrary"
+                formControlName="hide"
+              />
+            </div>
+            <label class="form-check-label" for="field_hideLibrary">On</label>
+          </div>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-md-3 form-group me-3">
+      <label class="form-control-label" for="field_comment">Comment</label>
+      <textarea
+        class="form-control"
+        name="comment"
+        id="field_comment"
+        data-cy="comment"
+        formControlName="comment"
+        placeholder="Comment"
+        ngbAutofocus
+      ></textarea>
+      <div
+        *ngIf="
+          libraryPerProductForm.get('comment')!.invalid &&
+          (libraryPerProductForm.get('comment')!.dirty || libraryPerProductForm.get('complianceComment')!.touched)
+        "
+      >
+        <small class="form-text text-danger" *ngIf="libraryPerProductForm.get('comment')?.errors?.maxlength">
+          This field cannot be longer than 4096 characters.
+        </small>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="row me-2">
+  <div class="col text-end">
+    <button
+      type="submit"
+      data-cy="entityCreateSaveButton"
+      [disabled]="libraryPerProductForm.invalid || isSaving"
+      class="btn btn-primary"
+      (click)="save()"
+    >
+      <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+    </button>
+    <span *ngIf="saved" class="text-success ms-2"> Saved!</span>
+  </div>
+</div>

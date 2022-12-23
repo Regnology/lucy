@@ -1,0 +1,61 @@
+<div class="card jh-card">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+        <h2 id="jhi-requirement-heading" data-cy="RequirementCreateUpdateHeading">Create or edit a Requirement</h2>
+
+        <div>
+          <jhi-alert-error></jhi-alert-error>
+
+          <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+            <label class="form-control-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_shortText">Short Text</label>
+            <input type="text" class="form-control" name="shortText" id="field_shortText" data-cy="shortText" formControlName="shortText" />
+            <div *ngIf="editForm.get('shortText')!.invalid && (editForm.get('shortText')!.dirty || editForm.get('shortText')!.touched)">
+              <small class="form-text text-danger" *ngIf="editForm.get('shortText')?.errors?.required"> This field is required. </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="field_description">Description</label>
+            <input
+              type="text"
+              class="form-control"
+              name="description"
+              id="field_description"
+              data-cy="description"
+              formControlName="description"
+            />
+            <div
+              *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)"
+            >
+              <small class="form-text text-danger" *ngIf="editForm.get('description')?.errors?.maxlength">
+                This field cannot be longer than 2048 characters.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+            <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+          </button>
+
+          <button
+            type="submit"
+            id="save-entity"
+            data-cy="entityCreateSaveButton"
+            [disabled]="editForm.invalid || isSaving"
+            class="btn btn-primary"
+          >
+            <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

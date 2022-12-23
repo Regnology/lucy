@@ -1,0 +1,34 @@
+{
+  "applications": "*",
+  "changelogDate": "20210615115333",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "license_per_library",
+  "fields": [
+    {
+      "fieldName": "linkType",
+      "fieldType": "LinkType",
+      "fieldValues": "AND (and),OR (or)"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "LicensePerLibrary",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "license",
+      "otherEntityRelationshipName": "licensePerLibrary",
+      "relationshipName": "license",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "library",
+      "otherEntityRelationshipName": "license",
+      "relationshipName": "library",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

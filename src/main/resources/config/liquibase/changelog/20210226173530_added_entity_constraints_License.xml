@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    <!--
+        Added the constraints for entity License.
+    -->
+    <changeSet id="20210226173530-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="last_reviewed_by_id"
+                                 baseTableName="license"
+                                 constraintName="fk_license__last_reviewed_by_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="license_risk_id"
+                                 baseTableName="license"
+                                 constraintName="fk_license__license_risk_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="license_risk"/>
+
+        <addForeignKeyConstraint baseColumnNames="license_id"
+                                 baseTableName="rel_license__requirement"
+                                 constraintName="fk_rel_license__requirement__license_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="license"/>
+
+        <addForeignKeyConstraint baseColumnNames="requirement_id"
+                                 baseTableName="rel_license__requirement"
+                                 constraintName="fk_rel_license__requirement__requirement_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="requirement"/>
+    </changeSet>
+</databaseChangeLog>

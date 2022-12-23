@@ -1,0 +1,385 @@
+<ng-container *ngIf="noDifferenceViewPossible === false; else noDifferenceView">
+  <div class="row g-3">
+    <form class="col-12" name="productComparisonForm" role="form" novalidate [formGroup]="productComparisonForm">
+      <div *ngIf="showProductSelection; else comparedProductNames" class="row justify-content-center align-items-center">
+        <div class="col-md-4">
+          <select class="form-control" id="field_firstProduct" data-cy="firstProduct" name="firstProduct" formControlName="firstProduct">
+            <option [ngValue]="null">Choose first product</option>
+            <option
+              [ngValue]="getSingleProduct(productOption, productComparisonForm.get('firstProduct')!.value)"
+              *ngFor="let productOption of productsSharedCollection; trackBy: trackProductById"
+            >
+              {{ productOption.name }} : {{ productOption.version }}
+            </option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <fa-icon icon="less-than"></fa-icon>
+          <fa-icon icon="greater-than"></fa-icon>
+        </div>
+        <div class="col-md-4">
+          <select
+            class="form-control"
+            id="field_secondProduct"
+            data-cy="secondProduct"
+            name="secondProduct"
+            formControlName="secondProduct"
+          >
+            <option [ngValue]="null">Choose second product</option>
+            <option
+              [ngValue]="getSingleProduct(productOption, productComparisonForm.get('secondProduct')!.value)"
+              *ngFor="let productOption of productsSharedCollection; trackBy: trackProductById"
+            >
+              {{ productOption.name }} : {{ productOption.version }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+
+    <div class="col-12">
+      <button class="btn btn-sm col-auto btn-outline-info" (click)="collapse.toggle()">Show options</button>
+    </div>
+    <div class="mb-2" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+      <div class="card">
+        <div class="card-body">
+          <form class="row justify-content-center align-items-center" name="optionsForm" role="form" novalidate [formGroup]="optionsForm">
+            <div class="row">
+              <div class="col-sm">
+                <div class="form-check form-switch">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="field_showLeft"
+                    name="showLeft"
+                    data-cy="showLeft"
+                    formControlName="showLeft"
+                  />
+                  <label class="form-check-label" for="field_showLeft"
+                    >Result of first selected product
+                    <fa-icon
+                      icon="question-circle"
+                      placement="top"
+                      ngbTooltip="Show the result of the libraries for the first selected product. Only the libraries that are not present in the other product are displayed here."
+                      container="body"
+                    ></fa-icon>
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm text-center">
+                <div class="form-check form-switch">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="field_showCenter"
+                    name="showCenter"
+                    data-cy="showCenter"
+                    formControlName="showCenter"
+                    style="float: none"
+                  />
+                  <label class="form-check-label" for="field_showCenter"
+                    >Library overlaps
+                    <fa-icon
+                      icon="question-circle"
+                      placement="top"
+                      ngbTooltip="Show the results where the same libraries are present in both products."
+                      container="body"
+                    ></fa-icon>
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm text-end">
+                <div class="form-check form-switch">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="field_showRight"
+                    name="showRight"
+                    data-cy="showRight"
+                    formControlName="showRight"
+                    style="float: none"
+                  />
+                  <label class="form-check-label" for="field_showRight"
+                    >Result of second selected product
+                    <fa-icon
+                      icon="question-circle"
+                      placement="top"
+                      ngbTooltip="Show the result of the libraries for the second selected product. Only the libraries that are not present in the other product are displayed here."
+                      container="body"
+                    ></fa-icon>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm">
+                <div class="form-check form-switch">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="field_onlyNewLibraries"
+                    name="onlyNewLibraries"
+                    data-cy="onlyNewLibraries"
+                    formControlName="onlyNewLibraries"
+                    style="float: none"
+                  />
+                  <label class="form-check-label" for="field_onlyNewLibraries"
+                    >Only new libraries
+                    <fa-icon
+                      icon="question-circle"
+                      placement="top"
+                      ngbTooltip="Shows only libraries that are completely new. This means that libraries that appear in a different version are not considered as completely new."
+                      container="body"
+                    ></fa-icon>
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm text-center">
+                <div class="form-check form-switch">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="field_showLicense"
+                    name="showLicense"
+                    data-cy="showLicense"
+                    formControlName="showLicense"
+                    style="float: none"
+                  />
+                  <label class="form-check-label" for="field_showLicense"
+                    >Show license of library
+                    <fa-icon
+                      icon="question-circle"
+                      placement="top"
+                      ngbTooltip="Shows only libraries that are completely new. This means that libraries that appear in a different version are not considered as completely new."
+                      container="body"
+                    ></fa-icon>
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm text-end">
+                <div class="form-check form-switch">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="field_showRisk"
+                    name="showRisk"
+                    data-cy="showRisk"
+                    formControlName="showRisk"
+                    style="float: none"
+                  />
+                  <label class="form-check-label" for="field_showRisk"
+                    >Show risk of library
+                    <fa-icon
+                      icon="question-circle"
+                      placement="top"
+                      ngbTooltip="Shows only libraries that are completely new. This means that libraries that appear in a different version are not considered as completely new."
+                      container="body"
+                    ></fa-icon>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <ng-container>
+    <div *ngIf="isLoading; then loading"></div>
+    <div *ngIf="differenceView && isLoading === false" class="row g-3">
+      <div *ngIf="optionsForm.get('showLeft')!.value" class="col">
+        <div class="card p-1 bg-blue">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <span
+                    >Result for {{ productComparisonForm.get('firstProduct')!.value?.name }} :
+                    {{ productComparisonForm.get('firstProduct')!.value?.version }}</span
+                  >
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              *ngIf="differenceView.addedLibraries && differenceView.addedLibraries.length > 0; else emptyResult"
+              class="break font-size-88"
+            >
+              <ng-container *ngIf="!optionsForm.get('onlyNewLibraries')!.value; else firstProductNewLibraries">
+                <tr *ngFor="let library of differenceView?.addedLibraries">
+                  <td>
+                    <a [routerLink]="['/library', library.id, 'view']" target="_blank">{{ library | libraryLabel }}</a>
+                    <ng-container
+                      [ngTemplateOutlet]="additionalLibraryOptions"
+                      [ngTemplateOutletContext]="{ library: library }"
+                    ></ng-container>
+                    <fa-icon
+                      *ngIf="isNew(differenceView?.firstProductNewLibraries, library)"
+                      class="ms-1 text-warning"
+                      icon="star"
+                      ngbTooltip="New Library"
+                    ></fa-icon>
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-template #firstProductNewLibraries>
+                <tr *ngFor="let library of differenceView?.firstProductNewLibraries">
+                  <td>
+                    <a [routerLink]="['/library', library.id, 'view']" target="_blank">{{ library | libraryLabel }}</a>
+                    <ng-container
+                      [ngTemplateOutlet]="additionalLibraryOptions"
+                      [ngTemplateOutletContext]="{ library: library }"
+                    ></ng-container>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="optionsForm.get('showCenter')!.value" class="col">
+        <div class="card p-1">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <span>Library overlaps</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              *ngIf="differenceView.sameLibraries && differenceView.sameLibraries.length > 0; else emptyResult"
+              class="break font-size-88"
+            >
+              <tr *ngFor="let library of differenceView?.sameLibraries">
+                <td>
+                  <a [routerLink]="['/library', library.id, 'view']" target="_blank">{{ library | libraryLabel }}</a>
+                  <ng-container
+                    [ngTemplateOutlet]="additionalLibraryOptions"
+                    [ngTemplateOutletContext]="{ library: library }"
+                  ></ng-container>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="optionsForm.get('showRight')!.value" class="col">
+        <div class="card p-1 bg-green">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <span
+                    >Result for {{ productComparisonForm.get('secondProduct')!.value?.name }} :
+                    {{ productComparisonForm.get('secondProduct')!.value?.version }}</span
+                  >
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              *ngIf="differenceView.removedLibraries && differenceView.removedLibraries.length > 0; else emptyResult"
+              class="break font-size-88"
+            >
+              <ng-container *ngIf="!optionsForm.get('onlyNewLibraries')!.value; else secondProductNewLibraries">
+                <tr *ngFor="let library of differenceView?.removedLibraries">
+                  <td>
+                    <a [routerLink]="['/library', library.id, 'view']" target="_blank">{{ library | libraryLabel }}</a>
+                    <ng-container
+                      [ngTemplateOutlet]="additionalLibraryOptions"
+                      [ngTemplateOutletContext]="{ library: library }"
+                    ></ng-container>
+                    <fa-icon
+                      *ngIf="isNew(differenceView?.secondProductNewLibraries, library)"
+                      class="ms-1 text-warning"
+                      icon="star"
+                      ngbTooltip="New Library"
+                    ></fa-icon>
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-template #secondProductNewLibraries>
+                <tr *ngFor="let library of differenceView?.secondProductNewLibraries">
+                  <td>
+                    <a [routerLink]="['/library', library.id, 'view']" target="_blank">{{ library | libraryLabel }}</a>
+                    <ng-container
+                      [ngTemplateOutlet]="additionalLibraryOptions"
+                      [ngTemplateOutletContext]="{ library: library }"
+                    ></ng-container>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+<ng-template #loading>
+  <div class="row p-3 align-items-center">
+    <div class="col text-center">
+      <div class="spinner-grow"></div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #loading2> Loading...</ng-template>
+<ng-template #emptyResult>
+  <tr>
+    <td class="text-muted">No libraries</td>
+  </tr>
+</ng-template>
+
+<ng-template #allLicensesInline let-library="library">
+  <span *ngFor="let license of library.licenses; let last = last">
+    {{ license.license?.shortIdentifier }}
+    {{ license.linkType }}
+    {{ last ? '' : ' ' }}
+  </span>
+</ng-template>
+
+<ng-template #allLicensesWindow let-library="library">
+  <span class="hand badge bg-secondary" placement="top" [ngbPopover]="popRiskContent" popoverTitle="All licenses">Licenses</span>
+
+  <ng-template #popRiskContent>
+    <div class="text-center">
+      <span *ngFor="let license of library.licenses; let last = last">
+        {{ license.license?.shortIdentifier }}
+        {{ license.linkType }}
+        {{ last ? '' : ' ' }}
+      </span>
+    </div>
+  </ng-template>
+</ng-template>
+<ng-template #additionalLibraryOptions let-library="library">
+  <ng-container
+    *ngIf="optionsForm.get('showLicense')!.value"
+    [ngTemplateOutlet]="library.licenses && library.licenses.length > 2 ? allLicensesWindow : allLicensesInline"
+    [ngTemplateOutletContext]="{ library: library }"
+    >|
+  </ng-container>
+  <ng-container *ngIf="optionsForm.get('showRisk')!.value"
+    >|
+    <span class="badge btn-light text-white" [ngStyle]="{ 'background-color': libraryRisk(library)?.color }">
+      {{ libraryRisk(library)?.name }}
+    </span>
+  </ng-container>
+</ng-template>
+<ng-template #comparedProductNames>
+  <ng-container *ngIf="isLoading; then loading2; else productNamesContent"></ng-container>
+  <ng-template #productNamesContent>
+    <h5>
+      Comparing
+      <b>{{ productComparisonForm.get('firstProduct')?.value?.name }} : {{ productComparisonForm.get('firstProduct')?.value?.version }}</b>
+      with
+      <b
+        >{{ productComparisonForm.get('secondProduct')?.value?.name }} : {{ productComparisonForm.get('secondProduct')?.value?.version }}</b
+      >
+    </h5>
+  </ng-template>
+</ng-template>
+<ng-template #noDifferenceView>
+  <h5>No comparison possible, as there is no previous version available.</h5>
+</ng-template>
