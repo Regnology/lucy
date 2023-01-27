@@ -75,6 +75,11 @@ Depending on the size of the SBOM, the first upload may take a while. After succ
 |![Main Page](res/mainpage.png)|![Product Detail Page](res/productDetailsPage.png)|
 
 ## Copyright & License
-Lucy is Copyright (c) 2022 Regnology GmbH. All rights reserved.
+Lucy is Copyright (c) 2023 Regnology GmbH. All rights reserved.
 
-It is licensed under [MIT](../blob/master/LICENSE).
+Lucy has been developed to provide support in license handling, which by nature concerns legal matters, and it has been released under an MIT license to make it available to everyone interested in using it. To make the usage easier, the authors have included sample data and some basic configuration.
+
+However, the examples provided in the database of the GitHub project are for reference only and should not be used as final or definitive solutions. These examples are not intended to provide legal advice and should not be relied upon as such. 
+Users are advised to evaluate and verify the information and examples provided before taking any action based on them.
+
+Please see the full [MIT license text](../main/LICENSE). 
