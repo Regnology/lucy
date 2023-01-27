@@ -204,13 +204,6 @@
                 <div class="row">
                   <span class="text-muted"
                     >Filter by License Risk
-                    <fa-icon
-                      icon="question-circle"
-                      placement="top"
-                      ngbTooltip="A library can have several risks if several licences have to be published.
-                        Therefore, it may happen that other risks are also shown in the filtered view.
-                        For the libraries, only the consolidated risk with the highest risk level is displayed"
-                    ></fa-icon>
                   </span>
                 </div>
                 <div class="row">
@@ -1008,13 +1001,6 @@
                     <th scope="col" *ngIf="tableForm.get('risk')!.value" jhiSortBy="library.libraryRisk.level">
                       <span>Risk</span>
                       <fa-icon icon="sort"></fa-icon>
-                      <fa-icon
-                        icon="question-circle"
-                        size="sm"
-                        placement="top"
-                        ngbTooltip="Consolidated licence risk of all licences to be published. The risk with the highest risk level is displayed."
-                      ></fa-icon>
-                    </th>
                     <th scope="col" *ngIf="tableForm.get('licenseUrl')!.value" jhiSortBy="library.licenseUrl">
                       <span>License Url</span>
                       <fa-icon icon="sort"></fa-icon>
@@ -1077,19 +1063,6 @@
                       </span>
                     </td>
                     <td *ngIf="tableForm.get('risk')!.value">
-                      <ng-template #popRiskContent>
-                        <div class="text-center">
-                          <span *ngFor="let licenseToPublish of libraryPerProduct.library?.licenseToPublishes; let last = last">
-                            <a
-                              class="badge btn-light text-white"
-                              [ngStyle]="{ 'background-color': licenseToPublish.licenseRisk?.color }"
-                              [routerLink]="['/license-risk', licenseToPublish.licenseRisk?.id, 'view']"
-                              >{{ licenseToPublish.licenseRisk?.name }}</a
-                            >
-                            {{ last ? '' : ' AND ' }}
-                          </span>
-                        </div>
-                      </ng-template>
                       <span>
                         <a
                           class="badge btn-light text-white"
@@ -1097,18 +1070,6 @@
                           [routerLink]="['/license-risk', libraryPerProduct.library?.libraryRisk?.id, 'view']"
                           >{{ libraryPerProduct.library?.libraryRisk?.name }}</a
                         >
-                        <fa-icon
-                          *ngIf="
-                            libraryPerProduct.library &&
-                            libraryPerProduct.library.licenseToPublishes &&
-                            libraryPerProduct.library.licenseToPublishes.length > 1
-                          "
-                          class="hand"
-                          icon="info-circle"
-                          placement="top"
-                          [ngbPopover]="popRiskContent"
-                          popoverTitle="All license risks"
-                        ></fa-icon>
                       </span>
                     </td>
                     <td *ngIf="tableForm.get('licenseUrl')!.value">
