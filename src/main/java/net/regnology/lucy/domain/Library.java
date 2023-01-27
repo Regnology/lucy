@@ -162,6 +162,9 @@ public class Library implements Serializable {
     )
     private Set<License> licenseOfFiles = new HashSet<>();
 
+    @ManyToOne
+    private LicenseRisk libraryRisk;
+
     /* Methods */
 
     public void updateEmptyFields(Library library) {
@@ -774,6 +777,19 @@ public class Library implements Serializable {
 
     public void setLicenseOfFiles(Set<License> licenses) {
         this.licenseOfFiles = licenses;
+    }
+
+    public LicenseRisk getLibraryRisk() {
+        return this.libraryRisk;
+    }
+
+    public Library libraryRisk(LicenseRisk libraryRisk) {
+        this.setLibraryRisk(libraryRisk);
+        return this;
+    }
+
+    public void setLibraryRisk(LicenseRisk libraryRisk) {
+        this.libraryRisk = libraryRisk;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

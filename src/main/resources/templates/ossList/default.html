@@ -36,6 +36,14 @@
         background-color: #ddd;
       }
 
+      tr > th:nth-child(7) {
+        min-width: 250px;
+      }
+
+      tr > th:nth-child(8) {
+        min-width: 250px;
+      }
+
       th {
         padding-top: 7px;
         padding-bottom: 7px;
@@ -53,6 +61,34 @@
         font-weight: bold;
         font-family: Courier New;
       }
+
+      .collapsible {
+        background-color: #777;
+        color: white;
+        cursor: pointer;
+        padding: 5px 18px;
+
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+      }
+
+      .active,
+      .collapsible:hover {
+        background-color: #555;
+      }
+
+      .content {
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
+      }
+
+      .content p {
+        margin: 10px;
+      }
     </style>
   </head>
   <body>
@@ -61,5 +97,19 @@
     <table>
       %{tableHeader}% %{tableContent}%
     </table>
+    <script>
+      function collapse(element) {
+        element.classList.toggle('active');
+        var content = element.nextElementSibling;
+        console.log('test');
+        if (content.style.display === 'block') {
+          content.style.display = 'none';
+          element.innerText = 'Show comment';
+        } else {
+          content.style.display = 'block';
+          element.innerText = 'Hide comment';
+        }
+      }
+    </script>
   </body>
 </html>

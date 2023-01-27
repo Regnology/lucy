@@ -106,11 +106,11 @@
               License Risk
             </div>
             <a
-              [routerLink]="['/license-risk', libraryRisk().id, 'view']"
-              [ngStyle]="{ 'background-color': libraryRisk().color }"
+              [routerLink]="['/license-risk', library.libraryRisk?.id, 'view']"
+              [ngStyle]="{ 'background-color': library.libraryRisk?.color }"
               class="card-body card-body-risk text-white btn-light"
             >
-              {{ libraryRisk().name }}
+              {{ library.libraryRisk?.name }}
             </a>
           </div>
         </div>

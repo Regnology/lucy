@@ -5,7 +5,6 @@ import { combineLatest } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ILibrary } from '../library.model';
-import { ILicenseRisk } from 'app/entities/license-risk/license-risk.model';
 
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/config/pagination.constants';
 import { DataUtils } from 'app/core/util/data-util.service';
@@ -98,10 +97,6 @@ export class LibraryCustomComponent extends LibraryComponent {
       },
       () => (this.isExporting = false)
     );
-  }
-
-  libraryRisk(library: ILibrary): ILicenseRisk {
-    return this.libraryService.libraryRisk(library);
   }
 
   search(): void {

@@ -10,7 +10,6 @@ import { ActivatedRoute } from '@angular/router';
 import { IDifferenceView } from './difference-view.model';
 import { ASC } from '../../../config/pagination.constants';
 import { ILibrary } from '../../../entities/library/library.model';
-import { ILicenseRisk } from '../../../entities/license-risk/license-risk.model';
 import { LibraryCustomService } from '../../../entities/library/service/library-custom.service';
 
 @Component({
@@ -111,14 +110,6 @@ export class DifferenceViewComponent implements OnInit {
       }
     }
     return option;
-  }
-
-  libraryRisk(library?: ILibrary | null): ILicenseRisk | null {
-    if (library) {
-      return this.libraryService.libraryRisk(library);
-    }
-
-    return null;
   }
 
   isNew(newLibraryList: ILibrary[] | undefined | null, library: ILibrary): boolean {

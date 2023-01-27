@@ -5,7 +5,7 @@ import { IUser } from 'app/entities/user/user.model';
 import { ILicense } from 'app/entities/license/license.model';
 import { LibraryType } from 'app/entities/enumerations/library-type.model';
 import { IFossology } from 'app/entities/fossology/fossology.model';
-
+import { ILicenseRisk } from 'app/entities/license-risk/license-risk.model';
 export interface ILibrary {
   id?: number;
   groupId?: string | null;
@@ -36,6 +36,7 @@ export interface ILibrary {
   lastReviewedDeepScanBy?: IUser | null;
   licenseToPublishes?: ILicense[] | null;
   licenseOfFiles?: ILicense[] | null;
+  libraryRisk?: ILicenseRisk | null;
 }
 
 export class Library implements ILibrary {
@@ -68,7 +69,8 @@ export class Library implements ILibrary {
     public lastReviewedBy?: IUser | null,
     public lastReviewedDeepScanBy?: IUser | null,
     public licenseToPublishes?: ILicense[] | null,
-    public licenseOfFiles?: ILicense[] | null
+    public licenseOfFiles?: ILicense[] | null,
+    public libraryRisk?: ILicenseRisk | null
   ) {
     this.reviewed = this.reviewed ?? false;
     this.reviewedDeepScan = this.reviewedDeepScan ?? false;

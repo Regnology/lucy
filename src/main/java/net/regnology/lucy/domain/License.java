@@ -50,8 +50,8 @@ public class License implements Serializable {
     @Column(name = "generic_license_text")
     private String genericLicenseText;
 
-    @Size(max = 2048)
-    @Column(name = "other", length = 2048)
+    @Size(max = 8192)
+    @Column(name = "other", length = 8192)
     private String other;
 
     @Column(name = "reviewed")

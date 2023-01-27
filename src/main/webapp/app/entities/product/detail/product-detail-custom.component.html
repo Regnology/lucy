@@ -1005,7 +1005,7 @@
                       <span>License To Publish</span>
                       <fa-icon icon="sort"></fa-icon>
                     </th>
-                    <th scope="col" *ngIf="tableForm.get('risk')!.value" jhiSortBy="library.licenseToPublishes.licenseRisk">
+                    <th scope="col" *ngIf="tableForm.get('risk')!.value" jhiSortBy="library.libraryRisk.level">
                       <span>Risk</span>
                       <fa-icon icon="sort"></fa-icon>
                       <fa-icon
@@ -1093,9 +1093,9 @@
                       <span>
                         <a
                           class="badge btn-light text-white"
-                          [ngStyle]="{ 'background-color': libraryRisk(libraryPerProduct.library)?.color }"
-                          [routerLink]="['/license-risk', libraryRisk(libraryPerProduct.library)?.id, 'view']"
-                          >{{ libraryRisk(libraryPerProduct.library)?.name }}</a
+                          [ngStyle]="{ 'background-color': libraryPerProduct.library?.libraryRisk?.color }"
+                          [routerLink]="['/license-risk', libraryPerProduct.library?.libraryRisk?.id, 'view']"
+                          >{{ libraryPerProduct.library?.libraryRisk?.name }}</a
                         >
                         <fa-icon
                           *ngIf="

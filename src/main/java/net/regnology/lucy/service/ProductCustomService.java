@@ -414,7 +414,7 @@ public class ProductCustomService extends ProductService {
 
         List<String> header = new ArrayList<>(
             // Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "UnknownLicenses", "UnknownTotal", "LicensesTotal")
-            Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "LicensesTotal")
+            Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "LicensesTotal", "Comment", "ComplianceComment")
         );
 
         List<String> requirementsLookup = requirementRepository
@@ -439,6 +439,8 @@ public class ProductCustomService extends ProductService {
             String version = libraryPerProduct.getVersion();
             String licenseRisk = libraryPerProduct.getLicenseRisk(libraryPerProduct.getLicenseToPublishes()).getName();
             List<String> requirements = new ArrayList<>(16);
+            String comment = libraryPerProduct.getComment();
+            String complianceComment = libraryPerProduct.getComplianceComment();
 
             for (String tmp : requirementsLookup) {
                 requirements.add("");
@@ -472,6 +474,8 @@ public class ProductCustomService extends ProductService {
                     // String.join(", ", license[1]),
                     // String.valueOf(unknownGlobal.size()),
                     String.valueOf(totalLicenses.size()),
+                    comment,
+                    complianceComment,
                     String.join(";", requirements),
                 }
             );

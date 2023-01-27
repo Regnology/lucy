@@ -10,7 +10,6 @@ import { ILibrary } from 'app/entities/library/library.model';
 
 import { ILicense } from 'app/entities/license/license.model';
 
-import { ILicenseRisk } from 'app/entities/license-risk/license-risk.model';
 import { HomeComponent } from 'app/home/home.component';
 import { ProductCustomService } from 'app/entities/product/service/product-custom.service';
 import { LicenseCustomService } from 'app/entities/license/service/license-custom.service';
@@ -76,9 +75,5 @@ export class HomeCustomComponent extends HomeComponent implements OnInit {
   ngOnInit(): void {
     super.ngOnInit();
     this.loadPage();
-  }
-
-  libraryRisk(library: ILibrary): ILicenseRisk {
-    return this.libraryService.libraryRisk(library);
   }
 }

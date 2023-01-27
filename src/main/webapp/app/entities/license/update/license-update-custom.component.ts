@@ -34,7 +34,7 @@ export class LicenseUpdateCustomComponent extends LicenseUpdateComponent {
     spdxIdentifier: [],
     url: [null, [Validators.maxLength(2048)]],
     genericLicenseText: [],
-    other: [null, [Validators.maxLength(2048)]],
+    other: [null, [Validators.maxLength(8192)]],
     reviewed: [],
     lastReviewedDate: [],
     lastReviewedBy: [],

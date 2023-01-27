@@ -207,7 +207,7 @@ export class ProductDetailCustomComponent extends ProductDetailComponent impleme
           'productId.equals': this.product.id,
           'artifactId.contains': this.searchForm.get('artifactId')?.value ?? null,
           'licensesShortIdentifier.contains': this.searchForm.get('licenses')?.value ?? null,
-          'licenseRiskId.in': licenseRiskFilter?.join(',') ?? null,
+          'libraryRiskId.in': licenseRiskFilter?.join(',') ?? null,
           'errorLogMessage.contains': this.filterForm.get('licenseConflicts')!.value ? 'License Conflict' : null,
           'errorLogStatus.notEquals': this.filterForm.get('licenseConflicts')!.value ? 'CLOSED' : null,
           'libraryCreatedDate.greaterThanOrEqual': this.filterForm.get('newLibrariesSinceLastUpload')!.value
@@ -404,14 +404,6 @@ export class ProductDetailCustomComponent extends ProductDetailComponent impleme
     }
   }
 
-  libraryRisk(library?: ILibrary | null): ILicenseRisk | null {
-    if (library) {
-      return this.libraryService.libraryRisk(library);
-    }
-
-    return null;
-  }
-
   openScrollableContent(longContent: TemplateRef<any>, windowSize: string): void {
     this.modalService.open(longContent, { scrollable: true, size: windowSize });
   }
@@ -550,7 +542,7 @@ export class ProductDetailCustomComponent extends ProductDetailComponent impleme
           'productId.equals': this.product.id,
           'artifactId.contains': this.searchForm.get('artifactId')?.value ?? null,
           'licensesShortIdentifier.contains': this.searchForm.get('licenses')?.value ?? null,
-          'licenseRiskId.in': licenseRiskFilter?.join(',') ?? null,
+          'libraryRiskId.in': licenseRiskFilter?.join(',') ?? null,
           'errorLogMessage.contains': this.filterForm.get('licenseConflicts')!.value ? 'License Conflict' : null,
           'errorLogStatus.notEquals': this.filterForm.get('licenseConflicts')!.value ? 'CLOSED' : null,
           'libraryCreatedDate.greaterThanOrEqual': this.filterForm.get('newLibrariesSinceLastUpload')!.value
@@ -583,7 +575,7 @@ export class ProductDetailCustomComponent extends ProductDetailComponent impleme
           'productId.equals': this.product.id,
           'artifactId.contains': this.searchForm.get('artifactId')?.value ?? null,
           'licensesShortIdentifier.contains': this.searchForm.get('licenses')?.value ?? null,
-          'licenseRiskId.in': riskFilter?.join(',') ?? null,
+          'libraryRiskId.in': riskFilter?.join(',') ?? null,
           'errorLogMessage.contains': this.filterForm.get('licenseConflicts')!.value ? 'License Conflict' : null,
           'errorLogStatus.notEquals': this.filterForm.get('licenseConflicts')!.value ? 'CLOSED' : null,
           'libraryCreatedDate.greaterThanOrEqual': this.filterForm.get('newLibrariesSinceLastUpload')!.value
@@ -680,7 +672,7 @@ export class ProductDetailCustomComponent extends ProductDetailComponent impleme
           'productId.equals': this.product.id,
           'artifactId.contains': this.searchForm.get('artifactId')?.value ?? null,
           'licensesShortIdentifier.contains': this.searchForm.get('licenses')?.value ?? null,
-          'licenseRiskId.in': riskFilter?.join(',') ?? null,
+          'libraryRiskId.in': riskFilter?.join(',') ?? null,
           'errorLogMessage.contains': this.filterForm.get('licenseConflicts')!.value ? 'License Conflict' : null,
           'errorLogStatus.notEquals': this.filterForm.get('licenseConflicts')!.value ? 'CLOSED' : null,
           'libraryCreatedDate.greaterThanOrEqual': this.filterForm.get('newLibrariesSinceLastUpload')!.value
@@ -862,11 +854,11 @@ export class ProductDetailCustomComponent extends ProductDetailComponent impleme
       this.searchForm.get('artifactId')?.setValue(artifactId);
       this.searchForm.get('licenses')?.setValue(licensesShortIdentifier);
 
-      if (params.get('licenseRiskId')) {
-        const licenseRiskId = params.get('licenseRiskId')?.split(',');
+      if (params.get('libraryRiskId')) {
+        const libraryRiskId = params.get('libraryRiskId')?.split(',');
 
         Object.keys(this.riskForm.controls).forEach(key => {
-          if (licenseRiskId?.includes(key)) {
+          if (libraryRiskId?.includes(key)) {
             this.riskForm.get(key)?.setValue(true);
           } else {
             this.riskForm.get(key)?.setValue(false);
@@ -917,7 +909,7 @@ export class ProductDetailCustomComponent extends ProductDetailComponent impleme
         queryParams: {
           artifactId: this.searchForm.get('artifactId')?.value ?? null,
           licenses: this.searchForm.get('licenses')?.value ?? null,
-          licenseRiskId: riskFilter?.join(',') ?? null,
+          libraryRiskId: riskFilter?.join(',') ?? null,
           licenseConflicts: this.filterForm.get('licenseConflicts')!.value ?? null,
           newLibraries: this.filterForm.get('newLibrariesSinceLastUpload')!.value ?? null,
           page: this.page,

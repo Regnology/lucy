@@ -160,16 +160,15 @@ public class LibraryPerProductQueryCustomService extends LibraryPerProductQueryS
                         )
                     );
             }
-            if (criteria.getLicenseRiskId() != null) {
+            if (criteria.getLibraryRiskId() != null) {
                 specification =
                     specification.and(
                         buildSpecification(
-                            criteria.getLicenseRiskId(),
+                            criteria.getLibraryRiskId(),
                             root ->
                                 root
                                     .join(LibraryPerProduct_.library, JoinType.LEFT)
-                                    .join(Library_.licenseToPublishes, JoinType.LEFT)
-                                    .join(License_.licenseRisk, JoinType.LEFT)
+                                    .join(Library_.libraryRisk, JoinType.LEFT)
                                     .get(LicenseRisk_.id)
                         )
                     );

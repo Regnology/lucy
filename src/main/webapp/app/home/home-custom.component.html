@@ -68,9 +68,9 @@
               <td class="text-center">
                 <span
                   class="rectangle-sm"
-                  [ngStyle]="{ 'background-color': libraryRisk(library).color }"
+                  [ngStyle]="{ 'background-color': library.libraryRisk?.color }"
                   placement="top"
-                  [ngbTooltip]="libraryRisk(library).name"
+                  [ngbTooltip]="library.libraryRisk?.name"
                 ></span>
               </td>
               <td>{{ library.createdDate | formatMediumDate }}</td>

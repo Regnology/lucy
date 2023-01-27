@@ -25,7 +25,7 @@ public class LibraryPerProductCustomCriteria extends LibraryPerProductCriteria {
 
     private StringFilter licensesShortIdentifier;
 
-    private LongFilter licenseRiskId;
+    private LongFilter libraryRiskId;
 
     private StringFilter errorLogMessage;
 
@@ -41,7 +41,7 @@ public class LibraryPerProductCustomCriteria extends LibraryPerProductCriteria {
         super(other);
         this.artifactId = other.artifactId == null ? null : other.artifactId.copy();
         this.licensesShortIdentifier = other.licensesShortIdentifier == null ? null : other.licensesShortIdentifier.copy();
-        this.licenseRiskId = other.licenseRiskId == null ? null : other.licenseRiskId.copy();
+        this.libraryRiskId = other.libraryRiskId == null ? null : other.libraryRiskId.copy();
         this.errorLogMessage = other.errorLogMessage == null ? null : other.errorLogMessage.copy();
         this.errorLogStatus = other.errorLogStatus == null ? null : other.errorLogStatus.copy();
         this.libraryCreatedDate = other.libraryCreatedDate == null ? null : other.libraryCreatedDate.copy();
@@ -82,19 +82,19 @@ public class LibraryPerProductCustomCriteria extends LibraryPerProductCriteria {
         this.licensesShortIdentifier = licensesShortIdentifier;
     }
 
-    public LongFilter getLicenseRiskId() {
-        return licenseRiskId;
+    public LongFilter getLibraryRiskId() {
+        return libraryRiskId;
     }
 
     public LongFilter licenseRiskId() {
-        if (licenseRiskId == null) {
-            licenseRiskId = new LongFilter();
+        if (libraryRiskId == null) {
+            libraryRiskId = new LongFilter();
         }
-        return licenseRiskId;
+        return libraryRiskId;
     }
 
-    public void setLicenseRiskId(LongFilter licenseRiskId) {
-        this.licenseRiskId = licenseRiskId;
+    public void setLibraryRiskId(LongFilter libraryRiskId) {
+        this.libraryRiskId = libraryRiskId;
     }
 
     public StringFilter getErrorLogMessage() {
@@ -161,7 +161,7 @@ public class LibraryPerProductCustomCriteria extends LibraryPerProductCriteria {
             Objects.equals(getProductId(), that.getProductId()) &&
             Objects.equals(getArtifactId(), that.getArtifactId()) &&
             Objects.equals(getLicensesShortIdentifier(), that.getLicensesShortIdentifier()) &&
-            Objects.equals(getLicenseRiskId(), that.getLicenseRiskId()) &&
+            Objects.equals(getLibraryRiskId(), that.getLibraryRiskId()) &&
             Objects.equals(getErrorLogMessage(), that.getErrorLogMessage()) &&
             Objects.equals(getErrorLogStatus(), that.getErrorLogStatus()) &&
             Objects.equals(getLibraryCreatedDate(), that.getLibraryCreatedDate()) &&
@@ -181,7 +181,7 @@ public class LibraryPerProductCustomCriteria extends LibraryPerProductCriteria {
             getProductId(),
             getArtifactId(),
             getLicensesShortIdentifier(),
-            getLicenseRiskId(),
+            getLibraryRiskId(),
             getErrorLogMessage(),
             getErrorLogStatus(),
             getLibraryCreatedDate(),
@@ -202,7 +202,7 @@ public class LibraryPerProductCustomCriteria extends LibraryPerProductCriteria {
             (getProductId() != null ? "productId=" + getProductId() + ", " : "") +
             (getArtifactId() != null ? "artifactId=" + getArtifactId() + ", " : "") +
             (getLicensesShortIdentifier() != null ? "licenseId=" + getLicensesShortIdentifier() + ", " : "") +
-            (getLicenseRiskId() != null ? "licenseRiskId=" + getLicenseRiskId() + ", " : "") +
+            (getLibraryRiskId() != null ? "libraryRiskId=" + getLibraryRiskId() + ", " : "") +
             (getErrorLogMessage() != null ? "errorLogMessage=" + getErrorLogMessage() + ", " : "") +
             (getErrorLogStatus() != null ? "errorLogStatus=" + getErrorLogStatus() + ", " : "") +
             (getLibraryCreatedDate() != null ? "libraryCreatedDate=" + getLibraryCreatedDate() + ", " : "") +

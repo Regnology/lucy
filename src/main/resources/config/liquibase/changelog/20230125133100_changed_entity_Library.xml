@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Added reviewedDeepScan, lastReviewedDeepScanDate and lastReviewedDeepScanById column for library.
+    -->
+    <changeSet id="20230125133100-1" author="alexandru.savu">
+        <addColumn tableName="library">
+            <column name="library_risk_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20230125133100-2" author="alexandru.savu">
+        <addForeignKeyConstraint baseColumnNames="library_risk_id"
+                                 baseTableName="library"
+                                 constraintName="fk_library__library_risk_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="license_risk"/>
+    </changeSet>
+</databaseChangeLog>

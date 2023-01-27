@@ -16,6 +16,7 @@ import net.regnology.lucy.domain.File;
 import net.regnology.lucy.domain.Library;
 import net.regnology.lucy.domain.License;
 import net.regnology.lucy.domain.LicensePerLibrary;
+import net.regnology.lucy.domain.LicenseRisk;
 import net.regnology.lucy.domain.enumeration.ExportFormat;
 import net.regnology.lucy.domain.enumeration.LogSeverity;
 import net.regnology.lucy.domain.helper.Copyright;
@@ -168,6 +169,7 @@ public class LibraryCustomService extends LibraryService {
         urlAutocomplete(library);
         licenseTextAutocomplete(library);
         copyrightAutocomplete(library);
+        calculateLibraryRisk(library);
 
         return save(library);
     }
@@ -829,6 +831,11 @@ public class LibraryCustomService extends LibraryService {
 
             orderCounter++;
         }
+    }
+
+    private void calculateLibraryRisk(Library library) {
+        log.debug("Calculating library risk for library : {}", library.getId());
+        library.setLibraryRisk(library.getLicenseRisk(library.getLicenseToPublishes()));
     }
 
     /**

@@ -144,8 +144,8 @@
           <span>License</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
-        <th scope="col" jhiSortBy="licenseToPublishes.licenseRisk">
-          <span>License Risk</span>
+        <th scope="col" jhiSortBy="libraryRisk.level">
+          <span>Library Risk</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
         <th scope="col" jhiSortBy="licenseUrl">
@@ -190,9 +190,9 @@
         <td>
           <a
             class="badge btn-light text-white"
-            [ngStyle]="{ 'background-color': libraryRisk(library).color }"
-            [routerLink]="['/license-risk', libraryRisk(library).id, 'view']"
-            >{{ libraryRisk(library).name }}</a
+            [ngStyle]="{ 'background-color': library.libraryRisk?.color }"
+            [routerLink]="['/license-risk', library.libraryRisk?.id, 'view']"
+            >{{ library.libraryRisk?.name }}</a
           >
         </td>
         <td>

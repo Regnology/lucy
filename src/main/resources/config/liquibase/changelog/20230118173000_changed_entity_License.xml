@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+       Increased the other column from 2048 to 8192 in the license table
+    -->
+    <changeSet author="alexandru.savu" id="20230118173000-1">
+        <modifyDataType
+            columnName="other"
+            newDataType="varchar(8192)"
+            tableName="license"/>
+    </changeSet>
+</databaseChangeLog>
+

@@ -66,24 +66,6 @@ export class LibraryDetailCustomComponent extends LibraryDetailComponent {
     }
   }
 
-  libraryRisk(): ILicenseRisk {
-    let risk: ILicenseRisk = {};
-
-    this.library?.licenseToPublishes?.forEach(function (value: ILicense) {
-      if (risk.level) {
-        if (value.licenseRisk?.level) {
-          if (risk.level < value.licenseRisk.level) {
-            risk = value.licenseRisk;
-          }
-        }
-      } else {
-        risk = value.licenseRisk ?? risk;
-      }
-    });
-
-    return risk;
-  }
-
   analyseCopyright(): void {
     this.isLoadingCopyright = true;
     if (this.library?.id) {

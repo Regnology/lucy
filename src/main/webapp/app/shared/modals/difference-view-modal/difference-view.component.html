@@ -362,8 +362,8 @@
   </ng-container>
   <ng-container *ngIf="optionsForm.get('showRisk')!.value"
     >|
-    <span class="badge btn-light text-white" [ngStyle]="{ 'background-color': libraryRisk(library)?.color }">
-      {{ libraryRisk(library)?.name }}
+    <span class="badge btn-light text-white" [ngStyle]="{ 'background-color': library.libraryRisk?.color }">
+      {{ library.libraryRisk?.name }}
     </span>
   </ng-container>
 </ng-template>

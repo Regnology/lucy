@@ -47,4 +47,7 @@
     <include file="config/liquibase/changelog/20220711143800_changed_entity_LibraryPerProduct.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220728085048_added_entity_LicenseConflict.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220728085048_added_entity_constraints_LicenseConflict.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20230118173000_changed_entity_License.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20230125133100_changed_entity_Library.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>

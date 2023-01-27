@@ -335,7 +335,7 @@
                   ></textarea>
                   <div *ngIf="editForm.get('other')!.invalid && (editForm.get('other')!.dirty || editForm.get('other')!.touched)">
                     <small class="form-text text-danger" *ngIf="editForm.get('other')?.errors?.maxlength">
-                      This field cannot be longer than 2048 characters.
+                      This field cannot be longer than 8192 characters.
                     </small>
                   </div>
                 </div>

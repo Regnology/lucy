@@ -351,7 +351,7 @@ public class OssListHelper {
 
         List<String> header = new ArrayList<>(
             // Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "UnknownLicenses", "UnknownTotal", "LicensesTotal")
-            Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "LicensesTotal")
+            Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "LicensesTotal", "Comment", "ComplianceComment")
         );
 
         header.addAll(requirementsLookup);
@@ -370,6 +370,22 @@ public class OssListHelper {
                 String groupId = libraryPerProduct.getGroupId();
                 String artifactId = libraryPerProduct.getArtifactId();
                 String version = libraryPerProduct.getVersion();
+
+                // Changing the button value when is pressed is defined in the collapse JS function in the ossList/default.html
+                String beforeData =
+                    "<button type=\"button\" onclick=\"collapse(this)\" class=\"collapsible\">Show comment</button>\n" +
+                    "<div class=\"content\">\n" +
+                    "<p>";
+                String afterData = "</p>\n" + "</div>";
+
+                String comment = !StringUtils.isBlank(libraryPerProduct.getComment())
+                    ? beforeData + libraryPerProduct.getComment() + afterData
+                    : "No comment";
+
+                String complianceComment = !StringUtils.isBlank(libraryPerProduct.getComplianceComment())
+                    ? beforeData + libraryPerProduct.getComplianceComment() + afterData
+                    : "No comment";
+
                 // List<String>[] license = licenseService.findLicenseToPublishTmp(libraryPerProduct.getOriginalLicense());
                 String licenseRisk = libraryPerProduct.getLicenseRisk(libraryPerProduct.getLicenseToPublishes()).getName();
                 List<String> requirements = new ArrayList<>(16);
@@ -406,7 +422,9 @@ public class OssListHelper {
                     licenseRisk,
                     // String.join(", ", license[1]),
                     // String.valueOf(unknownGlobal.size()),
-                    String.valueOf(totalLicenses.size())
+                    String.valueOf(totalLicenses.size()),
+                    comment,
+                    complianceComment
                 );
 
                 resultList.addAll(requirements);

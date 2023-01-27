@@ -6,7 +6,6 @@ import { ApplicationConfigService } from 'app/core/config/application-config.ser
 import { createRequestOption } from 'app/core/request/request-util';
 import { ILibrary } from '../library.model';
 import { ILicense } from 'app/entities/license/license.model';
-import { ILicenseRisk } from 'app/entities/license-risk/license-risk.model';
 import { ICopyright } from 'app/core/copyright/copyright.model';
 import { ILibraryErrorLog } from 'app/entities/library-error-log/library-error-log.model';
 import { LogStatus } from 'app/entities/enumerations/log-status.model';
@@ -38,26 +37,6 @@ export class LibraryCustomService extends LibraryService {
 
   fossologyAnalysis(id: number): Observable<HttpResponse<IFossology>> {
     return this.http.get<IFossology>(`${this.resourceUrl}/${id}/fossology-analysis`, { observe: 'response' });
-  }
-
-  libraryRisk(library: ILibrary): ILicenseRisk {
-    let risk: ILicenseRisk = {};
-
-    if (library.licenseToPublishes) {
-      library.licenseToPublishes.forEach(function (value: ILicense) {
-        if (risk.level) {
-          if (value.licenseRisk?.level) {
-            if (risk.level < value.licenseRisk.level) {
-              risk = value.licenseRisk;
-            }
-          }
-        } else {
-          risk = value.licenseRisk ?? risk;
-        }
-      });
-    }
-
-    return risk;
   }
 
   hasErrors(library: ILibrary): boolean {
