@@ -25,6 +25,7 @@
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
     <changeSet id="20210226173730-1-data" author="jhipster">
+        <validCheckSum>8:2d308e0cd4ef7e54ccdd6b164c48433c</validCheckSum>
         <loadData
                   file="config/liquibase/data/requirement.csv"
                   separator=";"

@@ -1,8 +1,8 @@
 id;name;level;description;color
-1;Permissive;10;The licenses with this risk are not harmful for the company, and you can use them in the commercial products with minimum requirements.;#85CF00
-2;Limited Copyleft;30;The licenses with this risk may be harmful for the company. Every license with this type of risk must be discussed with development teams to establish the exact use case and if this suitable and compliant or if component must be removed or replaced.;#FFC300
-3;Strong Copyleft;75;The licenses with this risk are the most harmful for the company, and it should not be combined with the commercial products.  Alternative 1: Use network/queuing adapter for separating component from our code. Alternative 2: Remove and replace the third party component.;#FF5733
-4;Commercial;40;The licenses with the license risk are third party components, but are not open source projects. The usage of this type of components require a commercial agreement.;#20A8D8
-5;Forbidden;90;The licenses with this risk should be removed from the delivery package. This licenses are incompatible with the commercial usage.;#C70039
-6;Proprietary Free;60;The licenses with this risk may be harmful for the company because they have a lot of restrictions. Usually, you can use them only in binary form. For this types of licenses, the source code is not available. Every license with this type of risk must be discussed with development teams to establish the exact use case and if this suitable and compliant or if component must be removed or replaced.;#9933FF
-7;Unknown;100;License not in database or not evaluated. This component may contain a risk. License needs to be evaluated.;#CCCCCC
+1;Permissive;10;Licenses with this risk are not harmful, and you can use them with minimum requirements.;#85CF00
+2;Limited Copyleft;30;Licenses with this risk may be harmful.;#FFC300
+3;Strong Copyleft;75;Licenses with this risk are harmful, and it should not be combined with a commercial product.;#FF5733
+4;Commercial;40;Licenses with this risk are third party components, but are not open source projects. The usage of this type of components require a commercial agreement.;#20A8D8
+5;Forbidden;90;Licenses with this risk are harmful and not allowed. These licenses are incompatible with a commercial usage.;#C70039
+6;Proprietary Free;60;Licenses with this risk may be harmful for a company because they have a lot of restrictions.;#9933FF
+7;Unknown;100;License not in database or not evaluated. A component may contain a risk. The License needs to be evaluated.;#CCCCCC
