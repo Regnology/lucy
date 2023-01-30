@@ -1023,6 +1023,7 @@ public class ProductCustomService extends ProductService {
                         libraryService.urlAutocomplete(dbLibrary);
                         libraryService.licenseTextAutocomplete(library);
                         libraryService.copyrightAutocomplete(dbLibrary);
+                        libraryService.calculateLibraryRisk(library);
                         library = libraryService.save(dbLibrary);
                     }
 
