@@ -1,53 +1,51 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
-version: '3.8'
+version: '3.3'
 services:
   lucy-app:
     image: lucy
+    container_name: lucy
     environment:
-      - _JAVA_OPTIONS=-Xmx512m -Xms256m
-      - SPRING_PROFILES_ACTIVE=prod,api-docs
-      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/eureka
-      - SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config
+      - _JAVA_OPTIONS=-Xmx8192m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,api-docs,tls
       - SPRING_DATASOURCE_URL=jdbc:postgresql://lucy-postgresql:5432/lucy
       - SPRING_LIQUIBASE_URL=jdbc:postgresql://lucy-postgresql:5432/lucy
-      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
-    # If you want to expose these ports outside your dev PC,
-    # remove the "127.0.0.1:" prefix
+      - JHIPSTER_SLEEP=10 # gives time for other services to boot before the application
+      - SERVER_SSL_KEY_STORE_PASSWORD=ENTER_YOUR_SSL_PASSWORD_HERE
+      - SERVER_SSL_KEY_ALIAS=ENTER_SSL_KEY_ALIAS_HERE
+      - APPLICATION_SOURCE_CODE_ARCHIVE_ACTIVE=false
+      #- SPRING_MAIL_HOST=
+      #- SPRING_MAIL_PORT=
+      #- SPRING_MAIL_USERNAME=
+      #- SPRING_MAIL_PASSWORD=
+      #- SPRING_MAIL_TLS=true
+      #- SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+      #- SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
+      #- JHIPSTER_MAIL_FROM=
+      #- JHIPSTER_MAIL_BASE_URL=
+      #- APPLICATION_MAIL_RESTRICT_TO_DOMAIN=true
+      #- APPLICATION_MAIL_ALLOWED_DOMAIN=ENTER_YOUR_DOMAIN_HERE
+      #- APPLICATION_FOSSOLOGY_ENABLED=true
+      #- APPLICATION_FOSSOLOGY_URL=
+      #- APPLICATION_FOSSOLOGY_TOKEN=
+      #- APPLICATION_FOSSOLOGY_FOLDER=
+      - APPLICATION_LUCY_DOMAIN=ENTER_THE_URL_OF_LUCY_HERE
     ports:
-      - 127.0.0.1:8080:8080
+      - 8090:8080
+    volumes:
+    # Mount volumes for ssl certificate, filesArchive and logs folder
+      #- PATH_TO_DIR:/app/resources/config/tls/
+      #- PATH_TO_DIR:/app/resources/filesArchive/
+      #- PATH_TO_DIR:/app/logs/
+    depends_on:
+      - "lucy-postgresql"
   lucy-postgresql:
-    image: postgres:14.2
-    # volumes:
-    #   - ~/volumes/jhipster/lucy/postgresql/:/var/lib/postgresql/data/
+    image: postgres:13.2
+    container_name: lucy_postgreSQL
+    volumes:
+    # Its recommended to mount the database volume
+      #- PATH_TO_DIR:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=lucy
-      - POSTGRES_PASSWORD=
+      - POSTGRES_PASSWORD=lucy123!
       - POSTGRES_HOST_AUTH_METHOD=trust
-    # If you want to expose these ports outside your dev PC,
-    # remove the "127.0.0.1:" prefix
-    ports:
-      - 127.0.0.1:5432:5432
-  jhipster-registry:
-    image: jhipster/jhipster-registry:v7.3.0
-    volumes:
-      - ./central-server-config:/central-config
-    # When run with the "dev" Spring profile, the JHipster Registry will
-    # read the config from the local filesystem (central-server-config directory)
-    # When run with the "prod" Spring profile, it will read the configuration from a Git repository
-    # See https://www.jhipster.tech/jhipster-registry/#spring-cloud-config
-    environment:
-      - JHIPSTER_SLEEP=20
-      - _JAVA_OPTIONS=-Xmx512m -Xms256m
-      - SPRING_PROFILES_ACTIVE=dev,api-docs
-      - SPRING_SECURITY_USER_PASSWORD=admin
-      - JHIPSTER_REGISTRY_PASSWORD=admin
-      - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=native
-      - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_LOCATIONS=file:./central-config/localhost-config/
-      # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=git
-      # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI=https://github.com/jhipster/jhipster-registry/
-      # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_PATHS=central-config
-    # If you want to expose these ports outside your dev PC,
-    # remove the "127.0.0.1:" prefix
-    ports:
-      - 127.0.0.1:8761:8761
+
