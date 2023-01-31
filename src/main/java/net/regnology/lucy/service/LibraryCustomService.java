@@ -833,7 +833,7 @@ public class LibraryCustomService extends LibraryService {
         }
     }
 
-    private void calculateLibraryRisk(Library library) {
+    public void calculateLibraryRisk(Library library) {
         log.debug("Calculating library risk for library : {}", library.getId());
         library.setLibraryRisk(library.getLicenseRisk(library.getLicenseToPublishes()));
     }
