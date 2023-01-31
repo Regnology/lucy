@@ -36,13 +36,14 @@ Currently, only the correct and full functionality of Lucy is supported as a Doc
 
 Build Docker image:
 ```shell
-./mvnw package -Pprod verify jib:dockerBuild
+./mvnw package -Pprod -DskipTests verify jib:dockerBuild
 ```
 
 Lucy is based on the JHipster framework. For further information check [JHipster](https://www.jhipster.tech/).
 
 ## Usage
-The image is launched using docker-compose. Under */docker/docker-compose.yml* is a sample file. This starts Lucy and a PostgreSQL.
+The image is launched using docker-compose. Under *src/main/docker/app.yml* is a sample file. This starts Lucy and a PostgreSQL.
+The docker-compose file must be adapted to the corresponding infrastructure afterwards.
 
 Start Lucy image:
 ```shell
