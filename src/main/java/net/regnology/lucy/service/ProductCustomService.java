@@ -2,6 +2,7 @@ package net.regnology.lucy.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.EntityManager;
+
 import net.regnology.lucy.config.ApplicationProperties;
 import net.regnology.lucy.config.Constants;
 import net.regnology.lucy.domain.*;
@@ -127,7 +129,8 @@ public class ProductCustomService extends ProductService {
         assetManager.addLoader(
             file -> {
                 try {
-                    return objectMapper.readValue(file.getFile(), new TypeReference<>() {});
+                    return objectMapper.readValue(file.getFile(), new TypeReference<>() {
+                    });
                 } catch (IOException e) {
                     log.error("Error while parsing JSON file : {}", e.getMessage());
                     throw new UploadException("JSON file can't be read");
@@ -229,7 +232,7 @@ public class ProductCustomService extends ProductService {
     }
 
     /**
-     * Creates a OSS list as a CSV or HTML file.
+     * Creates an OSS list as a CSV or HTML file.
      * It can create three different types of OSS lists.
      * DEFAULT: OSS list with all libraries and different information like license risk.
      * PUBLISH: OSS list with distinct libraries (based on GroupId, ArtifactId) and license(s) to be published.
@@ -243,14 +246,14 @@ public class ProductCustomService extends ProductService {
     public File createOssList(Product product, ExportFormat format, OssType ossType) throws ExportException {
         String fileName =
             product.getIdentifier() +
-            "_" +
-            product.getVersion() +
-            "_" +
-            "%{type}%" +
-            "_" +
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
+                "_" +
+                product.getVersion() +
+                "_" +
+                "%{type}%" +
+                "_" +
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
 
-        byte[] content = new byte[] {};
+        byte[] content = new byte[]{};
         String contentType = null;
         Deque<String> headers = null;
         StringBuilder csvBuilder = null;
@@ -260,7 +263,6 @@ public class ProductCustomService extends ProductService {
             case REQUIREMENT:
                 fileName = fileName.replace("%{type}%", Constants.OSS_REQUIREMENT_PREFIX);
                 if (format.equals(ExportFormat.HTML)) {
-                    // throw new ExportException("HTML download is unsupported for \"Requirement\" option");
                     try {
                         OssListHelper ossListHelper = new OssListHelper(
                             product,
@@ -280,7 +282,19 @@ public class ProductCustomService extends ProductService {
                         throw new ExportException("HTML template could not be found");
                     }
                 } else if (format.equals(ExportFormat.CSV)) {
-                    return createOssListWithRequirements(product);
+                    headers = new ArrayDeque<>(
+                        Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "LicensesTotal", "Comment", "ComplianceComment")
+                    );
+
+                    List<String> requirementsLookup = requirementRepository
+                        .findAll()
+                        .stream()
+                        .map(Requirement::getShortText)
+                        .collect(Collectors.toList());
+
+                    headers.addAll(requirementsLookup);
+                    csvBuilder = new StringBuilder(65536);
+                    libraries = createOssListWithRequirements(product, requirementsLookup);
                 }
                 break;
             case DEFAULT:
@@ -385,7 +399,10 @@ public class ProductCustomService extends ProductService {
         } else if (format.equals(ExportFormat.CSV)) {
             fileName = fileName + ".csv";
             contentType = "text/csv";
-            CSVFormat csvFormat = CSVFormat.DEFAULT.withDelimiter(';').withHeader(headers.toArray(new String[0]));
+            CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
+                .setDelimiter(';')
+                .setHeader(headers.toArray(new String[0]))
+                .build();
 
             try (CSVPrinter csvPrinter = new CSVPrinter(csvBuilder, csvFormat)) {
                 for (Deque<String> library : libraries) {
@@ -404,32 +421,15 @@ public class ProductCustomService extends ProductService {
     }
 
     /**
-     * Creates a OSS list as a CSV file
+     * Helper for the "Full" OSS CSV report to create the content with library information and
+     * the requirements to fulfill.
      *
-     * @param product for which the list should be created
-     * @return CSV OSS list as a byte array
+     * @param product            For which the list should be created
+     * @param requirementsLookup List with all requirements
+     * @return List with Deque objects which contains all information per row in the CSV
      */
-    public File createOssListWithRequirements(Product product) {
-        List<String[]> data = new ArrayList<>();
-
-        List<String> header = new ArrayList<>(
-            // Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "UnknownLicenses", "UnknownTotal", "LicensesTotal")
-            Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "LicensesTotal", "Comment", "ComplianceComment")
-        );
-
-        List<String> requirementsLookup = requirementRepository
-            .findAll()
-            .stream()
-            .map(Requirement::getShortText)
-            .collect(Collectors.toList());
-
-        header.addAll(requirementsLookup);
-
-        String[] itemsArray = new String[header.size()];
-        itemsArray = header.toArray(itemsArray);
-        data.add(itemsArray);
-
-        // Set<String> unknownGlobal = new HashSet<>();
+    private List<Deque<String>> createOssListWithRequirements(Product product, List<String> requirementsLookup) {
+        List<Deque<String>> content = new ArrayList<>();
         Set<String> totalLicenses = new HashSet<>();
 
         List<Library> libraries = libraryPerProductService.findLibrariesByProductId(product.getId());
@@ -442,12 +442,11 @@ public class ProductCustomService extends ProductService {
             String comment = libraryPerProduct.getComment();
             String complianceComment = libraryPerProduct.getComplianceComment();
 
-            for (String tmp : requirementsLookup) {
+            // Set initially empty string for every requirement
+            for (String ignored : requirementsLookup) {
                 requirements.add("");
             }
 
-            // unknownGlobal.addAll(license[1]);
-            // totalLicenses.addAll(license[0]);
             libraryPerProduct.getLicenses().forEach(e -> totalLicenses.add(e.getLicense().getShortIdentifier()));
 
             if (libraryPerProduct.getLicenseToPublishes() != null && !libraryPerProduct.getLicenseToPublishes().isEmpty()) {
@@ -463,32 +462,22 @@ public class ProductCustomService extends ProductService {
                 }
             }
 
-            data.add(
-                new String[] {
-                    groupId,
-                    artifactId,
-                    "V" + version,
-                    libraryPerProduct.printLinkedLicenses(),
-                    // String.join(" AND ", license[0]),
-                    licenseRisk,
-                    // String.join(", ", license[1]),
-                    // String.valueOf(unknownGlobal.size()),
-                    String.valueOf(totalLicenses.size()),
-                    comment,
-                    complianceComment,
-                    String.join(";", requirements),
-                }
-            );
+            List<String> libraryRow = new ArrayList<>(Arrays.asList(
+                groupId,
+                artifactId,
+                "V" + version,
+                libraryPerProduct.printLinkedLicenses(),
+                licenseRisk,
+                String.valueOf(totalLicenses.size()),
+                comment != null ? comment : "",
+                complianceComment != null ? complianceComment : ""
+            ));
+
+            libraryRow.addAll(requirements);
+            content.add(new ArrayDeque<>(libraryRow));
         }
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try (PrintWriter pw = new PrintWriter(byteArrayOutputStream)) {
-            data.stream().map(e -> String.join(";", e)).forEach(pw::println);
-        }
-
-        String fileName = product.getIdentifier() + "_" + product.getVersion() + "_" + Constants.OSS_REQUIREMENT_PREFIX + ".csv";
-
-        return new File(fileName, byteArrayOutputStream.toByteArray(), "text/csv");
+        return content;
     }
 
     public void transferBundleToTarget(Product product) {
@@ -508,13 +497,13 @@ public class ProductCustomService extends ProductService {
                     product.getTargetUrl(),
                     createLicenseZip(product),
                     product.getIdentifier() +
-                    "_" +
-                    product.getVersion() +
-                    "_" +
-                    Constants.OSS_ZIP_PREFIX +
-                    "_" +
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)) +
-                    ".zip"
+                        "_" +
+                        product.getVersion() +
+                        "_" +
+                        Constants.OSS_ZIP_PREFIX +
+                        "_" +
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)) +
+                        ".zip"
                 );
             } catch (ExportException e) {
                 log.error(
@@ -809,8 +798,8 @@ public class ProductCustomService extends ProductService {
                             library.addErrorLog(
                                 "Source Code",
                                 "The source code archive was found using the fuzzy search." +
-                                " This may not be the right archive and should be verified : " +
-                                identifier,
+                                    " This may not be the right archive and should be verified : " +
+                                    identifier,
                                 LogSeverity.MEDIUM
                             );
 
@@ -940,7 +929,7 @@ public class ProductCustomService extends ProductService {
     /**
      * Processing of an SBOM for a project. Based on the SBOM format the AssetManager recognizes which loader has to be
      * selected. The loaders are registered individually in the constructor. If the SBOM contains duplicates, then these
-     * are added only once. Likewise the components, which are already contained in the project (delete=false) are
+     * are added only once. Likewise, the components, which are already contained in the project (delete=false) are
      * checked, so that no renewed adding takes place.
      *
      * @param product Product entity.
