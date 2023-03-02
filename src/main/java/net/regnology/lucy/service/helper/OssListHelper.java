@@ -131,38 +131,42 @@ public class OssListHelper {
         headers.add("ArtifactId");
         headers.add("License");
 
-        CSVFormat csvFormat = CSVFormat.DEFAULT.withDelimiter(';').withHeader(headers.toArray(new String[0]));
+
+        CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
+            .setDelimiter(';')
+            .setHeader(headers.toArray(new String[0]))
+            .build();
+
         StringBuilder csvBuilder = new StringBuilder(32768);
-        CSVPrinter csvPrinter = new CSVPrinter(csvBuilder, csvFormat);
-
-        for (Map.Entry<String, List<Library>> entry : libraries.entrySet()) {
-            String key = entry.getKey();
-            List<Library> value = entry.getValue();
-            int counter = 1;
-            List<String> licenses = new ArrayList<>(4);
-            for (Library library : value) {
-                String currentlicenses = library
-                    .getLicenseToPublishes()
-                    .stream()
-                    .map(License::getShortIdentifier)
-                    .collect(Collectors.joining(" AND "));
-                if (!licenses.contains(currentlicenses)) {
-                    licenses.add(" (" + counter + ")");
-                    licenses.add(currentlicenses);
+        try (CSVPrinter csvPrinter = new CSVPrinter(csvBuilder, csvFormat)) {
+            for (Map.Entry<String, List<Library>> entry : libraries.entrySet()) {
+                List<Library> value = entry.getValue();
+                int counter = 1;
+                List<String> licenses = new ArrayList<>(4);
+                for (Library library : value) {
+                    String currentLicenses = library
+                        .getLicenseToPublishes()
+                        .stream()
+                        .map(License::getShortIdentifier)
+                        .collect(Collectors.joining(" AND "));
+                    if (!licenses.contains(currentLicenses)) {
+                        licenses.add(" (" + counter + ")");
+                        licenses.add(currentLicenses);
+                    }
+                    counter++;
                 }
-                counter++;
+
+                // remove first element (enumeration) if library has only one license
+                if (licenses.size() <= 2) licenses.remove(0);
+
+                if (withGroupId) {
+                    csvPrinter.printRecord(value.get(0).getGroupId(), value.get(0).getArtifactId(), String.join("", licenses).trim());
+                } else {
+                    csvPrinter.printRecord(value.get(0).getArtifactId(), String.join("", licenses));
+                }
+
+                csvPrinter.flush();
             }
-
-            // remove first element (enumeration) if library has only one license
-            if (licenses.size() <= 2) licenses.remove(0);
-
-            if (withGroupId) {
-                csvPrinter.printRecord(value.get(0).getGroupId(), value.get(0).getArtifactId(), String.join("", licenses).trim());
-            } else {
-                csvPrinter.printRecord(value.get(0).getArtifactId(), String.join("", licenses));
-            }
-
-            csvPrinter.flush();
         }
 
         return csvBuilder.toString().getBytes(StandardCharsets.UTF_8);
@@ -350,21 +354,13 @@ public class OssListHelper {
         List<List<String>> data = new ArrayList<>();
 
         List<String> header = new ArrayList<>(
-            // Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "UnknownLicenses", "UnknownTotal", "LicensesTotal")
             Arrays.asList("GroupId", "ArtifactId", "Version", "License", "LicenseRisk", "LicensesTotal", "Comment", "ComplianceComment")
         );
 
         header.addAll(requirementsLookup);
-
-        // Set<String> unknownGlobal = new HashSet<>();
         Set<String> totalLicenses = new HashSet<>();
 
         libraries.forEach((key, value) -> {
-            /*String groupId = value.get(0).getGroupId();
-                String artifactId = value.get(0).getArtifactId();
-                List<String> licenses = new ArrayList<>(4);
-                LicenseRisk licenseRisk = value.get(0).getLicenseRisk(value.get(0).getLicenseToPublishes());
-                String risk = licenseRisk != null ? licenseRisk.getName() : "Unknown";*/
 
             for (Library libraryPerProduct : value) {
                 String groupId = libraryPerProduct.getGroupId();
@@ -386,16 +382,13 @@ public class OssListHelper {
                     ? beforeData + libraryPerProduct.getComplianceComment() + afterData
                     : "No comment";
 
-                // List<String>[] license = licenseService.findLicenseToPublishTmp(libraryPerProduct.getOriginalLicense());
                 String licenseRisk = libraryPerProduct.getLicenseRisk(libraryPerProduct.getLicenseToPublishes()).getName();
                 List<String> requirements = new ArrayList<>(16);
 
-                for (String tmp : requirementsLookup) {
+                for (String ignored : requirementsLookup) {
                     requirements.add("");
                 }
 
-                // unknownGlobal.addAll(license[1]);
-                // totalLicenses.addAll(license[0]);
                 libraryPerProduct.getLicenses().forEach(e -> totalLicenses.add(e.getLicense().getShortIdentifier()));
 
                 if (libraryPerProduct.getLicenseToPublishes() != null && !libraryPerProduct.getLicenseToPublishes().isEmpty()) {
@@ -418,10 +411,7 @@ public class OssListHelper {
                     artifactId,
                     "V" + version,
                     libraryPerProduct.printLinkedLicenses(),
-                    // String.join(" AND ", license[0]),
                     licenseRisk,
-                    // String.join(", ", license[1]),
-                    // String.valueOf(unknownGlobal.size()),
                     String.valueOf(totalLicenses.size()),
                     comment,
                     complianceComment
