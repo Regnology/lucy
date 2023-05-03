@@ -254,6 +254,15 @@ public class LibraryCustomService extends LibraryService {
             Optional<License> optionalLicense = licenseService.findOne(lpp.getLicense().getId());
             optionalLicense.ifPresent(lpp::setLicense);
         }
+        
+        for (License license : library.getLicenseToPublishes()) {
+            if (license.getLicenseRisk() == null) {
+                Optional<License> optionalLicense = licenseService.findOne(license.getId());
+                if (optionalLicense.isPresent()) {
+                    license.setLicenseRisk(optionalLicense.get().getLicenseRisk());
+                }
+            }
+        }
 
         if (
             library.getLicenses().isEmpty() ||
