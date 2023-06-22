@@ -3,7 +3,9 @@ package net.regnology.lucy.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -397,6 +399,19 @@ public class LicenseCustomService extends LicenseService {
 
         return licenseUrls;
     }
+    /**
+     * Validates URL.
+     */
+    public boolean isValidURL(String url) throws MalformedURLException, URISyntaxException {
+        try {
+            new URL(url).toURI();
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        } catch (URISyntaxException e) {
+            return false;
+        }
+    }
 
     /**
      * Downloads the HTML page from an URL.
@@ -408,7 +423,11 @@ public class LicenseCustomService extends LicenseService {
      * @throws InterruptedException if the download gets interrupted
      */
     public String downloadLicenseText(String url) throws URISyntaxException, IOException, InterruptedException {
-        log.debug("Downloading URL : {}", url);
+        //cleanup of strange url from NPM projects
+        if (!isValidURL(url)){
+            log.info("Download License Text failed due to: invalid URI scheme ");
+            return "";
+        }
 
         if (url.contains("github.com") && url.contains("/blob/")) {
             url = url.replace("github.com", "raw.githubusercontent.com").replace("raw.raw.", "raw.").replace("/blob/", "/");
