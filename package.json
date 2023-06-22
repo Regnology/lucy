@@ -1,6 +1,6 @@
 {
   "name": "lucy",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "private": true,
   "description": "Lucy is a component analysis platform to minimize the risk of license infringements and to support and optimize the license compliance process.",
   "homepage": "https://github.com/Regnology/lucy",
