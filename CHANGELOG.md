@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [0.6.4] - 2023-06-22
+
+### Added 
+- Added URL verifier before downloading license text 
+
+### Changed
+- Exporting full reports as CVS is now working 
+- Unknown libraries can now be edited and saved in a way that also update the license risk score. 
 
 ## [0.6.3] - 2022-12-23
 
