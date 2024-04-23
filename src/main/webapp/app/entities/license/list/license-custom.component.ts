@@ -33,6 +33,19 @@ export class LicenseCustomComponent extends LicenseComponent {
     requirements: [],
   });
 
+  //added code for dropdown table
+  tableForm = this.fb.group({
+      shortIdentifier: true,
+      spdxIdentifier: true,
+      licenseRisk: true,
+      lastReviewedBy: false,
+      lastReviewedDate: false,
+      libraryPublishes: false,
+      libraryFiles: false,
+      reviewed: false,
+      errorLog: false,
+    });
+
   constructor(
     protected licenseService: LicenseCustomService,
     protected requirementService: RequirementCustomService,
@@ -74,6 +87,48 @@ export class LicenseCustomComponent extends LicenseComponent {
       );
 
     this.updateForm();
+  }
+
+  onLibraryTableChanges(): void {
+      this.tableForm.valueChanges.subscribe(() => {
+        this.saveLocalStorage();
+      });
+  }
+
+  saveLocalStorage(): void {
+      const tableFormSettings = {
+        shortIdentifier: this.tableForm.get(['shortIdentifier'])!.value,
+        spdxIdentifier: this.tableForm.get(['spdxIdentifier'])!.value,
+        licenseRisk: this.tableForm.get(['licenseRisk'])!.value,
+        lastReviewedBy: this.tableForm.get(['lastReviewedBy'])!.value,
+        lastReviewedDate: this.tableForm.get(['lastReviewedDate'])!.value,
+        libraryPublishes: this.tableForm.get(['libraryPublishes'])!.value,
+        libraryFiles: this.tableForm.get(['libraryFiles'])!.value,
+        reviewed: this.tableForm.get(['reviewed'])!.value,
+        errorLog: this.tableForm.get(['errorLog'])!.value,
+      };
+
+      localStorage.setItem('product.libraryTableSettings', JSON.stringify(tableFormSettings));
+  }
+
+  loadLocalStorage(): void {
+      const productLibraryTableSettings = localStorage.getItem('product.libraryTableSettings');
+
+      if (productLibraryTableSettings) {
+        const tableFormSettings = JSON.parse(productLibraryTableSettings);
+
+        this.tableForm.patchValue({
+          shortIdentifier: tableFormSettings.shortIdentifier,
+          spdxIdentifier: tableFormSettings.spdxIdentifier,
+          licenseRisk: tableFormSettings.licenseRisk,
+          lastReviewedBy: tableFormSettings.lastReviewedBy,
+          lastReviewedDate: tableFormSettings.lastReviewedDate,
+          libraryPublishes: tableFormSettings.libraryPublishes,
+          libraryFiles: tableFormSettings.libraryFiles,
+          reviewed: tableFormSettings.reviewed,
+          errorLog: tableFormSettings.errorLog,
+        });
+      }
   }
 
   delete(license: ILicense): void {

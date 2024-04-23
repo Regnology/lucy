@@ -111,7 +111,160 @@
         </div>
       </form>
     </div>
+    <!-- START table columns button -->
+      <div class="col-auto pl-1">
+        <div class="btn-group" ngbDropdown role="group" aria-label="Table columns" container="body" placement="bottom-right">
+          <button type="button" class="btn btn-outline-info" ngbDropdownToggle>
+            <fa-icon icon="table"></fa-icon>
+          </button>
+          <div class="dropdown-menu" style="white-space: nowrap" ngbDropdownMenu>
+            <form class="ps-2 pe-2" name="tableForm" role="form" novalidate [formGroup]="tableForm">
+              <table class="mb-0 table table-sm table-hover">
+                <tbody>
+                <tr>
+                  <td style="border-top: none">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="shortIdentifier"
+                        id="shortIdentifier"
+                        data-cy="shortIdentifier"
+                        formControlName="shortIdentifier"
+                      />
+                      <label class="form-check-label w-100" for="shortIdentifier"> Short Identifier </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="spdxIdentifier"
+                        id="spdxIdentifier"
+                        data-cy="spdxIdentifier"
+                        formControlName="spdxIdentifier"
+                      />
+                      <label class="form-check-label w-100" for="spdxIdentifier"> Spdx Identifier </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="licenseRisk"
+                        id="licenseRisk"
+                        data-cy="licenseRisk"
+                        formControlName="licenseRisk"
+                      />
+                      <label class="form-check-label w-100" for="licenseRisk"> License Risk </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="lastReviewedBy"
+                        id="lastReviewedBy"
+                        data-cy="lastReviewedBy"
+                        formControlName="lastReviewedBy"
+                      />
+                      <label class="form-check-label w-100" for="lastReviewedBy"> Last Reviewed By </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="lastReviewedDate"
+                        id="lastReviewedDate"
+                        data-cy="lastReviewedDate"
+                        formControlName="lastReviewedDate"
+                      />
+                      <label class="form-check-label w-100" for="lastReviewedDate"> Last Reviewed Date </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="reviewed"
+                        id="reviewed"
+                        data-cy="reviewed"
+                        formControlName="reviewed"
+                      />
+                      <label class="form-check-label w-100" for="reviewed"> Reviewed </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="libraryPublishes"
+                        id="libraryPublishes"
+                        data-cy="libraryPublishes"
+                        formControlName="libraryPublishes"
+                      />
+                      <label class="form-check-label w-100" for="libraryPublishes"> Library Publishes </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="libraryFiles"
+                        id="libraryFiles"
+                        data-cy="libraryFiles"
+                        formControlName="libraryFiles"
+                      />
+                      <label class="form-check-label w-100" for="libraryFiles"> Library Files </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+                  <td>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="errorLog"
+                        id="errorLog"
+                        data-cy="errorLog"
+                        formControlName="errorLog"
+                      />
+                      <label class="form-check-label w-100" for="errorLog"> Error Log </label>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+      </div>
+    <!-- END table columns button -->
   </div>
+
 </div>
 
 <div class="jh-card card" *ngIf="licenses?.length === 0">
@@ -128,20 +281,36 @@
           <span>Full Name</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
-        <th scope="col" jhiSortBy="shortIdentifier">
+        <th scope="col" jhiSortBy="shortIdentifier" *ngIf="tableForm.get('shortIdentifier')!.value">
           <span>Short Identifier</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
-        <th scope="col" jhiSortBy="spdxIdentifier">
+        <th scope="col" jhiSortBy="spdxIdentifier" *ngIf="tableForm.get('spdxIdentifier')!.value">
           <span>Spdx Identifier</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
-        <th scope="col" jhiSortBy="licenseRisk.name">
+        <th scope="col" jhiSortBy="licenseRisk.name" *ngIf="tableForm.get('licenseRisk')!.value">
           <span>License Risk</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
-        <th scope="col" jhiSortBy="reviewed">
+        <th scope="col" jhiSortBy="reviewed" *ngIf="tableForm.get('reviewed')!.value">
           <span>Reviewed</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="lastReviewedBy.login" *ngIf="tableForm.get('lastReviewedBy')!.value">
+          <span>Last Reviewed By</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="lastReviewedDate" *ngIf="tableForm.get('lastReviewedDate')!.value">
+          <span>Last Reviewed Date</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="libraryPublishes" *ngIf="tableForm.get('libraryPublishes')!.value">
+          <span>Library Publishes</span>
+          <fa-icon icon="sort"></fa-icon>
+        </th>
+        <th scope="col" jhiSortBy="libraryFiles" *ngIf="tableForm.get('libraryFiles')!.value">
+          <span>Library Files</span>
           <fa-icon icon="sort"></fa-icon>
         </th>
         <th scope="col"></th>
@@ -155,9 +324,13 @@
             license.requirements?.length
           }}</span>
         </td>
-        <td>{{ license.shortIdentifier }}</td>
-        <td>{{ license.spdxIdentifier }}</td>
-        <td>
+        <td *ngIf="tableForm.get('shortIdentifier')!.value">
+          {{ license.shortIdentifier }}
+        </td>
+        <td *ngIf="tableForm.get('spdxIdentifier')!.value">
+          {{ license.spdxIdentifier }}
+        </td>
+        <td *ngIf="tableForm.get('licenseRisk')!.value">
           <a
             class="badge btn-light text-white"
             [ngStyle]="{ 'background-color': license.licenseRisk?.color }"
@@ -166,10 +339,23 @@
             {{ license.licenseRisk?.name }}
           </a>
         </td>
-        <td class="text-center">
+        <td class="text-center" *ngIf="tableForm.get('reviewed')!.value">
           <fa-icon icon="check" class="text-success" *ngIf="license.reviewed"></fa-icon>
           <fa-icon icon="times" class="text-danger" *ngIf="!license.reviewed"></fa-icon>
         </td>
+        <td *ngIf="tableForm.get('lastReviewedBy')!.value">
+          {{ license.lastReviewedBy?.login }}
+        </td>
+        <td *ngIf="tableForm.get('lastReviewedDate')!.value">
+          {{ license.lastReviewedDate }}
+        </td>
+        <td *ngIf="tableForm.get('libraryPublishes')!.value">
+          {{ license.libraryPublishes?.length }}
+        </td>
+        <td *ngIf="tableForm.get('libraryFiles')!.value">
+          {{ license.libraryFiles?.length }}
+        </td>
+
         <td *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']" class="text-right">
           <div class="btn-group">
             <button
