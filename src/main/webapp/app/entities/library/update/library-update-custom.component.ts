@@ -59,6 +59,7 @@ export class LibraryUpdateCustomComponent extends LibraryUpdateComponent {
       }),
     ]),
     fossology: [],
+    inheritedLicenseOption: []
   });
 
   constructor(
@@ -186,6 +187,7 @@ export class LibraryUpdateCustomComponent extends LibraryUpdateComponent {
       licenseOfFiles: library.licenseOfFiles,
       linkedLicenses: library.licenses,
       fossology: library.fossology,
+      inheritedLicenseOption: library.inheritedLicenseOption
     });
 
     this.updateLinkedLicensesForm(library.licenses ?? null);
@@ -264,6 +266,7 @@ export class LibraryUpdateCustomComponent extends LibraryUpdateComponent {
       licenseOfFiles: this.editForm.get(['licenseOfFiles'])!.value,
       licenses: this.buildILicensePerLibrary(),
       fossology: this.editForm.get(['fossology'])!.value,
+      inheritedLicenseOption : this.editForm.get(['inheritedLicenseOption'])!.value
     };
   }
 

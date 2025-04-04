@@ -51,7 +51,7 @@ export class LibraryUpdateComponent implements OnInit {
     fossologyUpload: [],
     lastReviewedBy: [],
     licenseToPublishes: [],
-    licenseOfFiles: [],
+    licenseOfFiles: []
   });
 
   constructor(

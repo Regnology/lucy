@@ -37,6 +37,7 @@ export interface ILibrary {
   licenseToPublishes?: ILicense[] | null;
   licenseOfFiles?: ILicense[] | null;
   libraryRisk?: ILicenseRisk | null;
+  inheritedLicenseOption?: boolean  | null;
 }
 
 export class Library implements ILibrary {
@@ -70,11 +71,13 @@ export class Library implements ILibrary {
     public lastReviewedDeepScanBy?: IUser | null,
     public licenseToPublishes?: ILicense[] | null,
     public licenseOfFiles?: ILicense[] | null,
-    public libraryRisk?: ILicenseRisk | null
+    public libraryRisk?: ILicenseRisk | null,
+    public inheritedLicenseOption?: boolean  | null
   ) {
     this.reviewed = this.reviewed ?? false;
     this.reviewedDeepScan = this.reviewedDeepScan ?? false;
     this.hideForPublishing = this.hideForPublishing ?? false;
+    this.inheritedLicenseOption = this.inheritedLicenseOption ?? false;
   }
 }
 

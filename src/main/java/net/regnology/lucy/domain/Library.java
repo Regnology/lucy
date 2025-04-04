@@ -113,6 +113,10 @@ public class Library implements Serializable {
     @Column(name = "sha1", length = 40)
     private String sha1;
 
+    @NotNull
+    @Column(name = "inherited_license_option", nullable = false)
+    private Boolean inheritedLicenseOption = false;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(unique = true)
     private Fossology fossology;
@@ -838,5 +842,13 @@ public class Library implements Serializable {
             ", md5='" + getMd5() + "'" +
             ", sha1='" + getSha1() + "'" +
             "}";
+    }
+
+    public Boolean getInheritedLicenseOption() {
+        return inheritedLicenseOption;
+    }
+
+    public void setInheritedLicenseOption(Boolean inheritedLicenseOption) {
+        this.inheritedLicenseOption = inheritedLicenseOption;
     }
 }

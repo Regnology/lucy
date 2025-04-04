@@ -354,6 +354,37 @@ public class LicenseCustomService extends LicenseService {
     }
 
     /**
+     * Find the inherited licenses for a library with only an unknown license
+     *
+     * @param library The library to find inherited license
+     * @return a set of LicensePerLibrary
+     */
+    public SortedSet<LicensePerLibrary> findInheritedLicenses(Library library) {
+        log.debug("Request to find inherited licenses(s) for the library : {}", library);
+
+        SortedSet<LicensePerLibrary> inheritedLicenses = new TreeSet<>();
+
+        // Look for the parent library
+        Optional<Library> parentLibrary = libraryService.findLastWithLicensesKnown(library.getGroupId(), library.getArtifactId(), library.getVersion());
+
+        // Copy the licenses
+        if (parentLibrary.isPresent()) {
+            for (LicensePerLibrary original : parentLibrary.get().getLicenses()) {
+                LicensePerLibrary copy = new LicensePerLibrary();
+                copy.setLibrary(library);
+                copy.setLicense(original.getLicense());
+                copy.setLinkType(original.getLinkType());
+                copy.setOrderId(original.getOrderId());
+                library.setLibraryRisk(parentLibrary.get().getLibraryRisk());
+                inheritedLicenses.add(copy);
+            }
+            library.setInheritedLicenseOption(true);
+        }
+
+        return inheritedLicenses;
+    }
+
+    /**
      * Check if a URL points to a generic license text.
      *
      * @param url License URL

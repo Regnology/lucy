@@ -168,15 +168,15 @@
         <td>{{ library.groupId }}</td>
         <td>
           <a [routerLink]="['/library', library.id, 'view']">{{ library.artifactId }}</a>
-          <span *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']"
-            ><fa-icon
+          <span *jhiHasAnyAuthority="['ROLE_USER', 'ROLE_ADMIN']">
+            <fa-icon
               *ngIf="hasErrors(library)"
               class="text-warning"
               icon="exclamation-triangle"
               placement="top"
-              ngbTooltip="Library has open error logs"
-            ></fa-icon
-          ></span>
+              ngbTooltip="Library has open error logs"></fa-icon>
+            <fa-icon icon="sitemap" placement="top" ngbTooltip="Inherited license" *ngIf="library?.inheritedLicenseOption"></fa-icon>
+          </span>
         </td>
         <td>{{ library.version }}</td>
         <td>{{ library.type }}</td>

@@ -73,7 +73,7 @@ public class LibraryCustomResource extends LibraryResource {
             throw new BadRequestAlertException("A new library cannot already have an ID", ENTITY_NAME, "idexists");
         }
         try {
-            Library result = libraryService.saveWithCheck(library);
+            Library result = libraryService.saveWithCheck(library, false);
             return ResponseEntity
                 .created(new URI("/api/libraries/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
@@ -108,7 +108,7 @@ public class LibraryCustomResource extends LibraryResource {
         }
 
         try {
-            Library result = libraryService.saveWithCheck(library);
+            Library result = libraryService.saveWithCheck(library, false);
 
             return ResponseEntity
                 .ok()

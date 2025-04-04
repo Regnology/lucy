@@ -463,6 +463,7 @@ public class ProductCustomResource extends ProductResource {
      * @param id     ID of the product
      * @param delete true if the libraries from a previous upload should be deleted, or
      *               false if the libraries from the new upload should be added to the previous results
+     * @param inherited Option to set the license of a library from the previous version if not found.
      * @param upload The Upload object with libraries
      * @return The {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}, if the processing is successfully started,
      * or with status {@code 400 (Bad Request)} if an error occurred during processing or the product does not exist.
@@ -472,6 +473,7 @@ public class ProductCustomResource extends ProductResource {
     public ResponseEntity<Void> upload(
         @PathVariable Long id,
         @RequestParam(value = "delete", defaultValue = "true") boolean delete,
+        @RequestParam(value = "inherited", defaultValue = "false") boolean inherited,
         @RequestBody Upload upload
     ) {
         log.debug("REST request with upload to product : {}", id);
@@ -492,7 +494,7 @@ public class ProductCustomResource extends ProductResource {
         }
 
         try {
-            productService.processUpload(product, upload, delete);
+            productService.processUpload(product, upload, delete, inherited);
         } catch (UploadException e) {
             log.error("Error while processing the upload : {}", e.getMessage());
         }
@@ -569,6 +571,7 @@ public class ProductCustomResource extends ProductResource {
         @PathVariable Long id,
         @RequestParam(value = "url") String url,
         @RequestParam(value = "delete", defaultValue = "true") boolean delete,
+        @RequestParam(value = "inherited", defaultValue = "false") boolean inherited,
         @RequestBody BasicAuthentication credentials
     ) {
         log.debug("REST request with upload to product by URL : {}", id);
@@ -591,7 +594,7 @@ public class ProductCustomResource extends ProductResource {
 
         try {
             String contentType = productService.preCheckForUploadByUrl(product, url, credentials);
-            productService.processUploadByUrl(product, url, credentials, delete, contentType);
+            productService.processUploadByUrl(product, url, credentials, delete, inherited, contentType);
         } catch (UploadException e) {
             log.error("Error while downloading file : {}", e.getMessage());
             product.setUploadState(UploadState.FAILURE);

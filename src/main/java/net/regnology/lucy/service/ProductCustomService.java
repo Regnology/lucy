@@ -936,11 +936,12 @@ public class ProductCustomService extends ProductService {
      * @param upload  {@link Upload} object with SBOM.
      * @param delete  True if already existing components should be deleted from the project, otherwise components from
      *                the upload will be added to the previous list.
+     * @param inherited Option to set the license of a library from the previous version if not found.
      * @throws UploadException If the project cannot be found or errors occur when processing the Upload.
      */
     @Async
     @Transactional
-    public void processUpload(Product product, Upload upload, boolean delete) throws UploadException {
+    public void processUpload(Product product, Upload upload, boolean delete, boolean inherited) throws UploadException {
         log.info("Start processing upload for Product : {}", product.getId());
 
         try {
@@ -998,13 +999,14 @@ public class ProductCustomService extends ProductService {
                             library.setLicenseOfFiles(licenseService.findShortIdentifier(licenseOfFiles.get()));
                         }*/
 
-                        library = libraryService.saveWithCheck(library);
+                        library = libraryService.saveWithCheck(library, inherited);
                     } catch (LibraryException e) {
+                        // LibraryAlreadyExistException if the library already exists in the database
                         Library dbLibrary = e.getLibrary();
                         dbLibrary.updateEmptyFields(library);
 
                         library = new Pipeline<>(new MavenLicenseStep()).pipe(new NpmLicenseStep()).execute(library);
-                        libraryService.licenseAutocomplete(dbLibrary);
+                        libraryService.licenseAutocomplete(dbLibrary, inherited);
                         //libraryService.hasIncompatibleLicenses(library);
                         libraryService.removeGenericLicenseUrl(dbLibrary);
                         // library.setLicenseUrl("");
@@ -1040,7 +1042,7 @@ public class ProductCustomService extends ProductService {
                         );
 
                         try {
-                            library = libraryService.saveWithCheck(library);
+                            library = libraryService.saveWithCheck(library, inherited);
                         } catch (LibraryException e) {
                             library = e.getLibrary();
                         }
@@ -1131,7 +1133,7 @@ public class ProductCustomService extends ProductService {
     }
 
     @Async
-    public void processUploadByUrl(Product product, String url, BasicAuthentication credentials, boolean delete, String contentType)
+    public void processUploadByUrl(Product product, String url, BasicAuthentication credentials, boolean delete, boolean inherited, String contentType)
         throws UploadException {
         log.info("Start processing upload by URL for Product : {}", product.getId());
         try (
@@ -1147,7 +1149,7 @@ public class ProductCustomService extends ProductService {
 
             // Will not be asynchronously executed
             // Async method call in same class doesn't work
-            processUpload(product, upload, delete);
+            processUpload(product, upload, delete, inherited);
 
             upload.getFile().getFilestream().close();
         } catch (IOException e) {

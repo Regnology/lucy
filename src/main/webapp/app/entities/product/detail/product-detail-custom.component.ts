@@ -120,6 +120,7 @@ export class ProductDetailCustomComponent extends ProductDetailComponent impleme
     additionalLibrariesContentType: [],
     additionalLibrariesFileName: [],
     deleteData: true,
+    inheritedLicense: false,
   });
 
   addLibraryForm = this.fb.group({
@@ -476,6 +477,7 @@ export class ProductDetailCustomComponent extends ProductDetailComponent impleme
         this.productService
           .upload(this.product.id, new Upload(fileUpload, additionalLibrariesUpload), {
             delete: this.uploadForm.get('deleteData')!.value,
+            inherited: this.uploadForm.get('inheritedLicense')!.value,
           })
           .subscribe(() => {
             this.resetUploadFormSuccess();
@@ -496,6 +498,7 @@ export class ProductDetailCustomComponent extends ProductDetailComponent impleme
           {
             url: this.uploadForm.get('url')!.value,
             delete: this.uploadForm.get('deleteData')!.value,
+            inherited: this.uploadForm.get('inheritedLicense')!.value,
           }
         )
         .subscribe({
