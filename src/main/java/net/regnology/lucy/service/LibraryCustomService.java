@@ -238,8 +238,11 @@ public class LibraryCustomService extends LibraryService {
      */
     public Optional<Library> findLastWithLicensesKnown(String groupId, String artifactId, String version) {
         log.debug("Request to get the last Library with licenses not only 'Unknown' by GroupId : {} and ArtifactId : {} and Version : {}", groupId, artifactId, version);
-        List<Library> libraries = libraryRepository.findLastWithLicensesKnown(groupId, artifactId, version);
-        if (libraries.isEmpty()) return Optional.empty();
+        List<Library> libraries = libraryRepository.findLastWithLicensesKnownOrderByVersion(groupId, artifactId, version);
+        if (libraries.isEmpty()) {
+            libraries = libraryRepository.findLastWithLicensesKnownOrderById(groupId, artifactId, version);
+            if (libraries.isEmpty()) return Optional.empty();
+        }
         return Optional.ofNullable(libraries.get(0));
     }
 
@@ -303,13 +306,22 @@ public class LibraryCustomService extends LibraryService {
             library.setLicenseToPublishes(licenseService.findLicenseToPublish(library.getLicenses()));
         }
 
-        // Feature to find the inherited licenses when the only license is 'Unknown'
+        // Feature to find the inherited licenses when the only license is 'Unknown' or 'Non-Licensed'
         if (inherited) {
             if (
-                !library.getLicenses().isEmpty() &&
-                    (library.getLicenses().size() == 1 && library.getLicenses().first().getLicense().equals(licenseService.getUnknownLicense()))
+                library.getLicenses().size() == 1 &&
+                    (library.getLicenses().first().getLicense().equals(licenseService.getUnknownLicense()) || library.getLicenses().first().getLicense().equals(licenseService.getNonLicensedLicense()))
             ) {
-                library.setLicenses(licenseService.findInheritedLicenses(library));
+                SortedSet<LicensePerLibrary> inheritedLicenses = licenseService.findInheritedLicenses(library);
+                if (!inheritedLicenses.isEmpty()) {
+                    // License
+                    library.setLicenses(inheritedLicenses);
+                    // License to publish
+                    library.getLicenseToPublishes().clear();
+                    for (LicensePerLibrary licensePerLibrary : library.getLicenses()) {
+                        library.addLicenseToPublish(licensePerLibrary.getLicense());
+                    }
+                }
             }
         }
     }
