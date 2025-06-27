@@ -237,12 +237,17 @@ public class LibraryCustomService extends LibraryService {
      * @return a Library as an Optional
      */
     public Optional<Library> findLastWithLicensesKnown(String groupId, String artifactId, String version) {
-        log.debug("Request to get the last Library with licenses not only 'Unknown' by GroupId : {} and ArtifactId : {} and Version : {}", groupId, artifactId, version);
+        log.info("Query to get the last library with licenses not only 'Unknown' for {} {} (order by version)", artifactId, version);
         List<Library> libraries = libraryRepository.findLastWithLicensesKnownOrderByVersion(groupId, artifactId, version);
         if (libraries.isEmpty()) {
+            log.info("Query to get the last library with licenses not only 'Unknown' for {} {} (2nd try order by id)", artifactId, version);
             libraries = libraryRepository.findLastWithLicensesKnownOrderById(groupId, artifactId, version);
-            if (libraries.isEmpty()) return Optional.empty();
+            if (libraries.isEmpty()) {
+                log.info("No parent library found");
+                return Optional.empty();
+            }
         }
+        log.info("Parent library found : {} {}", libraries.get(0).getArtifactId(), libraries.get(0).getVersion());
         return Optional.ofNullable(libraries.get(0));
     }
 
