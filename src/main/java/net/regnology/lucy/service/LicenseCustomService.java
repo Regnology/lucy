@@ -368,7 +368,6 @@ public class LicenseCustomService extends LicenseService {
         Optional<Library> parentLibrary = libraryService.findLastWithLicensesKnown(library.getGroupId(), library.getArtifactId(), library.getVersion());
 
         // Copy the licenses
-        log.info("Copy the licenses");
         if (parentLibrary.isPresent()) {
             for (LicensePerLibrary original : parentLibrary.get().getLicenses()) {
                 LicensePerLibrary copy = new LicensePerLibrary();
@@ -381,7 +380,6 @@ public class LicenseCustomService extends LicenseService {
             }
             library.setInheritedLicenseOption(true);
         }
-        log.info("Copy the licenses done");
 
         return inheritedLicenses;
     }

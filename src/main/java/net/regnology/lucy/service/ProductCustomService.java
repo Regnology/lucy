@@ -1008,45 +1008,28 @@ public class ProductCustomService extends ProductService {
                         library = new Pipeline<>(new MavenLicenseStep()).pipe(new NpmLicenseStep()).execute(library);
                         libraryService.licenseAutocomplete(dbLibrary, inherited);
                         //libraryService.hasIncompatibleLicenses(library);
-                        log.info("removeGenericLicenseUrl");
                         libraryService.removeGenericLicenseUrl(dbLibrary);
-                        log.info("removeGenericLicenseUrl done");
                         // library.setLicenseUrl("");
                         // library.setSourceCodeUrl("");
-                        log.info("urlAutocomplete");
                         libraryService.urlAutocomplete(dbLibrary);
-                        log.info("urlAutocomplete done");
-                        log.info("licenseTextAutocomplete");
                         libraryService.licenseTextAutocomplete(library);
-                        log.info("licenseTextAutocomplete done");
-                        log.info("copyrightAutocomplete");
                         libraryService.copyrightAutocomplete(dbLibrary);
-                        log.info("copyrightAutocomplete done");
-                        log.info("calculateLibraryRisk");
                         libraryService.calculateLibraryRisk(library);
-                        log.info("calculateLibraryRisk done");
-                        log.info("save");
                         library = libraryService.save(dbLibrary);
-                        log.info("save done");
                     }
 
-                    log.info("Link library and product");
                     LibraryPerProduct libraryPerProduct = new LibraryPerProduct();
                     libraryPerProduct.setProduct(product);
                     libraryPerProduct.setLibrary(library);
-                    log.info("Link library and product done");
 
                     try {
-                        log.info("Save link library/product");
                         libraryPerProductService.saveWithCheck(libraryPerProduct);
-                        log.info("Save link library/product done");
                     } catch (LibraryException e) {
                         log.debug("Library [ {} ] is already in Product [ {} ]", library.getId(), product.getId());
                     }
                 });
 
                 if (upload.getAdditionalLibraries() != null && upload.getAdditionalLibraries().getFile() != null) {
-                    log.info("Additional libraries stuff");
                     AdditionalLibrariesLoader additionalLibrariesLoader = new AdditionalLibrariesLoader();
                     Set<Library> additionalLibraries = additionalLibrariesLoader.load(upload.getAdditionalLibraries());
 
@@ -1075,7 +1058,6 @@ public class ProductCustomService extends ProductService {
                             log.debug("Library [ {} ] is already in Product [ {} ]", library.getId(), product.getId());
                         }
                     }
-                    log.info("Additional libraries stuff done");
                 }
 
                 product.setUploadState(UploadState.SUCCESSFUL);
