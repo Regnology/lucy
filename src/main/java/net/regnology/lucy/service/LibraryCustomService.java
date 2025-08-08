@@ -296,21 +296,6 @@ public class LibraryCustomService extends LibraryService {
             library.setLicenses(licenseService.findLicenseWithLinking(library.getOriginalLicense()));
         }
 
-        // Bugfix for libraries where the license to publish is 'Unknown' but licenses are not 'Unknown'
-        if (
-            !library.getLicenses().isEmpty() &&
-            (library.getLicenseToPublishes().size() == 1 && library.getLicenseToPublishes().contains(licenseService.getUnknownLicense()))
-        ) {
-            library.setLicenseToPublishes(licenseService.findLicenseToPublish(library.getLicenses()));
-        }
-
-        if (
-            !library.getLicenses().isEmpty() &&
-            (library.getLicenseToPublishes().isEmpty() || licenseService.unidentifiedLicense(library.getLicenseToPublishes()))
-        ) {
-            library.setLicenseToPublishes(licenseService.findLicenseToPublish(library.getLicenses()));
-        }
-
         // Feature to find the inherited licenses when the only license is 'Unknown' or 'Non-Licensed'
         if (inherited) {
             if (
@@ -321,7 +306,9 @@ public class LibraryCustomService extends LibraryService {
                 if (!inheritedLicenses.isEmpty()) {
                     // License
                     library.setLicenses(inheritedLicenses);
+
                     // License to publish
+                    /*
                     log.info("Clear licenses to publish");
                     //library.getLicenseToPublishes().clear();
                     // -> don't use it because it doesn't manage the relationship with licence
@@ -335,9 +322,27 @@ public class LibraryCustomService extends LibraryService {
                         library.addLicenseToPublish(licenseToAdd);
                     }
                     log.info("Set licenses to publish done");
+                    */
                 }
             }
         }
+
+        // Bugfix for libraries where the license to publish is 'Unknown' but licenses are not 'Unknown'
+        log.info("Using existing bugfix for libraries where the license to publish is 'Unknown' but licenses are not 'Unknown'");
+        if (
+            !library.getLicenses().isEmpty() &&
+                (library.getLicenseToPublishes().size() == 1 && library.getLicenseToPublishes().contains(licenseService.getUnknownLicense()))
+        ) {
+            library.setLicenseToPublishes(licenseService.findLicenseToPublish(library.getLicenses()));
+        }
+
+        if (
+            !library.getLicenses().isEmpty() &&
+                (library.getLicenseToPublishes().isEmpty() || licenseService.unidentifiedLicense(library.getLicenseToPublishes()))
+        ) {
+            library.setLicenseToPublishes(licenseService.findLicenseToPublish(library.getLicenses()));
+        }
+        log.info("Bugfix done");
     }
 
     public void hasIncompatibleLicenses(Library library) {
