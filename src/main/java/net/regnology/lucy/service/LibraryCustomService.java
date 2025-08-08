@@ -320,12 +320,16 @@ public class LibraryCustomService extends LibraryService {
                 SortedSet<LicensePerLibrary> inheritedLicenses = licenseService.findInheritedLicenses(library);
                 if (!inheritedLicenses.isEmpty()) {
                     // License
+                    log.info("Set the licenses");
                     library.setLicenses(inheritedLicenses);
+                    log.info("Set the licenses done");
                     // License to publish
+                    log.info("Set the licenses to publish");
                     library.getLicenseToPublishes().clear();
                     for (LicensePerLibrary licensePerLibrary : library.getLicenses()) {
                         library.addLicenseToPublish(licensePerLibrary.getLicense());
                     }
+                    log.info("Set the licenses to publish done");
                 }
             }
         }
