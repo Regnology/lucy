@@ -237,17 +237,17 @@ public class LibraryCustomService extends LibraryService {
      * @return a Library as an Optional
      */
     public Optional<Library> findLastWithLicensesKnown(String groupId, String artifactId, String version) {
-        log.info("Query to get the last library with licenses not only 'Unknown' for {} {} (order by version)", artifactId, version);
+        //log.info("Query to get the last library with licenses not only 'Unknown' for {} {} (order by version)", artifactId, version);
         List<Library> libraries = libraryRepository.findLastWithLicensesKnownOrderByVersion(groupId, artifactId, version);
         if (libraries.isEmpty()) {
-            log.info("Query to get the last library with licenses not only 'Unknown' for {} {} (2nd try order by id)", artifactId, version);
+            //log.info("Query to get the last library with licenses not only 'Unknown' for {} {} (2nd try order by id)", artifactId, version);
             libraries = libraryRepository.findLastWithLicensesKnownOrderById(groupId, artifactId, version);
             if (libraries.isEmpty()) {
-                log.info("No parent library found");
+                //log.info("No parent library found");
                 return Optional.empty();
             }
         }
-        log.info("Parent library found : {} {}", libraries.get(0).getArtifactId(), libraries.get(0).getVersion());
+        //log.info("Parent library found : {} {}", libraries.get(0).getArtifactId(), libraries.get(0).getVersion());
         return Optional.ofNullable(libraries.get(0));
     }
 
@@ -270,7 +270,7 @@ public class LibraryCustomService extends LibraryService {
      * @param library Library entity
      */
     public void licenseAutocomplete(Library library, boolean inherited) {
-        log.debug("Autocomplete of license fields");
+        //log.debug("Autocomplete of license fields");
         if (library.getOriginalLicense() == null) library.setOriginalLicense("");
 
         // Load licenses for existing libraries
@@ -328,7 +328,7 @@ public class LibraryCustomService extends LibraryService {
         }
 
         // Bugfix for libraries where the license to publish is 'Unknown' but licenses are not 'Unknown'
-        log.info("Using existing bugfix for libraries where the license to publish is 'Unknown' but licenses are not 'Unknown'");
+        //log.info("Using existing bugfix for libraries where the license to publish is 'Unknown' but licenses are not 'Unknown'");
         if (
             !library.getLicenses().isEmpty() &&
                 (library.getLicenseToPublishes().size() == 1 && library.getLicenseToPublishes().contains(licenseService.getUnknownLicense()))
@@ -342,7 +342,7 @@ public class LibraryCustomService extends LibraryService {
         ) {
             library.setLicenseToPublishes(licenseService.findLicenseToPublish(library.getLicenses()));
         }
-        log.info("Bugfix done");
+        //log.info("Bugfix done");
     }
 
     public void hasIncompatibleLicenses(Library library) {
