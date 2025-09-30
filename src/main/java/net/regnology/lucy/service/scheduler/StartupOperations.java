@@ -103,7 +103,7 @@ public class StartupOperations {
         List<Library> libraries = libraryQueryService.findByCriteria(libraryCriteria);
 
         for (Library library : libraries) {
-            libraryService.licenseAutocomplete(library);
+            libraryService.licenseAutocomplete(library, false);
         }
     }
 
@@ -465,7 +465,7 @@ public class StartupOperations {
                 library.setSourceCodeUrl("");
 
                 try {
-                    libraryService.saveWithCheck(library);
+                    libraryService.saveWithCheck(library, false);
                     counter++;
                 } catch (LibraryException e) {
                     log.error("Should not happen!");

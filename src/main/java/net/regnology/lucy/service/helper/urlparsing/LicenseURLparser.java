@@ -37,6 +37,14 @@ public class LicenseURLparser implements URLparser {
         "Copyright.md",
         "copyright.txt",
         "copyright.md",
+        "LICENSE.MIT",
+        "LICENSE.APACHE",
+        "LICENSE.GPL",
+        "LICENSE.LGPL",
+        "License.MIT",
+        "License.APACHE",
+        "License.GPL",
+        "License.LGPL"
     };
     private static final URLparserHelper helper = new URLparserHelper();
 

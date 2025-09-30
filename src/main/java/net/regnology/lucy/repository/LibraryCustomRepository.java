@@ -39,6 +39,40 @@ public interface LibraryCustomRepository extends LibraryRepository, LibraryRepos
     );
 
     @Query(
+        "SELECT lib FROM Library lib " +
+        "   LEFT JOIN lib.licenses lpl " +
+        "   LEFT JOIN lpl.license lic " +
+        "WHERE LOWER(lib.groupId) = LOWER(:groupId) " +
+        "   AND LOWER(lib.artifactId) = LOWER(:artifactId) " +
+        "   AND LOWER(lib.version) < LOWER(:version) " +
+        "   AND lic.shortIdentifier <> 'Unknown' " +
+        "   AND lic.shortIdentifier <> 'Non-Licensed' " +
+        "ORDER BY lib.version DESC"
+    )
+    List<Library> findLastWithLicensesKnownOrderByVersion(
+        @Param("groupId") String groupId,
+        @Param("artifactId") String artifactId,
+        @Param("version") String version
+    );
+
+    @Query(
+        "SELECT lib FROM Library lib " +
+            "   LEFT JOIN lib.licenses lpl " +
+            "   LEFT JOIN lpl.license lic " +
+            "WHERE LOWER(lib.groupId) = LOWER(:groupId) " +
+            "   AND LOWER(lib.artifactId) = LOWER(:artifactId) " +
+            "   AND LOWER(lib.version) <> LOWER(:version) " +
+            "   AND lic.shortIdentifier <> 'Unknown' " +
+            "   AND lic.shortIdentifier <> 'Non-Licensed' " +
+            "ORDER BY lib.id DESC"
+    )
+    List<Library> findLastWithLicensesKnownOrderById(
+        @Param("groupId") String groupId,
+        @Param("artifactId") String artifactId,
+        @Param("version") String version
+    );
+
+    @Query(
         "select distinct library from Library library where library.licenseUrl is null or library.licenseUrl = '' or library.sourceCodeUrl is null or library.sourceCodeUrl = ''"
     )
     List<Library> findAllWhereUrlIsEmpty();

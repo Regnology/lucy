@@ -546,6 +546,33 @@
                             </div>
                           </div>
 
+                          <!-- Inherited license option -->
+                          <div class="row g-3 mt-3">
+                            <div class="col text-end">
+                              <label for="field_inheritedLicense">Inherited license</label>
+                              <ng-template #inheritedLicenseTooltip>
+                                <p>
+                                  If Lucy cannot find a license for a library then it will reuse the same than for the last version of this library.
+                                </p>
+                              </ng-template>
+                              <fa-icon icon="question-circle" placement="right" [ngbTooltip]="inheritedLicenseTooltip"></fa-icon>
+                            </div>
+                            <div class="col-auto">
+                              <div class="form-check form-switch">
+                                <input
+                                  type="checkbox"
+                                  class="form-check-input"
+                                  id="field_inheritedLicense"
+                                  name="inheritedLicense"
+                                  data-cy="inheritedLicense"
+                                  formControlName="inheritedLicense"
+                                />
+                                <label class="form-check-label" for="field_inheritedLicense"></label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Upload Filter -->
                           <div class="text-end mt-3">
                             <button
                               type="button"
@@ -1046,6 +1073,7 @@
                     <td *ngIf="tableForm.get('groupId')!.value">{{ libraryPerProduct.library?.groupId }}</td>
                     <td *ngIf="tableForm.get('artifactId')!.value">
                       <a [routerLink]="['/library', libraryPerProduct.library?.id, 'view']">{{ libraryPerProduct.library?.artifactId }}</a>
+                      <fa-icon icon="sitemap" placement="top" ngbTooltip="Inherited license" *ngIf="libraryPerProduct.library?.inheritedLicenseOption"></fa-icon>
                     </td>
                     <td *ngIf="tableForm.get('version')!.value">{{ libraryPerProduct.library?.version }}</td>
                     <td *ngIf="tableForm.get('type')!.value">{{ libraryPerProduct.library?.type }}</td>

@@ -149,11 +149,11 @@ public class UploadCustomService extends UploadService {
                             library.setLicenseUrl("");
                             library.setSourceCodeUrl("");
 
-                            library = libraryService.saveWithCheck(library);
+                            library = libraryService.saveWithCheck(library, false);
                         } catch (LibraryException e) {
                             Library dbLibrary = e.getLibrary();
                             dbLibrary.updateEmptyFields(library);
-                            libraryService.licenseAutocomplete(dbLibrary);
+                            libraryService.licenseAutocomplete(dbLibrary, false);
                             libraryService.removeGenericLicenseUrl(dbLibrary);
                             // library.setLicenseUrl("");
                             // library.setSourceCodeUrl("");
