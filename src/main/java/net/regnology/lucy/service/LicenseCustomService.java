@@ -360,7 +360,7 @@ public class LicenseCustomService extends LicenseService {
      * @return a set of LicensePerLibrary
      */
     public SortedSet<LicensePerLibrary> findInheritedLicenses(Library library) {
-        log.debug("Request to find inherited licenses(s) for the library : {}", library);
+        //log.debug("Request to find inherited licenses(s) for the library : {}", library);
 
         SortedSet<LicensePerLibrary> inheritedLicenses = new TreeSet<>();
 
