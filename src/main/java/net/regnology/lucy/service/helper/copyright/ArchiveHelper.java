@@ -57,8 +57,7 @@ public class ArchiveHelper {
      */
     private static Copyright searchForCopyright(InputStream input, boolean inAllFiles)
         throws net.regnology.lucy.service.exceptions.ArchiveException {
-        try {
-            ArchiveInputStream archiveInputStream = new ArchiveStreamFactory().createArchiveInputStream(input);
+        try (ArchiveInputStream archiveInputStream = new ArchiveStreamFactory().createArchiveInputStream(input)) {
             Set<String> copyrightsFromAllFiles = new HashSet<>(4);
             Set<String> copyrightsDocumentationFiles = new HashSet<>(4);
 
@@ -112,7 +111,7 @@ public class ArchiveHelper {
             }
 
             return new Copyright(copyrightsFromAllFiles, copyrightsDocumentationFiles);
-        } catch (ArchiveException e) {
+        } catch (ArchiveException | IOException e) {
             throw new net.regnology.lucy.service.exceptions.ArchiveException(
                 "Archive cannot be read. File is not a archive or not supported."
             );
