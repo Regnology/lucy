@@ -57,15 +57,20 @@ public class ArchiveHelper {
      */
     private static Copyright searchForCopyright(InputStream input, boolean inAllFiles)
         throws net.regnology.lucy.service.exceptions.ArchiveException {
-        try {
-            ArchiveInputStream archiveInputStream = new ArchiveStreamFactory().createArchiveInputStream(input);
+        try (ArchiveInputStream archiveInputStream = new ArchiveStreamFactory().createArchiveInputStream(input)) {
             Set<String> copyrightsFromAllFiles = new HashSet<>(4);
             Set<String> copyrightsDocumentationFiles = new HashSet<>(4);
 
             ArchiveEntry entry = null;
+            int consecutiveErrors = 0;
+            int maxConsecutiveErrors = 3;
+
             while (true) {
                 try {
                     if ((entry = archiveInputStream.getNextEntry()) == null) break;
+
+                    // Reset error counter on successful entry read
+                    consecutiveErrors = 0;
 
                     // If inAllFiles is false, then check if the current file matches the file pattern to search for copyrights
                     /*if (
@@ -85,12 +90,28 @@ public class ArchiveHelper {
                         copyrightsDocumentationFiles.addAll(copyrights);
                     }
                 } catch (IOException e) {
-                    log.error("Error while {}", e.getMessage());
+                    consecutiveErrors++;
+                    log.error("Error while reading archive entry: {}", e.getMessage());
+
+                    // If we hit too many consecutive errors, the archive is likely corrupted
+                    if (consecutiveErrors >= maxConsecutiveErrors) {
+                        log.warn("Too many consecutive errors ({}) reading archive, stopping analysis. Archive may be corrupted or incomplete.",
+                            consecutiveErrors);
+                        break;
+                    }
+
+                    // For truncated ZIP entries or similar fatal errors, break immediately
+                    if (e.getMessage() != null && (e.getMessage().contains("Truncated") ||
+                        e.getMessage().contains("unexpected end of archive") ||
+                        e.getMessage().contains("corrupted"))) {
+                        log.warn("Fatal archive error detected: {}. Stopping analysis.", e.getMessage());
+                        break;
+                    }
                 }
             }
 
             return new Copyright(copyrightsFromAllFiles, copyrightsDocumentationFiles);
-        } catch (ArchiveException e) {
+        } catch (ArchiveException | IOException e) {
             throw new net.regnology.lucy.service.exceptions.ArchiveException(
                 "Archive cannot be read. File is not a archive or not supported."
             );
